@@ -2,31 +2,39 @@
 #define CROPWINDOW_H
 
 
+
 #include <QLabel>
 #include <QPoint>
-#include <QSize>
-#include <QRubberBand>
+#include <QRect>
 #include <QListWidget>
 #include <QMouseEvent>
 #include <QPainter>
 
 
-
 #include "include/screenshot.h"
 
 
+
+// The window to crop the screenshot of the entire screen
 class CropWindow : public QLabel
 {
     Q_OBJECT
 
     // Variables
     private :
+        // List of all the taken screenshots
         QListWidget* listWidgetImage;
+
+        // Size and position for the crop tool
         QPoint cropOrigin;
         QRect cropArea;
+
+        // Differents pixmaps to draw usefull for the crop tool
         QPixmap* originalPixmap;
         QPixmap* whitePixmap;
         QPixmap* mixPixmap;
+
+        // Painter use to modify the differents pixmaps above
         QPainter* painterMix;
 
 

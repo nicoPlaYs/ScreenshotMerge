@@ -5,14 +5,15 @@
 
 #include <QListWidgetItem>
 #include <QDateTime>
-#include <QKeyEvent>
 
 
 
+// Store a screenshot which can be put in a QListWidget
 class Screenshot : public QListWidgetItem
 {
     // Variables
     private :
+        // The screenshot
         QPixmap image;
 
     // Getter

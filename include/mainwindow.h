@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 
+
 #include <QApplication>
 #include <QMainWindow>
 #include <QMenuBar>
@@ -18,9 +19,12 @@
 #include <QFileDialog>
 #include <QString>
 #include <QStandardPaths>
+#include <QTranslator>
 
 
+// The window to crop the screenshot of the entire screen
 #include "include/cropwindow.h"
+// The window to display an image
 #include "include/viewerwindow.h"
 
 
@@ -38,18 +42,21 @@ class MainWindow : public QMainWindow
         QMenu* menuHelp;
             QAction* actionAbout;
 
-        // Body of the window
-        QWidget* widgetMain;
-            QGridLayout* layoutMain;
-                QToolBar* toolBarMain;
-                    QAction* actionTakeScreenshot;
-                    QAction* actionMerge;
-                    QAction* actionView;
-                    QAction* actionUp;
-                    QAction* actionDown;
-                    QAction* actionDelete;
-                QListWidget* listWidgetImage;
+        // The main toolbar
+        QToolBar* toolBarMain;
+            QAction* actionTakeScreenshot;
+            QAction* actionMerge;
+            QAction* actionView;
+            QAction* actionUp;
+            QAction* actionDown;
+            QAction* actionDelete;
 
+        // The main widget
+        QWidget* widgetMain;
+            // The main layout
+            QGridLayout* layoutMain;
+                // List of all the taken screenshots
+                QListWidget* listWidgetImage;
 
     // Constructor
     public :
@@ -59,13 +66,9 @@ class MainWindow : public QMainWindow
     public :
         ~MainWindow();
 
-    // Methods
-    public:
-
-
     // Qt slots
     public slots :
-        // About dialog
+        // Open the about dialog : the credits of the program
         void about();
 
         // Wait, shot a screenshot and put it in the list
@@ -76,15 +79,14 @@ class MainWindow : public QMainWindow
         void merge();
         // Open a window to visualize the selected image on the list
         void openViewerWindow();
-        // Raise an image on the list
+            // Open a window to visualize an image on the list
+            void openViewerWindow(QListWidgetItem* imageClicked);
+        // Raise the selected image on the list
         void upImage();
-        // Descend an image on the list
+        // Descend the selected image on the list
         void downImage();
         // Delete the selected image in the list
         void deleteImage();
-
-        // Open a window to visualize the double-clicked image on the list
-        void openViewerWindow(QListWidgetItem* imageClicked);
 
         // Quit the application when the main window is closed
         void closeEvent(QCloseEvent* event);
