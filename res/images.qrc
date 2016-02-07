@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/menu/about.ico</file>
+        <file>images/menu/quit.ico</file>
+        <file>images/toolbar/delete.ico</file>
+        <file>images/toolbar/merge.ico</file>
+        <file>images/toolbar/takescreenshot.ico</file>
+        <file>images/toolbar/view.ico</file>
+        <file>images/toolbar/down.ico</file>
+        <file>images/toolbar/up.ico</file>
+        <file>images/app.ico</file>
+    </qresource>
+</RCC>

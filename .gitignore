@@ -1,28 +1,40 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Dossier des fichiers binaires
+bin/
 
-# Precompiled Headers
-*.gch
-*.pch
+# Fichier user de Qt
+*.pro.user
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
 
-# Fortran module files
-*.mod
+# Folder config file
+Desktop.ini
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
 
-# Executables
-*.exe
-*.out
-*.app
+# =========================
+# Operating System Files
+# =========================
+
+# OSX
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
