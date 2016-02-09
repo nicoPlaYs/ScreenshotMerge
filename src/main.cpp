@@ -21,6 +21,8 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/images/app.ico"));
     app.setQuitOnLastWindowClosed(false);
 
+
+
     // Force the app to use the same language as the system
     QString locale = QLocale::system().name().section('_', 0, 0);
     QTranslator translator;

@@ -25,6 +25,7 @@ MainWindow::MainWindow() : QMainWindow()
     // Toolbar
     toolBarMain = new QToolBar(this);
     toolBarMain->setMovable(false);
+    toolBarMain->setContextMenuPolicy(Qt::PreventContextMenu);
 
         actionTakeScreenshot = toolBarMain->addAction(QIcon("://images/toolbar/takescreenshot.ico"), tr("Take a screenshot"));
         QObject::connect(actionTakeScreenshot, SIGNAL(triggered()), this, SLOT(takeScreenshot()));
@@ -63,6 +64,18 @@ MainWindow::MainWindow() : QMainWindow()
             QObject::connect(listWidgetImage, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(openViewerWindow(QListWidgetItem*)));
 
         layoutMain->addWidget(listWidgetImage, 0, 0, 1, 1, 0);
+
+
+    // System tray icon
+    QSystemTrayIcon* trayIcon = new QSystemTrayIcon(QIcon(":/images/app.ico"), this);
+        menuTrayIcon = new QMenu(this);
+            actionOpen = menuTrayIcon->addAction(tr("Open"));
+            QObject::connect(actionOpen, SIGNAL(triggered()), this, SLOT(open()));
+        menuTrayIcon->addAction(actionQuit);
+    trayIcon->setToolTip("Screenshot Merge");
+    trayIcon->setContextMenu(menuTrayIcon);
+    trayIcon->show();
+    QObject::connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(activationTrayIcon(QSystemTrayIcon::ActivationReason)));
 }
 
 
@@ -79,6 +92,13 @@ MainWindow::~MainWindow()
 
 
 // Qt slots
+
+// Open the window if it's minimize
+void MainWindow::open()
+{
+    this->showNormal();
+    this->activateWindow();
+}
 
 // Open the about dialog : the credits of the program
 void MainWindow::about()
@@ -263,8 +283,9 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
     MSG msg = *((MSG*)message);
     if(msg.message == WM_HOTKEY)
     {
-        // ... and if it's the hotkey to take a screenshot...
-        if(msg.wParam == 1)
+        /* ... and if it's the hotkey to take a screenshot
+         * and if there isn't an other screnshot on the go... */
+        if(msg.wParam == 1 && this->isVisible())
         {
             this->takeScreenshot();
             return true;
@@ -277,5 +298,14 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
     else
     {
         return false;
+    }
+}
+
+// Specify the action when the user interact with the tray icon
+void MainWindow::activationTrayIcon(QSystemTrayIcon::ActivationReason reason)
+{
+    if(reason == QSystemTrayIcon::DoubleClick)
+    {
+        this->open();
     }
 }

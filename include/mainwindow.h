@@ -20,6 +20,7 @@
 #include <QString>
 #include <QStandardPaths>
 #include <QTranslator>
+#include <QSystemTrayIcon>
 
 
 // For globals hotkeys on Windows
@@ -62,6 +63,11 @@ class MainWindow : public QMainWindow
                 // List of all the taken screenshots
                 QListWidget* listWidgetImage;
 
+        // System tray icon
+        QSystemTrayIcon* trayIcon;
+            QMenu* menuTrayIcon;
+                QAction* actionOpen;
+
     // Constructor
     public :
         MainWindow();
@@ -72,6 +78,9 @@ class MainWindow : public QMainWindow
 
     // Qt slots
     public slots :
+        // Open the window if it's minimize
+        void open();
+
         // Open the about dialog : the credits of the program
         void about();
 
@@ -96,6 +105,9 @@ class MainWindow : public QMainWindow
         void closeEvent(QCloseEvent* event);
         // Use to receive globals hotkeys events from Windows
         bool nativeEvent(const QByteArray &eventType, void *message, long *result);
+
+        // Specify the action when the user interact with the tray icon
+        void activationTrayIcon(QSystemTrayIcon::ActivationReason reason);
 };
 
 
