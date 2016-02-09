@@ -22,6 +22,10 @@
 #include <QTranslator>
 
 
+// For globals hotkeys on Windows
+#include <windows.h>
+
+
 // The window to crop the screenshot of the entire screen
 #include "include/cropwindow.h"
 // The window to display an image
@@ -90,6 +94,8 @@ class MainWindow : public QMainWindow
 
         // Quit the application when the main window is closed
         void closeEvent(QCloseEvent* event);
+        // Use to receive globals hotkeys events from Windows
+        bool nativeEvent(const QByteArray &eventType, void *message, long *result);
 };
 
 

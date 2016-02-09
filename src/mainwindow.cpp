@@ -28,6 +28,7 @@ MainWindow::MainWindow() : QMainWindow()
 
         actionTakeScreenshot = toolBarMain->addAction(QIcon("://images/toolbar/takescreenshot.ico"), tr("Take a screenshot"));
         QObject::connect(actionTakeScreenshot, SIGNAL(triggered()), this, SLOT(takeScreenshot()));
+        RegisterHotKey((HWND) this->winId(), 1, 0x4000, VK_SNAPSHOT);
 
         actionMerge = toolBarMain->addAction(QIcon("://images/toolbar/merge.ico"), tr("Merge"));
         QObject::connect(actionMerge, SIGNAL(triggered()), this, SLOT(merge()));
@@ -252,3 +253,29 @@ void MainWindow::closeEvent(QCloseEvent* event)
     qApp->quit();
 }
 
+// Use to receive globals hotkeys events from Windows
+bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
+{
+    Q_UNUSED(eventType);
+    Q_UNUSED(result);
+
+    // If the mesage is about a Windows hotkey...
+    MSG msg = *((MSG*)message);
+    if(msg.message == WM_HOTKEY)
+    {
+        // ... and if it's the hotkey to take a screenshot...
+        if(msg.wParam == 1)
+        {
+            this->takeScreenshot();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
