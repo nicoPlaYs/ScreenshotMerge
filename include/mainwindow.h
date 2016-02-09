@@ -86,8 +86,6 @@ class MainWindow : public QMainWindow
 
         // Wait, shot a screenshot and put it in the list
         void takeScreenshot();
-            // Shoot the screenshot and put it in the list
-            void shootScreenshot();
         // Merge the images in the list
         void merge();
         // Open a window to visualize the selected image on the list

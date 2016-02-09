@@ -119,14 +119,8 @@ void MainWindow::about()
 void MainWindow::takeScreenshot()
 {
     // Hide the main window, so it can't be see in the screenshot
-    this->hide();
+    this->lower();
 
-    // Wait 500ms for the window to vanish beforce taking the screenshot
-    QTimer::singleShot(500, this, SLOT(shootScreenshot()));
-}
-// Shoot the screenshot and put it in the list
-void MainWindow::shootScreenshot()
-{
     // Get the pixmap of the primary screen
     QScreen *screen = QGuiApplication::primaryScreen();
     QPixmap pixmapFullscreen = screen->grabWindow(0);
