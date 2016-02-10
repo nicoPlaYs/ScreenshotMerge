@@ -18,6 +18,8 @@ int main(int argc, char *argv[])
     // Creation and configuration of the Qt application
     QApplication app(argc, argv);
     app.setApplicationName("Screenshot Merge");
+    app.setOrganizationName("nicoPlaYs");
+    app.setOrganizationDomain("nicoplays.error404.fr");
     app.setWindowIcon(QIcon(":/images/app.ico"));
     app.setQuitOnLastWindowClosed(false);
 

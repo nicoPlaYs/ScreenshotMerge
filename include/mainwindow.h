@@ -5,6 +5,7 @@
 
 #include <QApplication>
 #include <QMainWindow>
+#include <QSettings>
 #include <QMenuBar>
 #include <QAction>
 #include <QMessageBox>
@@ -41,6 +42,9 @@ class MainWindow : public QMainWindow
 
     // Variables
     private :
+        // Setting
+        QSettings* setting;
+
         // Menu
         QMenu* menuFile;
             QAction* actionQuit;
@@ -99,13 +103,13 @@ class MainWindow : public QMainWindow
         // Delete the selected image in the list
         void deleteImage();
 
-        // Quit the application when the main window is closed
-        void closeEvent(QCloseEvent* event);
-        // Use to receive globals hotkeys events from Windows
-        bool nativeEvent(const QByteArray &eventType, void *message, long *result);
-
         // Specify the action when the user interact with the tray icon
         void activationTrayIcon(QSystemTrayIcon::ActivationReason reason);
+
+        // Use to receive globals hotkeys events from Windows
+        bool nativeEvent(const QByteArray &eventType, void *message, long *result);
+        // Quit the application when the main window is closed
+        void closeEvent(QCloseEvent* event);
 };
 
 

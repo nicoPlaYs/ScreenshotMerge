@@ -5,11 +5,12 @@
 // Constructor
 MainWindow::MainWindow() : QMainWindow()
 {
+    setting = new QSettings();
+
     // We define the minimum size of the window...
     this->setMinimumSize(300,400);
-    // ...and the curent size of the window
-    this->resize(300,400);
-
+    // ... and we restore the size of the window from a previous session
+    this->restoreGeometry(setting->value("MainWindow/geometry").toByteArray());
 
     // File menu
     menuFile = menuBar()->addMenu(tr("File"));
@@ -256,15 +257,13 @@ void MainWindow::deleteImage()
     }
 }
 
-
-// Quit the application when the main window is closed
-void MainWindow::closeEvent(QCloseEvent* event)
+// Specify the action when the user interact with the tray icon
+void MainWindow::activationTrayIcon(QSystemTrayIcon::ActivationReason reason)
 {
-    // Accept the event
-    event->accept();
-
-    // Close the app
-    qApp->quit();
+    if(reason == QSystemTrayIcon::DoubleClick)
+    {
+        this->open();
+    }
 }
 
 // Use to receive globals hotkeys events from Windows
@@ -295,11 +294,15 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
     }
 }
 
-// Specify the action when the user interact with the tray icon
-void MainWindow::activationTrayIcon(QSystemTrayIcon::ActivationReason reason)
+// Quit the application when the main window is closed
+void MainWindow::closeEvent(QCloseEvent* event)
 {
-    if(reason == QSystemTrayIcon::DoubleClick)
-    {
-        this->open();
-    }
+    // Accept the event
+    event->accept();
+
+    // We save all the settings
+    setting->setValue("MainWindow/geometry", this->saveGeometry());
+
+    // Close the app
+    qApp->quit();
 }
