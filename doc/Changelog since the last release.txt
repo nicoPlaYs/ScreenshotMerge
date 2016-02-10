@@ -1,0 +1,28 @@
+Bug fix :
+	- Disable the context menu on the toolbar
+	
+New features :
+	- System Tray Icon
+	- Global HotKey 'Print Screen' to take a screenshot
+	
+Improvement :
+	- Take a screenshot : there isn't a delay anymore before the screenshot to be taken, the window of the program vanish instantly now
+
+Idea to implement :
+	- Settings menu
+		- Quality of JPEG and PNG
+		- Start minimized with Windows
+		- Change the default directory where the screenshot is saved
+		- Don't ask the directory, just always use the default directory
+		- Don't show the draw window, in the single screenshot mode
+	- 2 modes : Single screenshot & Multiple screenshots
+	- Draw tool, to paint on screenshot
+		- Possibility to change the color of the tool
+		- Delete tool
+		- Pen tool
+		- Line tool
+		- Rectangle tool
+		- Circle tool
+
+Bug to fix :
+	- Only take a screenshot of the primary screen not the other
