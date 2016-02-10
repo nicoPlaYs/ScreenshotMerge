@@ -43,7 +43,7 @@ class MainWindow : public QMainWindow
     // Variables
     private :
         // Setting
-        QSettings* setting;
+        QSettings* settings;
 
         // Menu
         QMenu* menuFile;
@@ -71,6 +71,10 @@ class MainWindow : public QMainWindow
         QSystemTrayIcon* trayIcon;
             QMenu* menuTrayIcon;
                 QAction* actionOpen;
+
+        // Usefull to refuse new screenshot to be taken when one is on his way to be taken / cropped
+        bool canTakeNewScreenshot;
+
 
     // Constructor
     public :

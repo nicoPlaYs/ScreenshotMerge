@@ -37,10 +37,13 @@ class CropWindow : public QLabel
         // Painter use to modify the differents pixmaps above
         QPainter* painterMix;
 
+        // Usefull to refuse new screenshot to be taken when one is on his way to be taken / cropped
+        bool* canTakeNewScreenshot;
+
 
     // Constructor
     public :
-        CropWindow(QPixmap pixmapFullscreen, QListWidget* listWidgetImage);
+        CropWindow(QPixmap pixmapFullscreen, QListWidget* listWidgetImage, bool* canTakeNewScreenshot);
 
     // Destructor
     public :

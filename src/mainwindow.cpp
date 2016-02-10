@@ -5,12 +5,18 @@
 // Constructor
 MainWindow::MainWindow() : QMainWindow()
 {
-    setting = new QSettings();
+    /* At the begin of the program, there is no screenshot on his way
+     * so we can take one */
+    canTakeNewScreenshot = true;
+
+    // Initialization of the settings variable
+    settings = new QSettings();
 
     // We define the minimum size of the window...
-    this->setMinimumSize(300,400);
-    // ... and we restore the size of the window from a previous session
-    this->restoreGeometry(setting->value("MainWindow/geometry").toByteArray());
+    this->setMinimumSize(300,300);
+    // ... and we restore the size of the window from the previous session
+    this->restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
+
 
     // File menu
     menuFile = menuBar()->addMenu(tr("File"));
@@ -109,9 +115,9 @@ void MainWindow::about()
 
                                          + " 1.0<br/>" +
 
-                                         tr("<b>Developped by :</b> <a href='http://nicoplays.error404.fr/'>Nicolas Fostier</a><br/>"
+                                         tr("<b>Developped by :</b> <a href='http://nicoplays.error404.fr/'>nicoPlaYs</a><br/>"
                                          "<b>Library used :</b> Qt 5.5.1<br/>"
-                                         "<b>Logo :</b> <a href='http://nicoplays.error404.fr/'>Nicolas Fostier</a><br/>"
+                                         "<b>Logo :</b> <a href='http://nicoplays.error404.fr/'>nicoPlaYs</a><br/>"
                                          "<b>Icon :</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a></p>"));
 }
 
@@ -119,17 +125,22 @@ void MainWindow::about()
 // Wait, shot a screenshot and put it in the list
 void MainWindow::takeScreenshot()
 {
-    // Hide the main window, so it can't be see in the screenshot
-    this->lower();
+    // We verify if we can take a new screenshot (if there is no other screenshot on his way to be taken / cropped)
+    if(canTakeNewScreenshot == true)
+    {
+        // So now that we will take one, we need to wait the end of the process before take an other one
+        canTakeNewScreenshot = false;
 
-    // Get the pixmap of the primary screen
-    QScreen *screen = QGuiApplication::primaryScreen();
-    QPixmap pixmapFullscreen = screen->grabWindow(0);
+        // Lower the main window, so it can't be see in the screenshot
+        this->lower();
 
-    // Create and show the window with the crop tool
-    CropWindow* cropWindow = new CropWindow(pixmapFullscreen, listWidgetImage);
-    cropWindow->showFullScreen();
-    QObject::connect(cropWindow, SIGNAL(destroyed()), this, SLOT(show()));
+        // Get the pixmap of the primary screen
+        QScreen *screen = QGuiApplication::primaryScreen();
+        QPixmap pixmapFullscreen = screen->grabWindow(0);
+
+        // Create and show the window with the crop tool
+        (new CropWindow(pixmapFullscreen, listWidgetImage, &canTakeNewScreenshot))->showFullScreen();
+    }
 }
 
 // Merge the images in the list
@@ -276,9 +287,8 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
     MSG msg = *((MSG*)message);
     if(msg.message == WM_HOTKEY)
     {
-        /* ... and if it's the hotkey to take a screenshot
-         * and if there isn't an other screnshot on the go... */
-        if(msg.wParam == 1 && this->isVisible())
+        // ... and if it's the hotkey to take a screenshot
+        if(msg.wParam == 1)
         {
             this->takeScreenshot();
             return true;
@@ -300,8 +310,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
     // Accept the event
     event->accept();
 
-    // We save all the settings
-    setting->setValue("MainWindow/geometry", this->saveGeometry());
+    // We save all the settings and data usefull for a next session
+    settings->setValue("MainWindow/geometry", this->saveGeometry());
 
     // Close the app
     qApp->quit();
