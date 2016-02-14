@@ -40,6 +40,7 @@ CropWindow::~CropWindow()
 
 // Qt slots
 
+
 // When we click on the window
 void CropWindow::mousePressEvent(QMouseEvent *event)
 {

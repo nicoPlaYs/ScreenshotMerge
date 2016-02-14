@@ -6,11 +6,12 @@
 #include <QDialog>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QTranslator>
 
 
 
 // The window to display an image
-class viewerWindow : public QDialog
+class ViewerWindow : public QDialog
 {
     // Variables
     private :
@@ -21,11 +22,11 @@ class viewerWindow : public QDialog
 
     // Constructor
     public :
-        viewerWindow(QPixmap image);
+        ViewerWindow(QPixmap image);
 
     // Destructor
     public :
-        ~viewerWindow();
+        ~ViewerWindow();
 };
 
 

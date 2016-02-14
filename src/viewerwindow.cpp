@@ -1,7 +1,7 @@
 #include "include/viewerwindow.h"
 
 // Constructor
-viewerWindow::viewerWindow(QPixmap image) : QDialog()
+ViewerWindow::ViewerWindow(QPixmap image) : QDialog()
 {
     // Creation of the layout of the window
     layout = new QHBoxLayout(this);
@@ -13,15 +13,18 @@ viewerWindow::viewerWindow(QPixmap image) : QDialog()
     // Add the label to the layout
     layout->addWidget(labelImage, Qt::AlignCenter);
 
-    // Configuraiton of the window
+    // Configuration of the window
+    this->setWindowTitle(tr("Edit your screenshot"));
     this->setMaximumSize(labelImage->size());
     this->setModal(true);
     this->setAttribute(Qt::WA_DeleteOnClose);
-    this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint);
+    this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
 }
 
+
+
 // Destructor
-viewerWindow::~viewerWindow()
+ViewerWindow::~ViewerWindow()
 {
 
 }

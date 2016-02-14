@@ -40,7 +40,6 @@ class CropWindow : public QLabel
         // Usefull to refuse new screenshot to be taken when one is on his way to be taken / cropped
         bool* canTakeNewScreenshot;
 
-
     // Constructor
     public :
         CropWindow(QPixmap pixmapFullscreen, QListWidget* listWidgetImage, bool* canTakeNewScreenshot);

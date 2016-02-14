@@ -28,6 +28,8 @@
 #include <windows.h>
 
 
+// The window to change the program settings
+#include "include/settingswindow.h"
 // The window to crop the screenshot of the entire screen
 #include "include/cropwindow.h"
 // The window to display an image
@@ -42,12 +44,13 @@ class MainWindow : public QMainWindow
 
     // Variables
     private :
-        // Setting
+        // Settings
         QSettings* settings;
 
         // Menu
         QMenu* menuFile;
             QAction* actionQuit;
+        QAction* actionSettings;
         QMenu* menuHelp;
             QAction* actionAbout;
 
@@ -75,7 +78,6 @@ class MainWindow : public QMainWindow
         // Usefull to refuse new screenshot to be taken when one is on his way to be taken / cropped
         bool canTakeNewScreenshot;
 
-
     // Constructor
     public :
         MainWindow();
@@ -84,13 +86,19 @@ class MainWindow : public QMainWindow
     public :
         ~MainWindow();
 
+    // Method
+    public :
+        // Give the next screenshot name available for the default directory
+        QString nextScreenshotName();
+
     // Qt slots
     public slots :
         // Open the window if it's minimize
         void open();
-
+        // Open the settings dialog
+        void openSettings();
         // Open the about dialog : the credits of the program
-        void about();
+        void openAbout();
 
         // Wait, shot a screenshot and put it in the list
         void takeScreenshot();
@@ -110,6 +118,8 @@ class MainWindow : public QMainWindow
         // Specify the action when the user interact with the tray icon
         void activationTrayIcon(QSystemTrayIcon::ActivationReason reason);
 
+        // When 1 state of the window has changed
+        void changeEvent(QEvent *event);
         // Use to receive globals hotkeys events from Windows
         bool nativeEvent(const QByteArray &eventType, void *message, long *result);
         // Quit the application when the main window is closed
