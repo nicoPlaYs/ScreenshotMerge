@@ -80,6 +80,7 @@ MainWindow::MainWindow() : QMainWindow()
         menuTrayIcon = new QMenu(this);
             actionOpen = menuTrayIcon->addAction(tr("Open"));
             QObject::connect(actionOpen, SIGNAL(triggered()), this, SLOT(open()));
+        menuTrayIcon->addAction(actionSettings);
         menuTrayIcon->addAction(actionQuit);
     trayIcon->setToolTip("Screenshot Merge");
     trayIcon->setContextMenu(menuTrayIcon);
@@ -136,15 +137,12 @@ void MainWindow::openSettings()
 // Open the about dialog : the credits of the program
 void MainWindow::openAbout()
 {
-    QMessageBox::about(this, tr("About"), tr("<h2><b>Screenshot Merge</b></h2>"
-                                         "<p><b>Version :</b>")
-
-                                         + " 1.0<br/>" +
-
-                                         tr("<b>Developped by :</b> <a href='http://nicoplays.error404.fr/'>Nicolas Fostier</a><br/>"
-                                         "<b>Library used :</b> Qt 5.5.1<br/>"
-                                         "<b>Logo :</b> <a href='http://nicoplays.error404.fr/'>Nicolas Fostier</a><br/>"
-                                         "<b>Icon :</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a></p>"));
+    QMessageBox::about(this, tr("About"),   "<h2><b>Screenshot Merge</b></h2>"
+                                            "<p><b>" + tr("Version :") + "</b>" + " 1.1 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
+                                            "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
+                                            "<b>" + tr("Library used :") + "</b> Qt 5.5.1<br/>"
+                                            "<b>" + tr("Logo :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
+                                            "<b>" + tr("Icon :") + "</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a></p>");
 }
 
 
@@ -226,6 +224,10 @@ void MainWindow::merge()
         {
             // Save the merged screenshots
             mergedScreenshots->save(path, 0, settings->value("SettingsWindow/imageQuality", 85).toInt());
+            if(settings->value("SettingsWindow/alwaysUseDefaultDirectory", false).toBool())
+            {
+                QMessageBox::information(this, tr("Image successfully saved"), tr("Your image has been saved in your default directory !"));
+            }
         }
     }
 }

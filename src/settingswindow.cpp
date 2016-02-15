@@ -29,6 +29,7 @@ SettingsWindow::SettingsWindow(QSettings* settings) : QDialog()
         // Default directory
         labelDefaultDirectory = new QLabel(tr("Default directory : "), this);
         lineEditDefaultDirectory = new QLineEdit(this->settings->value("SettingsWindow/defaultDirectory", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)).toString(), this);
+        lineEditDefaultDirectory->setDisabled(true);
         changeDefaultDirectory = new QPushButton(tr("..."), this);
         QObject::connect(changeDefaultDirectory, SIGNAL(clicked()), this, SLOT(openSelectDefaultDirectory()));
 
@@ -45,23 +46,35 @@ SettingsWindow::SettingsWindow(QSettings* settings) : QDialog()
     layout->addWidget(checkBoxAlwaysUseDefaultDirectory, 2, 1, 1, 2, Qt::AlignHCenter);
 
         // Don't show the draw windows in merge mode
-        labelDontShowDrawWinMergeMode = new QLabel(tr("Don't show the draw window in merge mode :"), this);
-        checkBoxDontShowDrawWindowMergeMode = new QCheckBox(this);
-        checkBoxDontShowDrawWindowMergeMode->setChecked(this->settings->value("SettingsWindow/dontShowDrawWindowMergeMode", false).toBool());
+//        labelDontShowDrawWinMergeMode = new QLabel(tr("Don't show the draw window after a screenshot being taken :"), this);
+//        checkBoxDontShowDrawWindowMergeMode = new QCheckBox(this);
+//        checkBoxDontShowDrawWindowMergeMode->setChecked(this->settings->value("SettingsWindow/dontShowDrawWindowMergeMode", false).toBool());
 
-    layout->addWidget(labelDontShowDrawWinMergeMode, 3, 0, 1, 1);
-    layout->addWidget(checkBoxDontShowDrawWindowMergeMode, 3, 1, 1, 2, Qt::AlignHCenter);
+//    layout->addWidget(labelDontShowDrawWinMergeMode, 3, 0, 1, 1);
+//    layout->addWidget(checkBoxDontShowDrawWindowMergeMode, 3, 1, 1, 2, Qt::AlignHCenter);
 
         // Start the program minimized with Windows
         labelStartWithWindows = new QLabel(tr("Launch the program minimized at startup : "), this);
         checkBoxStartWithWindows = new QCheckBox(this);
-        checkBoxStartWithWindows->setChecked(this->settings->value("SettingsWindow/startWithWindows", false).toBool());
+
+        // We verify if it's the right path for the program to launch on system startup
+        QString pathApp = "\"" + QCoreApplication::applicationFilePath() + "\" -minimized";
+        pathApp.replace("/", "\\");
+        QSettings startup("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+        if(startup.value("Screenshot Merge", QString()).toString() == pathApp)
+        {
+            checkBoxStartWithWindows->setChecked(true);
+        }
+        else
+        {
+            checkBoxStartWithWindows->setChecked(false);
+        }
 
     layout->addWidget(labelStartWithWindows, 4, 0, 1, 1);
     layout->addWidget(checkBoxStartWithWindows, 4, 1, 1, 2, Qt::AlignHCenter);
 
         // Minimize the window to the system tray
-        labelMinimizeTray = new QLabel(tr("Minimize to the system tray"), this);
+        labelMinimizeTray = new QLabel(tr("Minimize to the system tray :"), this);
         checkBoxMinimizeTray = new QCheckBox(this);
         checkBoxMinimizeTray->setChecked(this->settings->value("SettingsWindow/minimizeTray", false).toBool());
         if(checkBoxStartWithWindows->isChecked())
@@ -91,6 +104,7 @@ SettingsWindow::SettingsWindow(QSettings* settings) : QDialog()
             layoutValidateOrCancel->addWidget(buttonCancelChanges);
 
     layout->addWidget(validateOrCancel, 6, 0, 1, 3, Qt::AlignHCenter);
+
 
     // Configure the window
     this->setWindowTitle(tr("Settings"));
@@ -128,9 +142,8 @@ void SettingsWindow::validateChanges()
     settings->setValue("SettingsWindow/imageQuality", sliderImageQuality->value());
     settings->setValue("SettingsWindow/defaultDirectory", lineEditDefaultDirectory->text());
     settings->setValue("SettingsWindow/alwaysUseDefaultDirectory", checkBoxAlwaysUseDefaultDirectory->isChecked());
-    settings->setValue("SettingsWindow/startWithWindows", checkBoxStartWithWindows->isChecked());
+//    settings->setValue("SettingsWindow/dontShowDrawWindowMergeMode", checkBoxDontShowDrawWindowMergeMode->isChecked());
     settings->setValue("SettingsWindow/minimizeTray", checkBoxMinimizeTray->isChecked());
-    settings->setValue("SettingsWindow/dontShowDrawWindowMergeMode", checkBoxDontShowDrawWindowMergeMode->isChecked());
 
     // Add or remove the program on the list of the programs to launch at the start of Windows
     QSettings startup("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
