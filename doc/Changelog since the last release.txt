@@ -1,7 +1,7 @@
 Idea to implement :
 	- Settings menu
 		- Never show the draw window right after taking a screenshot
-	- Draw tool, to paint on screenshot
+	- The viewer window become an edit window
 		- Possibility to change the color of the tool
 		- Delete tool
 		- Pen tool

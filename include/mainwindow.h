@@ -33,7 +33,7 @@
 // The window to crop the screenshot of the entire screen
 #include "include/cropwindow.h"
 // The window to display an image
-#include "include/viewerwindow.h"
+#include "include/editwindow.h"
 
 
 
@@ -55,9 +55,10 @@ class MainWindow : public QMainWindow
             QAction* actionAbout;
 
         // The main toolbar
-        QToolBar* toolBarMain;
+        QToolBar* toolBar;
             QAction* actionTakeScreenshot;
             QAction* actionMerge;
+
             QAction* actionView;
             QAction* actionUp;
             QAction* actionDown;
@@ -86,10 +87,17 @@ class MainWindow : public QMainWindow
     public :
         ~MainWindow();
 
-    // Method
+    // Methods
     public :
         // Give the next screenshot name available for the default directory
         QString nextScreenshotName();
+
+        // When 1 state of the window has changed
+        void changeEvent(QEvent *event);
+        // Use to receive globals hotkeys events from Windows
+        bool nativeEvent(const QByteArray &eventType, void *message, long *result);
+        // Quit the application when the main window is closed
+        void closeEvent(QCloseEvent* event);
 
     // Qt slots
     public slots :
@@ -117,13 +125,6 @@ class MainWindow : public QMainWindow
 
         // Specify the action when the user interact with the tray icon
         void activationTrayIcon(QSystemTrayIcon::ActivationReason reason);
-
-        // When 1 state of the window has changed
-        void changeEvent(QEvent *event);
-        // Use to receive globals hotkeys events from Windows
-        bool nativeEvent(const QByteArray &eventType, void *message, long *result);
-        // Quit the application when the main window is closed
-        void closeEvent(QCloseEvent* event);
 };
 
 

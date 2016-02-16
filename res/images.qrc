@@ -9,5 +9,13 @@
         <file>images/toolbar/down.ico</file>
         <file>images/toolbar/up.ico</file>
         <file>images/app.ico</file>
+        <file>images/editwindow/cancel.ico</file>
+        <file>images/editwindow/color.ico</file>
+        <file>images/editwindow/copytoclipboard.ico</file>
+        <file>images/editwindow/save.ico</file>
+        <file>images/editwindow/validate.ico</file>
+        <file>images/editwindow/retakescreenshot.ico</file>
+        <file>images/editwindow/pen.ico</file>
+        <file>images/editwindow/eraser.ico</file>
     </qresource>
 </RCC>

@@ -32,32 +32,32 @@ MainWindow::MainWindow() : QMainWindow()
 
 
     // Toolbar
-    toolBarMain = new QToolBar(this);
-    toolBarMain->setMovable(false);
-    toolBarMain->setContextMenuPolicy(Qt::PreventContextMenu);
+    toolBar = new QToolBar(this);
+    toolBar->setMovable(false);
+    toolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
-        actionTakeScreenshot = toolBarMain->addAction(QIcon("://images/toolbar/takescreenshot.ico"), tr("Take a screenshot"));
+        actionTakeScreenshot = toolBar->addAction(QIcon("://images/toolbar/takescreenshot.ico"), tr("Take a screenshot"));
         QObject::connect(actionTakeScreenshot, SIGNAL(triggered()), this, SLOT(takeScreenshot()));
         RegisterHotKey((HWND) this->winId(), 1, 0x4000, VK_SNAPSHOT);
 
-        actionMerge = toolBarMain->addAction(QIcon("://images/toolbar/merge.ico"), tr("Merge"));
+        actionMerge = toolBar->addAction(QIcon("://images/toolbar/merge.ico"), tr("Merge"));
         QObject::connect(actionMerge, SIGNAL(triggered()), this, SLOT(merge()));
 
-    toolBarMain->addSeparator();
+    toolBar->addSeparator();
 
-        actionView = toolBarMain->addAction(QIcon("://images/toolbar/view.ico"), tr("View"));
+        actionView = toolBar->addAction(QIcon("://images/toolbar/view.ico"), tr("View"));
         QObject::connect(actionView, SIGNAL(triggered()), this, SLOT(openViewerWindow()));
 
-        actionUp = toolBarMain->addAction(QIcon("://images/toolbar/up.ico"), tr("Rise"));
+        actionUp = toolBar->addAction(QIcon("://images/toolbar/up.ico"), tr("Rise"));
         QObject::connect(actionUp, SIGNAL(triggered()), this, SLOT(upImage()));
 
-        actionDown = toolBarMain->addAction(QIcon("://images/toolbar/down.ico"), tr("Descend"));
+        actionDown = toolBar->addAction(QIcon("://images/toolbar/down.ico"), tr("Descend"));
         QObject::connect(actionDown, SIGNAL(triggered()), this, SLOT(downImage()));
 
-        actionDelete = toolBarMain->addAction(QIcon("://images/toolbar/delete.ico"), tr("Delete"));
+        actionDelete = toolBar->addAction(QIcon("://images/toolbar/delete.ico"), tr("Delete"));
         QObject::connect(actionDelete, SIGNAL(triggered()), this, SLOT(deleteImage()));
 
-    this->addToolBar(toolBarMain);
+    this->addToolBar(toolBar);
 
 
     // Main Widget
@@ -97,7 +97,8 @@ MainWindow::~MainWindow()
 
 
 
-// Method
+// Methods
+
 
 // Give the next screenshot name available for the default directory
 QString MainWindow::nextScreenshotName()
@@ -115,6 +116,65 @@ QString MainWindow::nextScreenshotName()
 
     return nextScreenshotJPG.fileName();
 }
+
+
+// When 1 state of the window has changed
+void MainWindow::changeEvent(QEvent *event)
+{
+    // We verify the type of event
+    if(event->type() == QEvent::WindowStateChange)
+    {
+        // We hide the window and show the tray icon if the "Minimize to tray" setting is activate
+        if(this->settings->value("SettingsWindow/minimizeTray", false).toBool() &&
+                (this->windowState().testFlag(Qt::WindowMinimized) == true ||
+                this->windowState().testFlag(Qt::WindowNoState) == true))
+        {
+            this->hide();
+            this->trayIcon->show();
+        }
+    }
+}
+
+// Use to receive globals hotkeys events from Windows
+bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
+{
+    Q_UNUSED(eventType);
+    Q_UNUSED(result);
+
+    // If the mesage is about a Windows hotkey...
+    MSG msg = *((MSG*)message);
+    if(msg.message == WM_HOTKEY)
+    {
+        // ... and if it's the hotkey to take a screenshot
+        if(msg.wParam == 1)
+        {
+            this->takeScreenshot();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+// Quit the application when the main window is closed
+void MainWindow::closeEvent(QCloseEvent* event)
+{
+    // Accept the event
+    event->accept();
+
+    // We save all the settings and data usefull for a next session
+    settings->setValue("MainWindow/geometry", this->saveGeometry());
+
+    // Close the app
+    qApp->quit();
+}
+
 
 
 // Qt slots
@@ -248,7 +308,7 @@ void MainWindow::openViewerWindow()
 void MainWindow::openViewerWindow(QListWidgetItem* imageClicked)
 {
     // Create a window to view the image and open it
-    (new ViewerWindow(((Screenshot*)imageClicked)->getImage()))->show();
+    (new EditWindow(((Screenshot*)imageClicked)->getImage()))->show();
 }
 
 // Raise the selected image on the list
@@ -322,62 +382,4 @@ void MainWindow::activationTrayIcon(QSystemTrayIcon::ActivationReason reason)
     {
         this->open();
     }
-}
-
-
-// When 1 state of the window has changed
-void MainWindow::changeEvent(QEvent *event)
-{
-    // We verify the type of event
-    if(event->type() == QEvent::WindowStateChange)
-    {
-        // We hide the window and show the tray icon if the "Minimize to tray" setting is activate
-        if(this->settings->value("SettingsWindow/minimizeTray", false).toBool() &&
-                (this->windowState().testFlag(Qt::WindowMinimized) == true ||
-                this->windowState().testFlag(Qt::WindowNoState) == true))
-        {
-            this->hide();
-            this->trayIcon->show();
-        }
-    }
-}
-
-// Use to receive globals hotkeys events from Windows
-bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
-{
-    Q_UNUSED(eventType);
-    Q_UNUSED(result);
-
-    // If the mesage is about a Windows hotkey...
-    MSG msg = *((MSG*)message);
-    if(msg.message == WM_HOTKEY)
-    {
-        // ... and if it's the hotkey to take a screenshot
-        if(msg.wParam == 1)
-        {
-            this->takeScreenshot();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
-    }
-}
-
-// Quit the application when the main window is closed
-void MainWindow::closeEvent(QCloseEvent* event)
-{
-    // Accept the event
-    event->accept();
-
-    // We save all the settings and data usefull for a next session
-    settings->setValue("MainWindow/geometry", this->saveGeometry());
-
-    // Close the app
-    qApp->quit();
 }

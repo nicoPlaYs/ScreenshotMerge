@@ -38,7 +38,7 @@ CropWindow::~CropWindow()
 
 
 
-// Qt slots
+// Methods
 
 
 // When we click on the window

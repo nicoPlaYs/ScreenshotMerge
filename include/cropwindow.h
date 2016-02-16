@@ -18,8 +18,6 @@
 // The window to crop the screenshot of the entire screen
 class CropWindow : public QLabel
 {
-    Q_OBJECT
-
     // Variables
     private :
         // List of all the taken screenshots
@@ -48,8 +46,8 @@ class CropWindow : public QLabel
     public :
         ~CropWindow();
 
-    // Qt slots
-    public slots :
+    // Methods
+    public :
         // When we click on the window
         void mousePressEvent(QMouseEvent *event);
         // When we move on the window
