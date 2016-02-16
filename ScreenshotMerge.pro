@@ -18,4 +18,10 @@ RESOURCES += res/images.qrc \
 
 TRANSLATIONS = res/lang/screenshotmerge_fr.ts
 
+VERSION = 1.1
+
 RC_ICONS += res/images/app.ico
+QMAKE_TARGET_PRODUCT = "Screenshot Merge"
+QMAKE_TARGET_COMPANY = "Nicolas Fostier"
+QMAKE_TARGET_COPYRIGHT = "Nicolas Fostier"
+QMAKE_TARGET_DESCRIPTION = "Take screenshots, crop them and merge them"
