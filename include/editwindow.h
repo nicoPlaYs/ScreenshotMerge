@@ -13,6 +13,7 @@
 #include <QColor>
 #include <QColorDialog>
 #include <QSettings>
+#include <QCloseEvent>
 #include <QLabel>
 #include <QTranslator>
 

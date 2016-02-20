@@ -5,7 +5,9 @@ EditWindow::EditWindow(QPixmap image) : QMainWindow()
 {
     // Settings
     settings = new QSettings();
-    drawColor = settings->value("EditWindow/drawColor", QColor(Qt::red).value()).toInt();
+    drawColor.setRed(settings->value("EditWindow/drawColorR", QColor(Qt::red).red()).toInt());
+    drawColor.setGreen(settings->value("EditWindow/drawColorG", QColor(Qt::red).green()).toInt());
+    drawColor.setBlue(settings->value("EditWindow/drawColorB", QColor(Qt::red).blue()).toInt());
 
     // Creation of the toolbar
     toolBar = new QToolBar(this);
@@ -91,9 +93,11 @@ EditWindow::~EditWindow()
 // When the window is closing
 void EditWindow::closeEvent(QCloseEvent *event)
 {
-    Q_UNUSED(event);
+    event->accept();
 
-    settings->setValue("EditWindow/drawColor", drawColor.value());
+    settings->setValue("EditWindow/drawColorR", drawColor.red());
+    settings->setValue("EditWindow/drawColorG", drawColor.green());
+    settings->setValue("EditWindow/drawColorB", drawColor.blue());
 }
 
 
