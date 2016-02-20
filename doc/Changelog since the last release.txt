@@ -1,7 +1,13 @@
 New features :
 	- Viewer window become an edit window
-	- The edit window is always opened after a screenshot being taken
-		- You can validate the screenshot, refuse him or retake him
+		- Pen tool
+		- Delete tool, to erase your the clicked lines draw with the pen
+		- Paint palette to select the color of your pen
+		- Save just the edited screenshot
+		- Copy the edited screenshot in the clipboard
+		- You can validate or cancel the change
+		- The edit window is always opened right after a screenshot has been taked
+			- You can validate the screenshot, refuse him or retake him		
 
 Change : 
 	- Add some icon and rearrange a little the main menu
@@ -14,15 +20,7 @@ Fix :
 	
 
 Idea to implement :
-	- Settings menu
-		- Never show the draw window right after taking a screenshot
-	- The viewer window become an edit window
-		- Possibility to change the color of the tool
-		- Delete tool
-		- Pen tool
-		- Line tool
-		- Rectangle tool
-		- Circle tool
+	- Autoscroll Wizard : take screenshots and scroll automaticly to the end of a page
 
 Bug to fix :
-	- Only take a screenshot of the primary screen not the other
+	- Only take a screenshot of the primary screen not the others
