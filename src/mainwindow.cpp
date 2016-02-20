@@ -126,8 +126,7 @@ void MainWindow::changeEvent(QEvent *event)
     {
         // We hide the window and show the tray icon if the "Minimize to tray" setting is activate
         if(this->settings->value("SettingsWindow/minimizeTray", false).toBool() &&
-                (this->windowState().testFlag(Qt::WindowMinimized) == true ||
-                this->windowState().testFlag(Qt::WindowNoState) == true))
+                (this->windowState().testFlag(Qt::WindowMinimized) == true))
         {
             this->hide();
             this->trayIcon->show();
@@ -198,7 +197,7 @@ void MainWindow::openSettings()
 void MainWindow::openAbout()
 {
     QMessageBox::about(this, tr("About"),   "<h2><b>Screenshot Merge</b></h2>"
-                                            "<p><b>" + tr("Version :") + "</b>" + " 1.1 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
+                                            "<p><b>" + tr("Version :") + "</b>" + " 1.2 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
                                             "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
                                             "<b>" + tr("Library used :") + "</b> Qt 5.5.1<br/>"
                                             "<b>" + tr("Logo :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
