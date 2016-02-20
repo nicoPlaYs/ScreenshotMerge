@@ -22,6 +22,7 @@
 #include <QStandardPaths>
 #include <QTranslator>
 #include <QSystemTrayIcon>
+#include <QSignalMapper>
 
 
 // For globals hotkeys on Windows
@@ -60,7 +61,7 @@ class MainWindow : public QMainWindow
             QAction* actionTakeScreenshot;
             QAction* actionMerge;
 
-            QAction* actionView;
+            QAction* actionEdit;
             QAction* actionUp;
             QAction* actionDown;
             QAction* actionDelete;
@@ -110,13 +111,17 @@ class MainWindow : public QMainWindow
         void openAbout();
 
         // Wait, shot a screenshot and put it in the list
-        void takeScreenshot();
-        // Merge the images in the list
+        void takeScreenshot(bool force = false);
+        // Merge the screenshots in the list
         void merge();
-        // Open a window to visualize the selected image on the list
-        void openViewerWindow();
-            // Open a window to visualize an image on the list
-            void openViewerWindow(QListWidgetItem* imageClicked);
+            // Save an image
+            void save(QPixmap image);
+        // Open a window to edit a new screenshot
+        void openEditWindowNewScreenshot(Screenshot* screenshot);
+        // Open a window to edit the selected image on the list
+        void openEditWindowOldScreenshot();
+            // Open a window to edit a screenshot
+            void openEditWindowOldScreenshot(QListWidgetItem* screenshotClicked);
         // Raise the selected image on the list
         void upImage();
         // Descend the selected image on the list

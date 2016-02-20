@@ -18,10 +18,12 @@
 // The window to crop the screenshot of the entire screen
 class CropWindow : public QLabel
 {
+    Q_OBJECT
+
     // Variables
     private :
-        // List of all the taken screenshots
-        QListWidget* listWidgetImage;
+        // Date when the screenshot has been taken
+        QString dateShooting;
 
         // Size and position for the crop tool
         QPoint cropOrigin;
@@ -40,7 +42,7 @@ class CropWindow : public QLabel
 
     // Constructor
     public :
-        CropWindow(QPixmap pixmapFullscreen, QListWidget* listWidgetImage, bool* canTakeNewScreenshot);
+        CropWindow(QPixmap pixmapFullscreen);
 
     // Destructor
     public :
@@ -54,6 +56,10 @@ class CropWindow : public QLabel
         void mouseMoveEvent(QMouseEvent *event);
         // When we release the click on the window
         void mouseReleaseEvent(QMouseEvent *event);
+
+    // Qt signals
+    signals :
+        void cropOver(Screenshot* croppedScreenshot);
 };
 
 

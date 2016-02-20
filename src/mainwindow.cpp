@@ -37,25 +37,30 @@ MainWindow::MainWindow() : QMainWindow()
     toolBar->setMovable(false);
     toolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
-        actionTakeScreenshot = toolBar->addAction(QIcon("://images/toolbar/takescreenshot.ico"), tr("Take a screenshot"));
+        actionTakeScreenshot = toolBar->addAction(QIcon("://images/toolbar/takescreenshot.ico"), tr("Take a screenshot (Print Screen)"));
         QObject::connect(actionTakeScreenshot, SIGNAL(triggered()), this, SLOT(takeScreenshot()));
         RegisterHotKey((HWND) this->winId(), 1, 0x4000, VK_SNAPSHOT);
 
-        actionMerge = toolBar->addAction(QIcon("://images/toolbar/merge.ico"), tr("Merge"));
+        actionMerge = toolBar->addAction(QIcon("://images/toolbar/merge.ico"), tr("Merge (Ctrl+S)"));
         QObject::connect(actionMerge, SIGNAL(triggered()), this, SLOT(merge()));
 
     toolBar->addSeparator();
 
-        actionView = toolBar->addAction(QIcon("://images/toolbar/view.ico"), tr("View"));
-        QObject::connect(actionView, SIGNAL(triggered()), this, SLOT(openViewerWindow()));
+        actionEdit = toolBar->addAction(QIcon("://images/toolbar/edit.ico"), tr("Edit (Enter)"));
+        actionEdit->setShortcut(QKeySequence(Qt::Key_Return));
+        QObject::connect(actionEdit, SIGNAL(triggered()), this, SLOT(openEditWindowOldScreenshot()));
 
-        actionUp = toolBar->addAction(QIcon("://images/toolbar/up.ico"), tr("Rise"));
+        actionUp = toolBar->addAction(QIcon("://images/toolbar/up.ico"), tr("Rise (Ctrl+Up)"));
+        actionUp->setShortcut(QKeySequence("Ctrl+Up"));
         QObject::connect(actionUp, SIGNAL(triggered()), this, SLOT(upImage()));
 
-        actionDown = toolBar->addAction(QIcon("://images/toolbar/down.ico"), tr("Descend"));
+        actionDown = toolBar->addAction(QIcon("://images/toolbar/down.ico"), tr("Descend (Ctrl+Down)"));
+        actionDown->setShortcut(QKeySequence("Ctrl+Down"));
+
         QObject::connect(actionDown, SIGNAL(triggered()), this, SLOT(downImage()));
 
-        actionDelete = toolBar->addAction(QIcon("://images/toolbar/delete.ico"), tr("Delete"));
+        actionDelete = toolBar->addAction(QIcon("://images/toolbar/delete.ico"), tr("Delete (Delete)"));
+        actionDelete->setShortcut(QKeySequence::Delete);
         QObject::connect(actionDelete, SIGNAL(triggered()), this, SLOT(deleteImage()));
 
     this->addToolBar(toolBar);
@@ -71,7 +76,7 @@ MainWindow::MainWindow() : QMainWindow()
             // List of the images / screenshots
             listWidgetImage = new QListWidget(widgetMain);
             listWidgetImage->setSelectionMode(QAbstractItemView::SingleSelection);
-            QObject::connect(listWidgetImage, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(openViewerWindow(QListWidgetItem*)));
+            QObject::connect(listWidgetImage, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(openEditWindowOldScreenshot(QListWidgetItem*)));
 
         layoutMain->addWidget(listWidgetImage, 0, 0, 1, 1, 0);
 
@@ -191,7 +196,7 @@ void MainWindow::restore()
 // Open the settings dialog
 void MainWindow::openSettings()
 {
-    (new SettingsWindow(settings));
+    (new SettingsWindow());
 }
 
 // Open the about dialog : the credits of the program
@@ -207,10 +212,10 @@ void MainWindow::openAbout()
 
 
 // Wait, shot a screenshot and put it in the list
-void MainWindow::takeScreenshot()
+void MainWindow::takeScreenshot(bool force)
 {
     // We verify if we can take a new screenshot (if there is no other screenshot on his way to be taken / cropped)
-    if(canTakeNewScreenshot == true)
+    if(canTakeNewScreenshot == true || force == true)
     {
         // So now that we will take one, we need to wait the end of the process before take an other one
         canTakeNewScreenshot = false;
@@ -223,11 +228,15 @@ void MainWindow::takeScreenshot()
         QPixmap pixmapFullscreen = screen->grabWindow(0);
 
         // Create and show the window with the crop tool
-        (new CropWindow(pixmapFullscreen, listWidgetImage, &canTakeNewScreenshot))->showFullScreen();
+        CropWindow* crop = new CropWindow(pixmapFullscreen);
+        crop->showFullScreen();
+
+        // When the crop windows is closing, we open the edit windows
+        QObject::connect(crop, SIGNAL(cropOver(Screenshot*)), this, SLOT(openEditWindowNewScreenshot(Screenshot*)));
     }
 }
 
-// Merge the images in the list
+// Merge the screenshots in the list
 void MainWindow::merge()
 {
     // We verify that there is at least 1 screenshot on the list
@@ -260,55 +269,71 @@ void MainWindow::merge()
         int currentY = 0;
         for(int i = 0; i < listWidgetImage->count(); i++)
         {
-            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->getImage();
+            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->withDrawing();
 
             painterMergedScreenshots->drawPixmap(0, currentY, currentPixmap);
 
             currentY += ((Screenshot*)listWidgetImage->item(i))->getImage().height();
         }
 
-        // We check if the user want to use the default directory or if he want the program to ask him
-        QString path;
-        if(!this->settings->value("SettingsWindow/alwaysUseDefaultDirectory", false).toBool())
-        {
-            // Open the dialog for the user to indicate where he want his merged screenhosts to be saved
-            path = QFileDialog::getSaveFileName(this, tr("Save as..."), nextScreenshotName(), "JPG (*.jpg);;PNG (*.png)");
-        }
-        else
-        {
-            path = nextScreenshotName();
-        }
+        save(*mergedScreenshots);
+    }
+}
+// Save an image
+void MainWindow::save(QPixmap image)
+{
+    // We check if the user want to use the default directory or if he want the program to ask him
+    QString path;
+    if(!this->settings->value("SettingsWindow/alwaysUseDefaultDirectory", false).toBool())
+    {
+        // Open the dialog for the user to indicate where he want his merged screenhosts to be saved
+        path = QFileDialog::getSaveFileName(this, tr("Save as..."), nextScreenshotName(), "JPG (*.jpg);;PNG (*.png)");
+    }
+    else
+    {
+        path = nextScreenshotName();
+    }
 
-        // We verify that the user has really selected a path
-        if(path != 0)
+    // We verify that the user has really selected a path
+    if(path != 0)
+    {
+        // Save the merged screenshots
+        image.save(path, 0, settings->value("SettingsWindow/imageQuality", 85).toInt());
+        if(settings->value("SettingsWindow/alwaysUseDefaultDirectory", false).toBool())
         {
-            // Save the merged screenshots
-            mergedScreenshots->save(path, 0, settings->value("SettingsWindow/imageQuality", 85).toInt());
-            if(settings->value("SettingsWindow/alwaysUseDefaultDirectory", false).toBool())
-            {
-                QMessageBox::information(this, tr("Image successfully saved"), tr("Your image has been saved in your default directory !"));
-            }
+            QMessageBox::information(this, tr("Image successfully saved"), tr("Your image has been saved in your default directory !"));
         }
     }
 }
 
-// Open a window to visualize the selected image on the list
-void MainWindow::openViewerWindow()
+// Open a window to edit a new screenshot
+void MainWindow::openEditWindowNewScreenshot(Screenshot* screenshot)
+{
+    // Create a window to edit the screenshot and open it
+    EditWindow* editWindow = new EditWindow(screenshot, listWidgetImage, &canTakeNewScreenshot);
+    QObject::connect(editWindow, SIGNAL(editOver()), this, SLOT(restore()));
+    QObject::connect(editWindow, SIGNAL(retakeSignal(bool)), this, SLOT(takeScreenshot(bool)));
+    QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(save(QPixmap)));
+    editWindow->show();
+}
+
+// Open a window to edit the selected screenshot on the list
+void MainWindow::openEditWindowOldScreenshot()
 {
     // Get the selected screenshot
     QList<QListWidgetItem*> selectedItems = listWidgetImage->selectedItems();
     // Verify that there is a selected screenshot
     if(!selectedItems.empty())
     {
-        // Create a window to view the image and open it
-        this->openViewerWindow(selectedItems.first());
+        // Create a window to edit the screenshot and open it
+        this->openEditWindowOldScreenshot(selectedItems.first());
     }
 }
-// Open a window to visualize an image on the list
-void MainWindow::openViewerWindow(QListWidgetItem* imageClicked)
+// Open a window to edit a screenshot on the list
+void MainWindow::openEditWindowOldScreenshot(QListWidgetItem* screenshotClicked)
 {
-    // Create a window to view the image and open it
-    (new EditWindow(((Screenshot*)imageClicked)->getImage()))->show();
+    // Create a window to edit the screenshot and open it
+    (new EditWindow((Screenshot*)screenshotClicked))->show();
 }
 
 // Raise the selected image on the list

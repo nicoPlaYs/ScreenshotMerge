@@ -5,6 +5,11 @@
 
 #include <QListWidgetItem>
 #include <QDateTime>
+#include <QList>
+#include <QPolygon>
+#include <QPainter>
+
+#include "include/coloredpoly.h"
 
 
 
@@ -15,10 +20,17 @@ class Screenshot : public QListWidgetItem
     private :
         // The screenshot
         QPixmap image;
+        QList<ColoredPoly> drawings;
 
     // Getter
     public :
         QPixmap getImage();
+        QList<ColoredPoly> getDrawings();
+
+    // Setter
+    public :
+        void setImage(QPixmap image);
+        void setDrawings(QList<ColoredPoly> drawings);
 
     // Constructor
     public :
@@ -27,6 +39,11 @@ class Screenshot : public QListWidgetItem
     // Destructor
     public :
         ~Screenshot();
+
+    // Methods
+    public :
+        // Return a pixmap of the screenshot with all of his drawing on it
+        QPixmap withDrawing();
 };
 
 

@@ -3,11 +3,10 @@
 
 
 // Constructor
-CropWindow::CropWindow(QPixmap pixmapFullscreen, QListWidget* listWidgetImage, bool* canTakeNewScreenshot) : QLabel()
+CropWindow::CropWindow(QPixmap pixmapFullscreen) : QLabel()
 {
-    this->listWidgetImage = listWidgetImage;
+    dateShooting = QDateTime::currentDateTime().toString("yy/mm/dd HH:mm:ss");
     this->originalPixmap = new QPixmap(pixmapFullscreen);
-    this->canTakeNewScreenshot = canTakeNewScreenshot;
 
     // Create the white version of the fullscreen screenshot
     this->whitePixmap = new QPixmap(pixmapFullscreen);
@@ -33,7 +32,11 @@ CropWindow::CropWindow(QPixmap pixmapFullscreen, QListWidget* listWidgetImage, b
 // Destructor
 CropWindow::~CropWindow()
 {
+    painterMix->end();
 
+    delete originalPixmap;
+    delete whitePixmap;
+    delete mixPixmap;
 }
 
 
@@ -84,14 +87,8 @@ void CropWindow::mouseReleaseEvent(QMouseEvent *event)
     // Accept the event
     event->accept();
 
-    // Get the screenshot cropped by the crop tool
-    QPixmap croppedScreenshot = this->originalPixmap->copy(cropArea);
-
-    // Add the screenshot to the list
-    listWidgetImage->addItem(new Screenshot(croppedScreenshot, QDateTime::currentDateTime().toString("yy/mm/dd HH:mm:ss")));
-
-    // Signal that's we can retake screenshot
-    *canTakeNewScreenshot = true;
+    // Send the cropped screenshot to the edit window
+    emit cropOver(new Screenshot(this->originalPixmap->copy(cropArea), dateShooting, 0));
 
     // The crop process is complete, we close the window
     this->close();

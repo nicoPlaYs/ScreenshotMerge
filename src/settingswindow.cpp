@@ -1,9 +1,9 @@
 #include "include/settingswindow.h"
 
 // Constructor
-SettingsWindow::SettingsWindow(QSettings* settings) : QDialog()
+SettingsWindow::SettingsWindow() : QDialog()
 {
-    this->settings = settings;
+    this->settings = new QSettings(this);
 
     // Creation of the layout of the window
     layout = new QGridLayout(this);
@@ -44,14 +44,6 @@ SettingsWindow::SettingsWindow(QSettings* settings) : QDialog()
 
     layout->addWidget(labelAlwaysUseDefaultDirectory, 2, 0, 1, 1);
     layout->addWidget(checkBoxAlwaysUseDefaultDirectory, 2, 1, 1, 2, Qt::AlignHCenter);
-
-        // Don't show the draw windows in merge mode
-//        labelDontShowDrawWinMergeMode = new QLabel(tr("Don't show the draw window after a screenshot being taken :"), this);
-//        checkBoxDontShowDrawWindowMergeMode = new QCheckBox(this);
-//        checkBoxDontShowDrawWindowMergeMode->setChecked(this->settings->value("SettingsWindow/dontShowDrawWindowMergeMode", false).toBool());
-
-//    layout->addWidget(labelDontShowDrawWinMergeMode, 3, 0, 1, 1);
-//    layout->addWidget(checkBoxDontShowDrawWindowMergeMode, 3, 1, 1, 2, Qt::AlignHCenter);
 
         // Start the program minimized with Windows
         labelStartWithWindows = new QLabel(tr("Launch the program minimized at startup : "), this);
@@ -131,7 +123,9 @@ SettingsWindow::~SettingsWindow()
 // Open a dialog for the user to select the default directory
 void SettingsWindow::openSelectDefaultDirectory()
 {
-    lineEditDefaultDirectory->setText(QFileDialog::getExistingDirectory(this, tr("Select your default directory"), this->settings->value("SettingsWindow/defaultDirectory", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)).toString()));
+    lineEditDefaultDirectory->setText(QFileDialog::getExistingDirectory(this, tr("Select your default directory"),
+                                                                        this->settings->value("SettingsWindow/defaultDirectory",
+                                                                        QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)).toString()));
 }
 
 
@@ -142,7 +136,6 @@ void SettingsWindow::validateChanges()
     settings->setValue("SettingsWindow/imageQuality", sliderImageQuality->value());
     settings->setValue("SettingsWindow/defaultDirectory", lineEditDefaultDirectory->text());
     settings->setValue("SettingsWindow/alwaysUseDefaultDirectory", checkBoxAlwaysUseDefaultDirectory->isChecked());
-//    settings->setValue("SettingsWindow/dontShowDrawWindowMergeMode", checkBoxDontShowDrawWindowMergeMode->isChecked());
     settings->setValue("SettingsWindow/minimizeTray", checkBoxMinimizeTray->isChecked());
 
     // Add or remove the program on the list of the programs to launch at the start of Windows

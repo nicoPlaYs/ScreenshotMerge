@@ -5,13 +5,15 @@ SOURCES += src/main.cpp \
         src/screenshot.cpp \
         src/cropwindow.cpp \
         src/settingswindow.cpp \
-        src/editwindow.cpp
+        src/editwindow.cpp \
+    src/coloredpoly.cpp
 
 HEADERS  += include/mainwindow.h \
         include/screenshot.h \
         include/cropwindow.h \
         include/settingswindow.h \
-        include/editwindow.h
+        include/editwindow.h \
+    include/coloredpoly.h
 
 RESOURCES += res/images.qrc \
         res/lang.qrc

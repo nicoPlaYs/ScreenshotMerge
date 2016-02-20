@@ -16,6 +16,13 @@
 #include <QCloseEvent>
 #include <QLabel>
 #include <QTranslator>
+#include <QListWidget>
+#include <QMessageBox>
+#include <QShortcut>
+#include <QPainter>
+
+
+#include "include/screenshot.h"
 
 
 
@@ -53,9 +60,23 @@ class EditWindow : public QMainWindow
                 // The label of the image we want to see
                 QLabel* labelImage;
 
+        // Screenshot
+        Screenshot* screenshot;
+        // List of all the taken screenshots
+        QListWidget* listWidgetImage;
+        // Usefull to refuse new screenshot to be taken when one is on his way to be taken / cropped
+        bool* canTakeNewScreenshot;
+        // QPixmap to show
+        QPixmap* screenshotToShow;
+        // QPainter to draw on the screenshot
+        QPainter* painterScreenshot;
+        // List of the new drawings
+        QList<ColoredPoly> newDrawings;
+
+
     // Constructor
     public :
-        EditWindow(QPixmap image);
+        EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage = 0, bool* canTakeNewScreenshot = 0);
 
     // Destructor
     public :
@@ -63,6 +84,14 @@ class EditWindow : public QMainWindow
 
     // Methods
     public :
+        //
+        void updateScreenshotToShow();
+
+        //
+        void mousePressEvent(QMouseEvent* event);
+        //
+        void mouseMoveEvent(QMouseEvent* event);
+
         // When the window is closing
         void closeEvent(QCloseEvent* event);
 
@@ -82,6 +111,15 @@ class EditWindow : public QMainWindow
 
         // Change the color of the draw tool
         void changeColor();
+
+    // Qt signals
+    signals :
+        // Signal the main window to retake a screenshot
+        void retakeSignal(bool force);
+        // Signal the main window that the edit is over
+        void editOver();
+        // Signal to save the screenshot
+        void saveSignal(QPixmap screenshot);
 };
 
 

@@ -68,7 +68,7 @@ class SettingsWindow : public QDialog
 
     // Constructor
     public :
-        SettingsWindow(QSettings* settings);
+        SettingsWindow();
 
     // Destructor
     public :

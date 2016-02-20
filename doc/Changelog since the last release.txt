@@ -1,8 +1,15 @@
+New features :
+	- Viewer window become an edit window
+	- The edit window is always opened after a screenshot being taken
+		- You can validate the screenshot, refuse him or retake him
+
 Change : 
 	- Add some icon and rearrange a little the main menu
 
 Fix :
-	- Issue when grabbing the window
+	- Fix an issue when grabbing the window
+	- Fix the viewer window which cropped a little the screenshot on the edge
+	- Fix some memory leak
 	
 	
 
