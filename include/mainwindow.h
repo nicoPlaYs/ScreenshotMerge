@@ -50,7 +50,8 @@ class MainWindow : public QMainWindow
         // Menu
         QMenu* menuFile;
             QAction* actionQuit;
-        QAction* actionSettings;
+        QMenu* menuTools;
+            QAction* actionSettings;
         QMenu* menuHelp;
             QAction* actionAbout;
 
@@ -101,8 +102,8 @@ class MainWindow : public QMainWindow
 
     // Qt slots
     public slots :
-        // Open the window if it's minimize
-        void open();
+        // Restore the window if it's minimize
+        void restore();
         // Open the settings dialog
         void openSettings();
         // Open the about dialog : the credits of the program

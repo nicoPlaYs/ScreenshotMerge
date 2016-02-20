@@ -1,3 +1,11 @@
+Change : 
+	- Add some icon and rearrange a little the main menu
+
+Fix :
+	- Issue when grabbing the window
+	
+	
+
 Idea to implement :
 	- Settings menu
 		- Never show the draw window right after taking a screenshot

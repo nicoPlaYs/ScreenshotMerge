@@ -17,5 +17,7 @@
         <file>images/editwindow/retakescreenshot.ico</file>
         <file>images/editwindow/pen.ico</file>
         <file>images/editwindow/eraser.ico</file>
+        <file>images/menu/settings.ico</file>
+        <file>images/menu/restore.ico</file>
     </qresource>
 </RCC>

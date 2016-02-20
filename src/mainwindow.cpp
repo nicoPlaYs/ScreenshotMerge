@@ -22,8 +22,9 @@ MainWindow::MainWindow() : QMainWindow()
         QObject::connect(actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
 
     // Options menu
-    actionSettings = menuBar()->addAction(tr("Settings"));
-    QObject::connect(actionSettings, SIGNAL(triggered()), this, SLOT(openSettings()));
+    menuTools = menuBar()->addMenu(tr("Tools"));
+        actionSettings = menuTools->addAction(QIcon("://images/menu/settings.ico"), tr("Settings"));
+        QObject::connect(actionSettings, SIGNAL(triggered()), this, SLOT(openSettings()));
 
     // Help menu
     menuHelp = menuBar()->addMenu("?");
@@ -78,8 +79,8 @@ MainWindow::MainWindow() : QMainWindow()
     // System tray icon
     this->trayIcon = new QSystemTrayIcon(QIcon(":/images/app.ico"), this);
         menuTrayIcon = new QMenu(this);
-            actionOpen = menuTrayIcon->addAction(tr("Open"));
-            QObject::connect(actionOpen, SIGNAL(triggered()), this, SLOT(open()));
+            actionOpen = menuTrayIcon->addAction(QIcon("://images/menu/restore.ico"), tr("Restore"));
+            QObject::connect(actionOpen, SIGNAL(triggered()), this, SLOT(restore()));
         menuTrayIcon->addAction(actionSettings);
         menuTrayIcon->addAction(actionQuit);
     trayIcon->setToolTip("Screenshot Merge");
@@ -180,7 +181,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 
 // Open the window if it's minimize
-void MainWindow::open()
+void MainWindow::restore()
 {
     this->showNormal();
     this->activateWindow();
@@ -376,9 +377,9 @@ void MainWindow::deleteImage()
 // Specify the action when the user interact with the tray icon
 void MainWindow::activationTrayIcon(QSystemTrayIcon::ActivationReason reason)
 {
-    // If the user double-click on the icon on the tray, we open the main window
+    // If the user double-click on the icon on the tray, we restore the main window
     if(reason == QSystemTrayIcon::DoubleClick)
     {
-        this->open();
+        this->restore();
     }
 }
