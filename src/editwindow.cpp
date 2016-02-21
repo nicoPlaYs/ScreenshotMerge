@@ -88,13 +88,13 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
             scrollArea = new QScrollArea(this);
 
                 // Creation of the label which contain the image to display
-                labelImage = new QLabel(widgetMain);
+                labelImage = new QLabel(scrollArea);
                 labelImage->setPixmap(this->screenshot->getImage());
                 labelImage->setFixedSize(this->screenshot->getImage().size());
 
             scrollArea->setWidget(labelImage);
             scrollArea->setAlignment(Qt::AlignCenter);
-            scrollArea->setMaximumSize(QApplication::desktop()->screenGeometry().size() - (QApplication::desktop()->screenGeometry().size() / 5));
+            scrollArea->setMaximumSize(QApplication::desktop()->screenGeometry().size() - QSize(175,175));
             QSize minimumSize(labelImage->size() + QSize(2,2));
             if(minimumSize.width() > scrollArea->maximumSize().width())
             {
