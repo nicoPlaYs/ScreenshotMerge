@@ -25,6 +25,7 @@ void ColoredPoly::setColor(QColor color)
 }
 
 
+
 // Constructor
 ColoredPoly::ColoredPoly()
 {
@@ -32,6 +33,8 @@ ColoredPoly::ColoredPoly()
 }
 
 
+
+// Operator overloading
 bool ColoredPoly::operator==(const ColoredPoly second)
 {
     if(this->polyline == second.polyline)

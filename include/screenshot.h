@@ -9,6 +9,8 @@
 #include <QPolygon>
 #include <QPainter>
 
+
+// Associate a polygon with a color
 #include "include/coloredpoly.h"
 
 
@@ -20,6 +22,7 @@ class Screenshot : public QListWidgetItem
     private :
         // The screenshot
         QPixmap image;
+        // The drawings on the screenshot
         QList<ColoredPoly> drawings;
 
     // Getter

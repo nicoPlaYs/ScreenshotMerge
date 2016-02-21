@@ -1,12 +1,14 @@
 #ifndef COLOREDPOLY_H
 #define COLOREDPOLY_H
 
-class ColoredPoly;
 
+
+class ColoredPoly;
 #include "include/screenshot.h"
 
 
 
+// Associate a polygon with a color
 class ColoredPoly
 {
     // Variable
@@ -28,6 +30,7 @@ class ColoredPoly
     public :
         ColoredPoly();
 
+    // Operator overloading
     public :
         bool operator==(const ColoredPoly second);
 };

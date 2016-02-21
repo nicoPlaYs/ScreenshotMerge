@@ -48,22 +48,28 @@ Screenshot::~Screenshot()
 // Return a pixmap of the screenshot with all of his drawing on it
 QPixmap Screenshot::withDrawing()
 {
+    // First, we make a clone of the screenshot without any drawings
     QPixmap finalPixmap = QPixmap(this->image);
-    QPainter* painter = new QPainter(&finalPixmap);
-    QPen pen;
-    pen.setWidth(2);
-    pen.setColor(Qt::red);
-    painter->setPen(pen);
-    painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
-    painter->drawPixmap(this->image.rect(), this->image);
+    // We prepare the painter and his pen
+    QPainter* painter = new QPainter(&finalPixmap);
+    painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
+    QPen pen;
+
+
+    // We draw one by one all the drawings of the user on the screenshot
     ColoredPoly coloredPolyline;
     foreach(coloredPolyline, this->drawings)
     {
-        painter->setPen(coloredPolyline.getColor());
+        pen.setColor(coloredPolyline.getColor());
+        pen.setWidth(2);
+        painter->setPen(pen);
         painter->drawPolyline(*coloredPolyline.getPtrPolyline());
     }
+
+    // The painting is over
     painter->end();
 
+    // We return the result
     return finalPixmap;
 }

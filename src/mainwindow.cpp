@@ -212,10 +212,10 @@ void MainWindow::openAbout()
 
 
 // Wait, shot a screenshot and put it in the list
-void MainWindow::takeScreenshot(bool force)
+void MainWindow::takeScreenshot()
 {
     // We verify if we can take a new screenshot (if there is no other screenshot on his way to be taken / cropped)
-    if(canTakeNewScreenshot == true || force == true)
+    if(canTakeNewScreenshot == true)
     {
         // So now that we will take one, we need to wait the end of the process before take an other one
         canTakeNewScreenshot = false;
@@ -276,6 +276,7 @@ void MainWindow::merge()
             currentY += ((Screenshot*)listWidgetImage->item(i))->getImage().height();
         }
 
+        // And we save it
         save(*mergedScreenshots);
     }
 }
@@ -309,11 +310,13 @@ void MainWindow::save(QPixmap image)
 // Open a window to edit a new screenshot
 void MainWindow::openEditWindowNewScreenshot(Screenshot* screenshot)
 {
-    // Create a window to edit the screenshot and open it
+    // Create a window to edit the screenshot
     EditWindow* editWindow = new EditWindow(screenshot, listWidgetImage, &canTakeNewScreenshot);
     QObject::connect(editWindow, SIGNAL(editOver()), this, SLOT(restore()));
-    QObject::connect(editWindow, SIGNAL(retakeSignal(bool)), this, SLOT(takeScreenshot(bool)));
+    QObject::connect(editWindow, SIGNAL(retakeSignal()), this, SLOT(takeScreenshot()));
     QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(save(QPixmap)));
+
+    // And open it
     editWindow->show();
 }
 
@@ -332,8 +335,12 @@ void MainWindow::openEditWindowOldScreenshot()
 // Open a window to edit a screenshot on the list
 void MainWindow::openEditWindowOldScreenshot(QListWidgetItem* screenshotClicked)
 {
-    // Create a window to edit the screenshot and open it
-    (new EditWindow((Screenshot*)screenshotClicked))->show();
+    // Create a window to edit the screenshot
+    EditWindow* editWindow = new EditWindow((Screenshot*)screenshotClicked);
+    QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(save(QPixmap)));
+
+    // And open it
+    editWindow->show();
 }
 
 // Raise the selected image on the list

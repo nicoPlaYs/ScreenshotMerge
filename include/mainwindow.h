@@ -111,7 +111,7 @@ class MainWindow : public QMainWindow
         void openAbout();
 
         // Wait, shot a screenshot and put it in the list
-        void takeScreenshot(bool force = false);
+        void takeScreenshot();
         // Merge the screenshots in the list
         void merge();
             // Save an image

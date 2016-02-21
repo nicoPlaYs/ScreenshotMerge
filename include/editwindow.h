@@ -22,11 +22,12 @@
 #include <QPainter>
 
 
+// Store a screenshot which can be put in a QListWidget
 #include "include/screenshot.h"
 
 
 
-// The window to display an image
+// The window to display and edit an screenshot
 class EditWindow : public QMainWindow
 {
     Q_OBJECT
@@ -84,12 +85,12 @@ class EditWindow : public QMainWindow
 
     // Methods
     public :
-        //
+        // Update the pixmap of the displayed screenshot with the new drawings
         void updateScreenshotToShow();
 
-        //
+        // When we press the right click on the window
         void mousePressEvent(QMouseEvent* event);
-        //
+        // When we move on the window
         void mouseMoveEvent(QMouseEvent* event);
 
         // When the window is closing
@@ -115,7 +116,7 @@ class EditWindow : public QMainWindow
     // Qt signals
     signals :
         // Signal the main window to retake a screenshot
-        void retakeSignal(bool force);
+        void retakeSignal();
         // Signal the main window that the edit is over
         void editOver();
         // Signal to save the screenshot

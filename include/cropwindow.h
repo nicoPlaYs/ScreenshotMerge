@@ -11,6 +11,7 @@
 #include <QPainter>
 
 
+// Store a screenshot which can be put in a QListWidget
 #include "include/screenshot.h"
 
 
@@ -59,6 +60,7 @@ class CropWindow : public QLabel
 
     // Qt signals
     signals :
+        // When the user has finished to crop his screenshot
         void cropOver(Screenshot* croppedScreenshot);
 };
 
