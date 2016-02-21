@@ -20,6 +20,9 @@
 #include <QMessageBox>
 #include <QShortcut>
 #include <QPainter>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QDesktopWidget>
 
 
 // Store a screenshot which can be put in a QListWidget
@@ -58,8 +61,10 @@ class EditWindow : public QMainWindow
         QWidget* widgetMain;
             // Main layout of the dialog
             QHBoxLayout* layout;
-                // The label of the image we want to see
-                QLabel* labelImage;
+                // If the screenshot is to big
+                QScrollArea* scrollArea;
+                    // The label of the image we want to see
+                    QLabel* labelImage;
 
         // Screenshot
         Screenshot* screenshot;

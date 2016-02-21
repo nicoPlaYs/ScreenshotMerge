@@ -84,19 +84,37 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
         layout = new QHBoxLayout(widgetMain);
         layout->setContentsMargins(10,10,10,10);
 
-            // Creation of the label which contain the image to display
-            labelImage = new QLabel(widgetMain);
-            labelImage->setPixmap(this->screenshot->getImage());
-            labelImage->setBaseSize(this->screenshot->getImage().size());
-            labelImage->setFixedSize(this->screenshot->getImage().size());
+            // If the screenshot is to big
+            scrollArea = new QScrollArea(this);
 
-        // Add the label to the layout
-        layout->addWidget(labelImage, Qt::AlignCenter);
+                // Creation of the label which contain the image to display
+                labelImage = new QLabel(widgetMain);
+                labelImage->setPixmap(this->screenshot->getImage());
+                labelImage->setFixedSize(this->screenshot->getImage().size());
+
+            scrollArea->setWidget(labelImage);
+            scrollArea->setAlignment(Qt::AlignCenter);
+            scrollArea->setMaximumSize(QApplication::desktop()->screenGeometry().size() - (QApplication::desktop()->screenGeometry().size() / 5));
+            QSize minimumSize(labelImage->size() + QSize(2,2));
+            if(minimumSize.width() > scrollArea->maximumSize().width())
+            {
+                minimumSize.setWidth(scrollArea->maximumSize().width());
+                minimumSize.setHeight(minimumSize.height() + scrollArea->horizontalScrollBar()->sizeHint().height());
+            }
+            if(minimumSize.height() > scrollArea->maximumSize().height())
+            {
+                minimumSize.setHeight(scrollArea->maximumSize().height());
+                minimumSize.setWidth(minimumSize.width() + scrollArea->verticalScrollBar()->sizeHint().width());
+            }
+            scrollArea->setMinimumSize(minimumSize);
+
+        // Add the scroll area to the layout
+        layout->addWidget(scrollArea, Qt::AlignCenter);
 
 
     // Configuration of the window
     this->setWindowTitle(tr("Edit your screenshot"));
-    this->setMinimumSize(400,400);
+    this->setFixedSize(this->sizeHint());
     this->setWindowModality(Qt::ApplicationModal);
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
