@@ -25,7 +25,6 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
     toolBar->setMovable(false);
     toolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
-
         actionValidate = toolBar->addAction(QIcon("://images/editwindow/validate.ico"), tr("Validate (Enter)"));
         actionValidate->setShortcut(QKeySequence(Qt::Key_Return));
         QObject::connect(actionValidate, SIGNAL(triggered()), this, SLOT(validate()));
@@ -169,13 +168,22 @@ void EditWindow::mousePressEvent(QMouseEvent* event)
         // Accept the event
         event->accept();
 
-        // Create a new polyline which begin with the point of our click
-        ColoredPoly newPolyline = ColoredPoly();
-        newPolyline.setColor(drawColor);
-        newPolyline.getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
+        // If there isn't any start of polyline in the list of drawing...
+        if(newDrawings.empty())
+        {
+            // We create a new polyline
+            ColoredPoly newPolyline = ColoredPoly();
+            newPolyline.setColor(drawColor);
+            newPolyline.getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
 
-        // Add the new polyline to the drawing list
-        newDrawings.prepend(newPolyline);
+            // Add the new polyline to the drawing list
+            newDrawings.prepend(newPolyline);
+        }
+        else
+        {
+            // We add the new point to the newest polyline
+            newDrawings.first().getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
+        }
 
         // Update the display of the screenshot
         updateScreenshotToShow();
@@ -219,10 +227,50 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
         // Accept the event
         event->accept();
 
-        // We add the new point to the newest polyline
-        newDrawings.first().getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
+        // If there isn't any start of polyline in the list of drawing...
+        if(newDrawings.empty())
+        {
+            // We create a new polyline
+            ColoredPoly newPolyline = ColoredPoly();
+            newPolyline.setColor(drawColor);
+            newPolyline.getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
+
+            // Add the new polyline to the drawing list
+            newDrawings.prepend(newPolyline);
+        }
+        else
+        {
+            // We add the new point to the newest polyline
+            newDrawings.first().getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
+        }
 
         // Update the display of the screenshot to see the polyline with his new point
+        updateScreenshotToShow();
+    }
+    else
+    {
+        // Ignore the event
+        event->ignore();
+    }
+}
+
+// When we release the click on the window
+void EditWindow::mouseReleaseEvent(QMouseEvent* event)
+{
+    // Check if the pen is selected
+    if(this->actionPen->isChecked())
+    {
+        // Accept the event
+        event->accept();
+
+        // Create a new polyline
+        ColoredPoly newPolyline = ColoredPoly();
+        newPolyline.setColor(drawColor);
+
+        // Add the new polyline to the drawing list
+        newDrawings.prepend(newPolyline);
+
+        // Update the display of the screenshot
         updateScreenshotToShow();
     }
     else

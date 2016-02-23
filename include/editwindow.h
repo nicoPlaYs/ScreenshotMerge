@@ -97,6 +97,8 @@ class EditWindow : public QMainWindow
         void mousePressEvent(QMouseEvent* event);
         // When we move on the window
         void mouseMoveEvent(QMouseEvent* event);
+        // When we release the click on the window
+        void mouseReleaseEvent(QMouseEvent* event);
 
         // When the window is closing
         void closeEvent(QCloseEvent* event);
