@@ -30,4 +30,4 @@
 </ul>
 
 <br/><br/><h3>Credits :</h3>
-<img src="http://i.imgur.com/UqcxviY.png"/>
+<img src="http://i.imgur.com/2sS93YU.png"/>
