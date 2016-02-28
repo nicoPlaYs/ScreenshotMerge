@@ -12,6 +12,7 @@
 (Note : double-click on a screenshot on the list do it too)</li>
 <li><b>Arrows :</b> rise or descend the selected screenshot</li>
 <li><b>Red cross :</b> delete the selected screeshot</li>
+<li><b>Red cross on a list :</b> clear the screenshots list</li>
 </ul>
 
 <br/><h3>Settings</h3>
