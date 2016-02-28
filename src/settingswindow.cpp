@@ -100,7 +100,6 @@ SettingsWindow::SettingsWindow() : QDialog()
 
     // Configure the window
     this->setWindowTitle(tr("Settings"));
-    this->setModal(true);
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     this->show();

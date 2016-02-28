@@ -4,62 +4,67 @@
 <context>
     <name>EditWindow</name>
     <message>
-        <location filename="../../src/editwindow.cpp" line="29"/>
+        <location filename="../../src/editwindow.cpp" line="28"/>
         <source>Validate (Enter)</source>
         <translation>Valider (Enter)</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="33"/>
+        <location filename="../../src/editwindow.cpp" line="32"/>
         <source>Cancel (Escape)</source>
         <translation>Annuler (Echap)</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="41"/>
+        <location filename="../../src/editwindow.cpp" line="40"/>
         <source>Retake the screenshot (Ctrl+N)</source>
         <translation>Reprendre le screenshot (Ctrl+N)</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="48"/>
+        <location filename="../../src/editwindow.cpp" line="47"/>
         <source>Save it (Ctrl+S)</source>
         <translation>L&apos;enregistrer (Ctrl+S)</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="52"/>
+        <location filename="../../src/editwindow.cpp" line="51"/>
         <source>Copy to clipboard (Ctrl+C)</source>
         <translation>Copier dans le presse-papier (Ctrl+C)</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="58"/>
+        <location filename="../../src/editwindow.cpp" line="55"/>
+        <source>Upload to NoelShack (Ctrl+U)</source>
+        <translation>Envoyer sur NoelShack (Ctrl+U)</translation>
+    </message>
+    <message>
+        <location filename="../../src/editwindow.cpp" line="61"/>
         <source>Color of the draw tools</source>
         <translation>Couleur des outils de dessins</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="65"/>
+        <location filename="../../src/editwindow.cpp" line="68"/>
         <source>Pen (P)</source>
         <translation>Crayon (P)</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="70"/>
+        <location filename="../../src/editwindow.cpp" line="73"/>
         <source>Eraser (E)</source>
         <translation>Effaceur (E)</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="98"/>
+        <location filename="../../src/editwindow.cpp" line="130"/>
         <source>Edit your screenshot</source>
         <translation>Editez votre screenshot</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="319"/>
+        <location filename="../../src/editwindow.cpp" line="369"/>
         <source>Clipboard</source>
         <translation>Presse-papier</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="319"/>
+        <location filename="../../src/editwindow.cpp" line="369"/>
         <source>Your screenshot has been successfuly put in your clipboard !</source>
         <translation>Votre screenshot a été placé dans votre presse-papier avec succès !</translation>
     </message>
     <message>
-        <location filename="../../src/editwindow.cpp" line="326"/>
+        <location filename="../../src/editwindow.cpp" line="382"/>
         <source>Choose your color</source>
         <translation>Choisissez votre couleur</translation>
     </message>
@@ -88,7 +93,7 @@
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="31"/>
-        <location filename="../../src/mainwindow.cpp" line="205"/>
+        <location filename="../../src/mainwindow.cpp" line="218"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
@@ -98,77 +103,87 @@
         <translation>Prendre un screenshot (Impr Écran)</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="44"/>
-        <source>Merge (Ctrl+S)</source>
-        <translation>Fusionner (Ctrl+S)</translation>
+        <location filename="../../src/mainwindow.cpp" line="47"/>
+        <source>Merge and save it (Ctrl+S)</source>
+        <translation>Fusionner puis sauvegarder</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="49"/>
+        <location filename="../../src/mainwindow.cpp" line="52"/>
+        <source>Merge and upload it (Ctrl+U)</source>
+        <translation>Fusionner puis envoyer (Ctrl+U)</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="59"/>
         <source>Edit (Enter)</source>
         <translation>Editer (Enter)</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="53"/>
+        <location filename="../../src/mainwindow.cpp" line="63"/>
         <source>Rise (Ctrl+Up)</source>
         <translation>Monter (Ctrl+Haut)</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="57"/>
+        <location filename="../../src/mainwindow.cpp" line="67"/>
         <source>Descend (Ctrl+Down)</source>
         <translation>Descendre (Ctrl+Bas)</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="62"/>
+        <location filename="../../src/mainwindow.cpp" line="72"/>
         <source>Delete (Delete)</source>
         <translation>Supprimer (Suppr)</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="87"/>
+        <location filename="../../src/mainwindow.cpp" line="76"/>
+        <source>Clear the list</source>
+        <translation>Vider la liste</translation>
+    </message>
+    <message>
+        <location filename="../../src/mainwindow.cpp" line="100"/>
         <source>Restore</source>
         <translation>Ouvrir</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="206"/>
+        <location filename="../../src/mainwindow.cpp" line="219"/>
         <source>Version :</source>
         <translation>Version :</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="206"/>
+        <location filename="../../src/mainwindow.cpp" line="219"/>
         <source>Latest releases</source>
         <translation>Dernières versions</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="207"/>
+        <location filename="../../src/mainwindow.cpp" line="220"/>
         <source>Developped by :</source>
         <translation>Développé par :</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="208"/>
+        <location filename="../../src/mainwindow.cpp" line="221"/>
         <source>Library used :</source>
         <translation>Librairie utilisée :</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="209"/>
+        <location filename="../../src/mainwindow.cpp" line="222"/>
         <source>Logo :</source>
         <translation>Logo :</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="210"/>
+        <location filename="../../src/mainwindow.cpp" line="223"/>
         <source>Icon :</source>
         <translation>Icônes :</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="305"/>
+        <location filename="../../src/mainwindow.cpp" line="326"/>
         <source>Image successfully saved</source>
         <translation>Image sauvegardée avec succès</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="305"/>
+        <location filename="../../src/mainwindow.cpp" line="326"/>
         <source>Your image has been saved in your default directory !</source>
         <translation>Votre image a été sauvegardée dans votre répertoire par défaut !</translation>
     </message>
     <message>
-        <location filename="../../src/mainwindow.cpp" line="291"/>
+        <location filename="../../src/mainwindow.cpp" line="312"/>
         <source>Save as...</source>
         <translation>Enregistrer sous...</translation>
     </message>
@@ -221,9 +236,27 @@
         <translation>Paramètres</translation>
     </message>
     <message>
-        <location filename="../../src/settingswindow.cpp" line="126"/>
+        <location filename="../../src/settingswindow.cpp" line="125"/>
         <source>Select your default directory</source>
         <translation>Selectionnez votre répertoire par défaut</translation>
+    </message>
+</context>
+<context>
+    <name>UploadWindow</name>
+    <message>
+        <location filename="../../src/uploadwindow.cpp" line="30"/>
+        <source>Copy to clipboard</source>
+        <translation>Copier dans le presse-papier</translation>
+    </message>
+    <message>
+        <location filename="../../src/uploadwindow.cpp" line="37"/>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <location filename="../../src/uploadwindow.cpp" line="44"/>
+        <source>Uploading to NoelShack</source>
+        <translation>Envoie vers NoelShack</translation>
     </message>
 </context>
 </TS>

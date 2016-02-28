@@ -44,13 +44,17 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
 
     toolBar->addSeparator();
 
-        actionSave = toolBar->addAction(QIcon("://images/editwindow/save.ico"), tr("Save it (Ctrl+S)"));
+        actionSave = toolBar->addAction(QIcon("://images/toolbar/save.ico"), tr("Save it (Ctrl+S)"));
         actionSave->setShortcut(QKeySequence::Save);
         QObject::connect(actionSave, SIGNAL(triggered()), this, SLOT(save()));
 
         actionCopyToClipboard = toolBar->addAction(QIcon("://images/editwindow/copytoclipboard.ico"), tr("Copy to clipboard (Ctrl+C)"));
         actionCopyToClipboard->setShortcut(QKeySequence::Copy);
         QObject::connect(actionCopyToClipboard, SIGNAL(triggered()), this, SLOT(copyToClipboard()));
+
+        actionUpload = toolBar->addAction(QIcon("://images/toolbar/noelshack.ico"), tr("Upload to NoelShack (Ctrl+U)"));
+        actionUpload->setShortcut(QKeySequence("Ctrl+U"));
+        QObject::connect(actionUpload, SIGNAL(triggered()), this, SLOT(upload()));
 
     toolBar->addSeparator();
 
@@ -111,15 +115,23 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
         layout->addWidget(scrollArea, Qt::AlignCenter);
 
 
+    // Create a new polyline
+    ColoredPoly newPolyline = ColoredPoly();
+    newPolyline.setColor(drawColor);
+
+    // Add the new polyline to the drawing list
+    newDrawings.prepend(newPolyline);
+
+    // Update the screenshot view
+    updateScreenshotToShow();
+
+
     // Configuration of the window
     this->setWindowTitle(tr("Edit your screenshot"));
     this->setFixedSize(this->sizeHint());
     this->setWindowModality(Qt::ApplicationModal);
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
-
-
-    updateScreenshotToShow();
 }
 
 
@@ -127,8 +139,7 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
 // Destructor
 EditWindow::~EditWindow()
 {
-    painterScreenshot->end();
-
+    delete painterScreenshot;
     delete screenshotToShow;
 }
 
@@ -168,22 +179,8 @@ void EditWindow::mousePressEvent(QMouseEvent* event)
         // Accept the event
         event->accept();
 
-        // If there isn't any start of polyline in the list of drawing...
-        if(newDrawings.empty())
-        {
-            // We create a new polyline
-            ColoredPoly newPolyline = ColoredPoly();
-            newPolyline.setColor(drawColor);
-            newPolyline.getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
-
-            // Add the new polyline to the drawing list
-            newDrawings.prepend(newPolyline);
-        }
-        else
-        {
-            // We add the new point to the newest polyline
-            newDrawings.first().getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
-        }
+        // We add the new point to the newest polyline
+        newDrawings.first().getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
 
         // Update the display of the screenshot
         updateScreenshotToShow();
@@ -227,22 +224,8 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
         // Accept the event
         event->accept();
 
-        // If there isn't any start of polyline in the list of drawing...
-        if(newDrawings.empty())
-        {
-            // We create a new polyline
-            ColoredPoly newPolyline = ColoredPoly();
-            newPolyline.setColor(drawColor);
-            newPolyline.getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
-
-            // Add the new polyline to the drawing list
-            newDrawings.prepend(newPolyline);
-        }
-        else
-        {
-            // We add the new point to the newest polyline
-            newDrawings.first().getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
-        }
+        // We add the new point to the newest polyline
+        newDrawings.first().getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
 
         // Update the display of the screenshot to see the polyline with his new point
         updateScreenshotToShow();
@@ -308,7 +291,8 @@ void EditWindow::closeEvent(QCloseEvent *event)
 // Update the pixmap of the displayed screenshot with the new drawings
 void EditWindow::validate()
 {
-    // We add the new drawings to the screenshot
+    // We add the new drawings to the screenshot after deleting the newest which is empty
+    newDrawings.removeFirst();
     screenshot->setDrawings(newDrawings);
 
     // If we edit a fresh new screenshot...
@@ -385,9 +369,20 @@ void EditWindow::copyToClipboard()
     QMessageBox::information(this, tr("Clipboard"), tr("Your screenshot has been successfuly put in your clipboard !"));
 }
 
+// Upload the screenshot to NoelShack
+void EditWindow::upload()
+{
+    emit uploadSignal(*(labelImage->pixmap()));
+}
+
 
 // Change the color of the draw tool
 void EditWindow::changeColor()
 {
-    drawColor = QColorDialog::getColor(drawColor, this, tr("Choose your color"));
+    QColor newColor = QColorDialog::getColor(drawColor, this, tr("Choose your color"));
+    if(newColor.isValid())
+    {
+            drawColor = newColor;
+            newDrawings.first().setColor(drawColor);
+    }
 }

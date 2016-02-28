@@ -32,8 +32,7 @@ CropWindow::CropWindow(QPixmap pixmapFullscreen) : QLabel()
 // Destructor
 CropWindow::~CropWindow()
 {
-    painterMix->end();
-
+    delete painterMix;
     delete originalPixmap;
     delete whitePixmap;
     delete mixPixmap;

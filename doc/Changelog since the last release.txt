@@ -1,3 +1,13 @@
+New features :
+	- Button to upload the single or merged screenshots to NoelShack
+	- Button to clear the list
+
+Fix :
+	- The color don't change to black anymore when canceling
+	- The color is now correct right after a change of color
+
+	
+	
 Idea to implement :
 	- Autoscroll Wizard : take screenshots and scroll automaticly to the end of a page
 

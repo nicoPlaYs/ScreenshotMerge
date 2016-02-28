@@ -47,10 +47,11 @@ class EditWindow : public QMainWindow
         QToolBar* toolBar;
             QAction* actionValidate;
             QAction* actionCancel;
-
             QAction* actionRetake;
+
             QAction* actionSave;
             QAction* actionCopyToClipboard;
+            QAction* actionUpload;
 
             QAction* actionColor;
             QActionGroup* actionGroupDrawTool;
@@ -78,7 +79,6 @@ class EditWindow : public QMainWindow
         QPainter* painterScreenshot;
         // List of the new drawings
         QList<ColoredPoly> newDrawings;
-
 
     // Constructor
     public :
@@ -109,13 +109,15 @@ class EditWindow : public QMainWindow
         void validate();
         // Cancel
         void cancel();
-
         // Retake the screenshot
         void retake();
+
         // Save the screenshot
         void save();
         // Copy the screenshot to the clipboard
         void copyToClipboard();
+        // Upload the screenshot to NoelShack
+        void upload();
 
         // Change the color of the draw tool
         void changeColor();
@@ -128,6 +130,8 @@ class EditWindow : public QMainWindow
         void editOver();
         // Signal to save the screenshot
         void saveSignal(QPixmap screenshot);
+        // Signal to upload the screenshot on NoelShack
+        void uploadSignal(QPixmap screenshot);
 };
 
 

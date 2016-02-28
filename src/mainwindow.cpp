@@ -41,8 +41,18 @@ MainWindow::MainWindow() : QMainWindow()
         QObject::connect(actionTakeScreenshot, SIGNAL(triggered()), this, SLOT(takeScreenshot()));
         RegisterHotKey((HWND) this->winId(), 1, 0x4000, VK_SNAPSHOT);
 
-        actionMerge = toolBar->addAction(QIcon("://images/toolbar/merge.ico"), tr("Merge (Ctrl+S)"));
-        QObject::connect(actionMerge, SIGNAL(triggered()), this, SLOT(merge()));
+        mapMerge = new QSignalMapper(this);
+        QObject::connect(mapMerge, SIGNAL(mapped(int)), this, SLOT(merge(int)));
+
+            actionSaveMerged = toolBar->addAction(QIcon("://images/toolbar/save.ico"), tr("Merge and save it (Ctrl+S)"));
+            actionSaveMerged->setShortcut(QKeySequence::Save);
+            mapMerge->setMapping(actionSaveMerged, 1);
+            QObject::connect(actionSaveMerged, SIGNAL(triggered()), mapMerge, SLOT(map()));
+
+            actionUploadMerged = toolBar->addAction(QIcon("://images/toolbar/noelshack.ico"), tr("Merge and upload it (Ctrl+U)"));
+            actionUploadMerged->setShortcut(QKeySequence("Ctrl+U"));
+            mapMerge->setMapping(actionUploadMerged, 2);
+            QObject::connect(actionUploadMerged, SIGNAL(triggered()), mapMerge, SLOT(map()));
 
     toolBar->addSeparator();
 
@@ -63,6 +73,8 @@ MainWindow::MainWindow() : QMainWindow()
         actionDelete->setShortcut(QKeySequence::Delete);
         QObject::connect(actionDelete, SIGNAL(triggered()), this, SLOT(deleteImage()));
 
+        actionClearList = toolBar->addAction(QIcon("://images/toolbar/clearlist.ico"), tr("Clear the list"));
+
     this->addToolBar(toolBar);
 
 
@@ -77,6 +89,7 @@ MainWindow::MainWindow() : QMainWindow()
             listWidgetImage = new QListWidget(widgetMain);
             listWidgetImage->setSelectionMode(QAbstractItemView::SingleSelection);
             QObject::connect(listWidgetImage, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(openEditWindowOldScreenshot(QListWidgetItem*)));
+            QObject::connect(actionClearList, SIGNAL(triggered()), listWidgetImage, SLOT(clear()));
 
         layoutMain->addWidget(listWidgetImage, 0, 0, 1, 1, 0);
 
@@ -203,7 +216,7 @@ void MainWindow::openSettings()
 void MainWindow::openAbout()
 {
     QMessageBox::about(this, tr("About"),   "<h2><b>Screenshot Merge</b></h2>"
-                                            "<p><b>" + tr("Version :") + "</b>" + " 1.2.2 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
+                                            "<p><b>" + tr("Version :") + "</b>" + " 1.3 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
                                             "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
                                             "<b>" + tr("Library used :") + "</b> Qt 5.5.1<br/>"
                                             "<b>" + tr("Logo :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
@@ -237,7 +250,7 @@ void MainWindow::takeScreenshot()
 }
 
 // Merge the screenshots in the list
-void MainWindow::merge()
+void MainWindow::merge(int destination)
 {
     // We verify that there is at least 1 screenshot on the list
     if(listWidgetImage->count() != 0)
@@ -275,9 +288,17 @@ void MainWindow::merge()
 
             currentY += ((Screenshot*)listWidgetImage->item(i))->getImage().height();
         }
+        delete painterMergedScreenshots;
 
-        // And we save it
-        save(*mergedScreenshots);
+        // And we save it or upload it
+        if(destination == 1)
+        {
+            save(*mergedScreenshots);
+        }
+        else if(destination == 2)
+        {
+            upload(*mergedScreenshots);
+        }
     }
 }
 // Save an image
@@ -306,6 +327,37 @@ void MainWindow::save(QPixmap image)
         }
     }
 }
+// Upload an image on noelshack
+void MainWindow::upload(QPixmap image)
+{
+    // Transform the image into a jpeg
+    QByteArray imageData;
+    QBuffer buffer(&imageData);
+    buffer.open(QIODevice::ReadWrite);
+    image.save(&buffer, "JPG", settings->value("SettingsWindow/imageQuality", 85).toInt());
+    buffer.reset();
+
+    // Preparation of the data
+    QByteArray boundary = "195309827104211";
+    QByteArray data = "--" + boundary + "\r\n";
+    data += "Content-Disposition: form-data; name=\"fichier\"; filename=\"Screenshot.jpg\";\r\n";
+    data += "Content-Type: image/jpeg\r\n\r\n";
+    data += buffer.readAll() + "\r\n";
+    data += "--" + boundary + "--\r\n";
+
+    // Preparation of the request
+    QNetworkRequest request(QUrl("http://www.noelshack.com/api.php"));
+    request.setRawHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
+    request.setRawHeader("Content-Length", QString::number(data.size()).toLatin1());
+
+    // Send all of it to noelshack
+    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+    QNetworkReply* reply = manager->post(request, data);
+
+    // Open the upload dialog
+    UploadWindow* uploadWindow = new UploadWindow(reply);
+    uploadWindow->show();
+}
 
 // Open a window to edit a new screenshot
 void MainWindow::openEditWindowNewScreenshot(Screenshot* screenshot)
@@ -315,6 +367,7 @@ void MainWindow::openEditWindowNewScreenshot(Screenshot* screenshot)
     QObject::connect(editWindow, SIGNAL(editOver()), this, SLOT(restore()));
     QObject::connect(editWindow, SIGNAL(retakeSignal()), this, SLOT(takeScreenshot()));
     QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(save(QPixmap)));
+    QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(upload(QPixmap)));
 
     // And open it
     editWindow->show();
@@ -338,6 +391,7 @@ void MainWindow::openEditWindowOldScreenshot(QListWidgetItem* screenshotClicked)
     // Create a window to edit the screenshot
     EditWindow* editWindow = new EditWindow((Screenshot*)screenshotClicked);
     QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(save(QPixmap)));
+    QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(upload(QPixmap)));
 
     // And open it
     editWindow->show();

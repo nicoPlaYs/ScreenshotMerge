@@ -22,6 +22,11 @@
 #include <QStandardPaths>
 #include <QTranslator>
 #include <QSystemTrayIcon>
+#include <QBuffer>
+#include <QNetworkRequest>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QRegExp>
 #include <QSignalMapper>
 
 
@@ -35,6 +40,8 @@
 #include "include/cropwindow.h"
 // The window to display an image
 #include "include/editwindow.h"
+// Window which appears when uploading an image to NoelShack
+#include "include/uploadwindow.h"
 
 
 
@@ -59,12 +66,16 @@ class MainWindow : public QMainWindow
         // The main toolbar
         QToolBar* toolBar;
             QAction* actionTakeScreenshot;
-            QAction* actionMerge;
+            QSignalMapper* mapMerge;
+                QAction* actionSaveMerged;
+                QAction* actionUploadMerged;
+
 
             QAction* actionEdit;
             QAction* actionUp;
             QAction* actionDown;
             QAction* actionDelete;
+            QAction* actionClearList;
 
         // The main widget
         QWidget* widgetMain;
@@ -112,10 +123,12 @@ class MainWindow : public QMainWindow
 
         // Wait, shot a screenshot and put it in the list
         void takeScreenshot();
-        // Merge the screenshots in the list
-        void merge();
+        // Merge the screenshots in the list, then save it or upload it
+        void merge(int destination);
             // Save an image
             void save(QPixmap image);
+            // Upload an image on noelshack
+            void upload(QPixmap image);
         // Open a window to edit a new screenshot
         void openEditWindowNewScreenshot(Screenshot* screenshot);
         // Open a window to edit the selected image on the list

@@ -68,7 +68,7 @@ QPixmap Screenshot::withDrawing()
     }
 
     // The painting is over
-    painter->end();
+    delete painter;
 
     // We return the result
     return finalPixmap;
