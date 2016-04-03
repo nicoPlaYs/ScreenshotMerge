@@ -1,11 +1,16 @@
-New features :
-	- Button to upload the single or merged screenshots to NoelShack
-	- Button to clear the list
+New feature :
+	- Copy the result of the merged screenshots into the clipboard
+
+Improvements :
+	- Work fully with multiple monitors setup
+	- Optimization of the crop window
+	- Optimization of the pen tool from the edit window
+	- Update to Qt 5.6.0
+	- Available in 64bit
 
 Fix :
-	- The color don't change to black anymore when canceling
-	- The color is now correct right after a change of color
-
+	- Memory leak
+	
 	
 	
 Idea to implement :

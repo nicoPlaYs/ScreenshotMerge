@@ -43,6 +43,9 @@ class EditWindow : public QMainWindow
         // Color of the draw tool
         QColor drawColor;
 
+        // Last point of the current polyline
+        QPoint lastPointPolyline;
+
         // The toolbar
         QToolBar* toolBar;
             QAction* actionValidate;
@@ -50,7 +53,7 @@ class EditWindow : public QMainWindow
             QAction* actionRetake;
 
             QAction* actionSave;
-            QAction* actionCopyToClipboard;
+            QAction* actionCopyIntoClipboard;
             QAction* actionUpload;
 
             QAction* actionColor;
@@ -90,8 +93,8 @@ class EditWindow : public QMainWindow
 
     // Methods
     public :
-        // Update the pixmap of the displayed screenshot with the new drawings
-        void updateScreenshotToShow();
+        // Refresh the pixmap of the displayed screenshot by redraw everything
+        void refreshScreenshotToShow();
 
         // When we press the right click on the window
         void mousePressEvent(QMouseEvent* event);
@@ -115,7 +118,7 @@ class EditWindow : public QMainWindow
         // Save the screenshot
         void save();
         // Copy the screenshot to the clipboard
-        void copyToClipboard();
+        void copyIntoClipboard();
         // Upload the screenshot to NoelShack
         void upload();
 

@@ -105,7 +105,7 @@
     <message>
         <location filename="../../src/mainwindow.cpp" line="47"/>
         <source>Merge and save it (Ctrl+S)</source>
-        <translation>Fusionner puis sauvegarder</translation>
+        <translation>Fusionner puis sauvegarder (Ctrl+S)</translation>
     </message>
     <message>
         <location filename="../../src/mainwindow.cpp" line="52"/>

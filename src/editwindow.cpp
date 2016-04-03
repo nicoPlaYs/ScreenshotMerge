@@ -1,5 +1,7 @@
 #include "include/editwindow.h"
 
+
+
 // Constructor
 EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, bool* canTakeNewScreenshot) : QMainWindow()
 {
@@ -7,7 +9,7 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
     this->listWidgetImage = listWidgetImage;
     this->canTakeNewScreenshot = canTakeNewScreenshot;
     this->newDrawings = screenshot->getDrawings();
-    this->screenshotToShow = new QPixmap(screenshot->getImage());
+    this->screenshotToShow = new QPixmap(screenshot->withDrawing());
     this->painterScreenshot = new QPainter(screenshotToShow);
     QPen pen = QPen(drawColor);
     pen.setWidth(2);
@@ -48,9 +50,9 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
         actionSave->setShortcut(QKeySequence::Save);
         QObject::connect(actionSave, SIGNAL(triggered()), this, SLOT(save()));
 
-        actionCopyToClipboard = toolBar->addAction(QIcon("://images/editwindow/copytoclipboard.ico"), tr("Copy to clipboard (Ctrl+C)"));
-        actionCopyToClipboard->setShortcut(QKeySequence::Copy);
-        QObject::connect(actionCopyToClipboard, SIGNAL(triggered()), this, SLOT(copyToClipboard()));
+        actionCopyIntoClipboard = toolBar->addAction(QIcon("://images/editwindow/copytoclipboard.ico"), tr("Copy to clipboard (Ctrl+C)"));
+        actionCopyIntoClipboard->setShortcut(QKeySequence::Copy);
+        QObject::connect(actionCopyIntoClipboard, SIGNAL(triggered()), this, SLOT(copyIntoClipboard()));
 
         actionUpload = toolBar->addAction(QIcon("://images/toolbar/noelshack.ico"), tr("Upload to NoelShack (Ctrl+U)"));
         actionUpload->setShortcut(QKeySequence("Ctrl+U"));
@@ -88,11 +90,11 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
         layout->setContentsMargins(10,10,10,10);
 
             // If the screenshot is to big
-            scrollArea = new QScrollArea(this);
+            scrollArea = new QScrollArea(widgetMain);
 
                 // Creation of the label which contain the image to display
                 labelImage = new QLabel(scrollArea);
-                labelImage->setPixmap(this->screenshot->getImage());
+                labelImage->setPixmap(*this->screenshotToShow);
                 labelImage->setFixedSize(this->screenshot->getImage().size());
 
             scrollArea->setWidget(labelImage);
@@ -122,10 +124,6 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage, boo
     // Add the new polyline to the drawing list
     newDrawings.prepend(newPolyline);
 
-    // Update the screenshot view
-    updateScreenshotToShow();
-
-
     // Configuration of the window
     this->setWindowTitle(tr("Edit your screenshot"));
     this->setFixedSize(this->sizeHint());
@@ -148,21 +146,32 @@ EditWindow::~EditWindow()
 // Methods
 
 
-// Update the pixmap of the displayed screenshot with the new drawings
-void EditWindow::updateScreenshotToShow()
+// Refresh the pixmap of the displayed screenshot by redraw everything
+void EditWindow::refreshScreenshotToShow()
 {
     // Take the screenshot without any drawings
     QPixmap screenshotPixmap = screenshot->getImage();
     painterScreenshot->drawPixmap(screenshotPixmap.rect(), screenshotPixmap);
 
     // Draw every drawings one by one on the clean screenshot
-    ColoredPoly coloredPoly;
-    foreach(coloredPoly, newDrawings)
+    QPen pen;
+    ColoredPoly coloredPolyline;
+    foreach(coloredPolyline, newDrawings)
     {
-        QPen pen(coloredPoly.getColor());
+        pen.setColor(coloredPolyline.getColor());
         pen.setWidth(2);
         painterScreenshot->setPen(pen);
-        painterScreenshot->drawPolyline(*coloredPoly.getPtrPolyline());
+
+        // If it's just a point...
+        if(coloredPolyline.getPtrPolyline()->count() == 1)
+        {
+            painterScreenshot->drawPoint(coloredPolyline.getPtrPolyline()->first());
+        }
+        // If it's a line...
+        else
+        {
+            painterScreenshot->drawPolyline(*coloredPolyline.getPtrPolyline());
+        }
     }
 
     // Update the pixmap of the label
@@ -173,18 +182,31 @@ void EditWindow::updateScreenshotToShow()
 // When we press the right click on the window
 void EditWindow::mousePressEvent(QMouseEvent* event)
 {
+    // Save the first point of the line
+    QPoint firstPoint = labelImage->mapFrom(this, event->pos());
+
     // We check which tool is selected
     if(this->actionPen->isChecked())
     {
         // Accept the event
         event->accept();
 
-        // We add the new point to the newest polyline
-        newDrawings.first().getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
+        // Add this first point to the newest polyline
+        newDrawings.first().getPtrPolyline()->append(firstPoint);
 
-        // Update the display of the screenshot
-        updateScreenshotToShow();
+        // Draw the point
+        QPen pen(drawColor);
+        pen.setWidth(2);
+        painterScreenshot->setPen(pen);
+        painterScreenshot->drawPoint(firstPoint);
+
+        // Update the pixmap of the label
+        labelImage->setPixmap(*screenshotToShow);
+
+        // We keep this new point as the last point
+        lastPointPolyline = firstPoint;
     }
+    // If it's the eraser which is selected...
     else if(this->actionEraser->isChecked())
     {
         // Accept the event
@@ -200,10 +222,10 @@ void EditWindow::mousePressEvent(QMouseEvent* event)
             {
                 // If our click is near a polyline, the polyline will be delete
                 rect = QRectF(double(point.x()) - (8.0 / 2.0), double(point.y()) - (8.0 / 2.0), 8.0, 8.0);
-                if(rect.contains(QPointF(labelImage->mapFrom(this, event->pos()))))
+                if(rect.contains(QPointF(firstPoint)))
                 {
                     newDrawings.removeOne(coloredPoly);
-                    updateScreenshotToShow();
+                    refreshScreenshotToShow();
                 }
             }
         }
@@ -224,11 +246,23 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
         // Accept the event
         event->accept();
 
-        // We add the new point to the newest polyline
-        newDrawings.first().getPtrPolyline()->append(labelImage->mapFrom(this, event->pos()));
+        // Save the new point of the line
+        QPoint newPoint = labelImage->mapFrom(this, event->pos());
 
-        // Update the display of the screenshot to see the polyline with his new point
-        updateScreenshotToShow();
+        // Add the new point to the newest polyline
+        newDrawings.first().getPtrPolyline()->append(newPoint);
+
+        // Draw the line from the last point and this new point of the polyline
+        QPen pen(drawColor);
+        pen.setWidth(2);
+        painterScreenshot->setPen(pen);
+        painterScreenshot->drawLine(lastPointPolyline, newPoint);
+
+        // Update the pixmap of the label
+        labelImage->setPixmap(*screenshotToShow);
+
+        // We keep this new point as the last point
+        lastPointPolyline = newPoint;
     }
     else
     {
@@ -252,9 +286,6 @@ void EditWindow::mouseReleaseEvent(QMouseEvent* event)
 
         // Add the new polyline to the drawing list
         newDrawings.prepend(newPolyline);
-
-        // Update the display of the screenshot
-        updateScreenshotToShow();
     }
     else
     {
@@ -357,7 +388,7 @@ void EditWindow::save()
 }
 
 // Copy the screenshot to the clipboard
-void EditWindow::copyToClipboard()
+void EditWindow::copyIntoClipboard()
 {
     // We get access to the clipboard
     QClipboard* clipboard = QApplication::clipboard();

@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 
     // Display the main window (minimized if the launch argument say so)
     if(QCoreApplication::arguments().count() > 1 &&
-            QCoreApplication::arguments().at(1) == "-minimized")
+       QCoreApplication::arguments().at(1) == "-minimized")
     {
         mainWindow.setWindowState(Qt::WindowMinimized);
     }

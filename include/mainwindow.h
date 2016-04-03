@@ -27,7 +27,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QRegExp>
-#include <QSignalMapper>
+#include <QClipboard>
 
 
 // For globals hotkeys on Windows
@@ -66,11 +66,9 @@ class MainWindow : public QMainWindow
         // The main toolbar
         QToolBar* toolBar;
             QAction* actionTakeScreenshot;
-            QSignalMapper* mapMerge;
-                QAction* actionSaveMerged;
-                QAction* actionUploadMerged;
-
-
+            QAction* actionSaveMerged;
+            QAction* actionCopyIntoClipboard;
+            QAction* actionUploadMerged;
             QAction* actionEdit;
             QAction* actionUp;
             QAction* actionDown;
@@ -104,6 +102,8 @@ class MainWindow : public QMainWindow
     public :
         // Give the next screenshot name available for the default directory
         QString nextScreenshotName();
+        // Merge the screenshots in the list and return the result
+        QPixmap* merge();
 
         // When 1 state of the window has changed
         void changeEvent(QEvent *event);
@@ -114,6 +114,11 @@ class MainWindow : public QMainWindow
 
     // Qt slots
     public slots :
+        // Save an image
+        void saveImage(QPixmap image);
+        // Upload an image on noelshack
+        void uploadImage(QPixmap image);
+
         // Restore the window if it's minimize
         void restore();
         // Open the settings dialog
@@ -121,16 +126,19 @@ class MainWindow : public QMainWindow
         // Open the about dialog : the credits of the program
         void openAbout();
 
-        // Wait, shot a screenshot and put it in the list
+        // Specify the action when the user interact with the tray icon
+        void activationTrayIcon(QSystemTrayIcon::ActivationReason reason);
+
+        // Shot a screenshot and open a window to edit it
         void takeScreenshot();
-        // Merge the screenshots in the list, then save it or upload it
-        void merge(int destination);
-            // Save an image
-            void save(QPixmap image);
-            // Upload an image on noelshack
-            void upload(QPixmap image);
-        // Open a window to edit a new screenshot
-        void openEditWindowNewScreenshot(Screenshot* screenshot);
+            // Open a window to edit a new screenshot
+            void openEditWindowNewScreenshot(Screenshot* screenshot);
+        // Merge the screenshots in the list and save the result
+        void saveMergedScreenshots();
+        // Merge the screenshots in the list and copy the result into the clipboard
+        void copyIntoClipboardMergedScreenshots();
+        // Merge the screenshots in the list and upload the result to noelshack
+        void uploadMergedScreenshots();
         // Open a window to edit the selected image on the list
         void openEditWindowOldScreenshot();
             // Open a window to edit a screenshot
@@ -141,9 +149,6 @@ class MainWindow : public QMainWindow
         void downImage();
         // Delete the selected image in the list
         void deleteImage();
-
-        // Specify the action when the user interact with the tray icon
-        void activationTrayIcon(QSystemTrayIcon::ActivationReason reason);
 };
 
 

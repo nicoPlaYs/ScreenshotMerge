@@ -56,7 +56,6 @@ QPixmap Screenshot::withDrawing()
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     QPen pen;
 
-
     // We draw one by one all the drawings of the user on the screenshot
     ColoredPoly coloredPolyline;
     foreach(coloredPolyline, this->drawings)
@@ -64,7 +63,17 @@ QPixmap Screenshot::withDrawing()
         pen.setColor(coloredPolyline.getColor());
         pen.setWidth(2);
         painter->setPen(pen);
-        painter->drawPolyline(*coloredPolyline.getPtrPolyline());
+
+        // If it's just a point...
+        if(coloredPolyline.getPtrPolyline()->count() == 1)
+        {
+            painter->drawPoint(coloredPolyline.getPtrPolyline()->first());
+        }
+        // If it's a line...
+        else
+        {
+            painter->drawPolyline(*coloredPolyline.getPtrPolyline());
+        }
     }
 
     // The painting is over

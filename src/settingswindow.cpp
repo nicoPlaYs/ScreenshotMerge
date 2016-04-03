@@ -1,5 +1,7 @@
 #include "include/settingswindow.h"
 
+
+
 // Constructor
 SettingsWindow::SettingsWindow() : QDialog()
 {

@@ -11,7 +11,7 @@ MainWindow::MainWindow() : QMainWindow()
     // Initialization of the settings variable
     settings = new QSettings();
     // We define the minimum size of the window...
-    this->setMinimumSize(300,300);
+    this->setMinimumSize(289,300);
     // ... and we restore the size of the window from the previous session
     this->restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
 
@@ -41,18 +41,17 @@ MainWindow::MainWindow() : QMainWindow()
         QObject::connect(actionTakeScreenshot, SIGNAL(triggered()), this, SLOT(takeScreenshot()));
         RegisterHotKey((HWND) this->winId(), 1, 0x4000, VK_SNAPSHOT);
 
-        mapMerge = new QSignalMapper(this);
-        QObject::connect(mapMerge, SIGNAL(mapped(int)), this, SLOT(merge(int)));
+        actionSaveMerged = toolBar->addAction(QIcon("://images/toolbar/save.ico"), tr("Merge and save it (Ctrl+S)"));
+        actionSaveMerged->setShortcut(QKeySequence::Save);
+        QObject::connect(actionSaveMerged, SIGNAL(triggered()), this, SLOT(saveMergedScreenshots()));
 
-            actionSaveMerged = toolBar->addAction(QIcon("://images/toolbar/save.ico"), tr("Merge and save it (Ctrl+S)"));
-            actionSaveMerged->setShortcut(QKeySequence::Save);
-            mapMerge->setMapping(actionSaveMerged, 1);
-            QObject::connect(actionSaveMerged, SIGNAL(triggered()), mapMerge, SLOT(map()));
+        actionCopyIntoClipboard = toolBar->addAction(QIcon("://images/editwindow/copytoclipboard.ico"), tr("Copy to clipboard (Ctrl+C)"));
+        actionCopyIntoClipboard->setShortcut(QKeySequence::Copy);
+        QObject::connect(actionCopyIntoClipboard, SIGNAL(triggered()), this, SLOT(copyIntoClipboardMergedScreenshots()));
 
-            actionUploadMerged = toolBar->addAction(QIcon("://images/toolbar/noelshack.ico"), tr("Merge and upload it (Ctrl+U)"));
-            actionUploadMerged->setShortcut(QKeySequence("Ctrl+U"));
-            mapMerge->setMapping(actionUploadMerged, 2);
-            QObject::connect(actionUploadMerged, SIGNAL(triggered()), mapMerge, SLOT(map()));
+        actionUploadMerged = toolBar->addAction(QIcon("://images/toolbar/noelshack.ico"), tr("Merge and upload it (Ctrl+U)"));
+        actionUploadMerged->setShortcut(QKeySequence("Ctrl+U"));
+        QObject::connect(actionUploadMerged, SIGNAL(triggered()), this, SLOT(uploadMergedScreenshots()));
 
     toolBar->addSeparator();
 
@@ -136,6 +135,56 @@ QString MainWindow::nextScreenshotName()
     return nextScreenshotJPG.fileName();
 }
 
+// Merge the screenshots in the list and return the result
+QPixmap* MainWindow::merge()
+{
+    // We verify that there is at least 1 screenshot on the list
+    if(listWidgetImage->count() != 0)
+    {
+        // Calculate the height and width of the merged screenshots
+        int height = 0;
+        int width = 0;
+        QPixmap currentPixmap;
+        // Loop to get the height and width to all the listed screenshots
+        for(int i = 0; i < listWidgetImage->count(); i++)
+        {
+            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->getImage();
+
+            height += currentPixmap.height();
+            if(width < currentPixmap.width())
+            {
+                width = currentPixmap.width();
+            }
+        }
+
+        // Creation of the pixmap for the merged screenshots
+        QPixmap* mergedScreenshots = new QPixmap(width, height);
+        mergedScreenshots->fill(Qt::white);
+
+        // And we need a QPainter to modify it
+        QPainter *painterMergedScreenshots = new QPainter(mergedScreenshots);
+
+        // Draw one per one the screenshots of the list into the pixmap created above
+        int currentY = 0;
+        for(int i = 0; i < listWidgetImage->count(); i++)
+        {
+            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->withDrawing();
+
+            painterMergedScreenshots->drawPixmap(0, currentY, currentPixmap);
+
+            currentY += ((Screenshot*)listWidgetImage->item(i))->getImage().height();
+        }
+
+        // We don't need the painter anymore
+        delete painterMergedScreenshots;
+
+        // Return the result
+        return mergedScreenshots;
+    }
+
+    return 0;
+}
+
 
 // When 1 state of the window has changed
 void MainWindow::changeEvent(QEvent *event)
@@ -198,111 +247,8 @@ void MainWindow::closeEvent(QCloseEvent* event)
 // Qt slots
 
 
-// Open the window if it's minimize
-void MainWindow::restore()
-{
-    this->showNormal();
-    this->activateWindow();
-    this->trayIcon->hide();
-}
-
-// Open the settings dialog
-void MainWindow::openSettings()
-{
-    (new SettingsWindow());
-}
-
-// Open the about dialog : the credits of the program
-void MainWindow::openAbout()
-{
-    QMessageBox::about(this, tr("About"),   "<h2><b>Screenshot Merge</b></h2>"
-                                            "<p><b>" + tr("Version :") + "</b>" + " 1.3 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
-                                            "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
-                                            "<b>" + tr("Library used :") + "</b> Qt 5.5.1<br/>"
-                                            "<b>" + tr("Logo :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
-                                            "<b>" + tr("Icon :") + "</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a></p>");
-}
-
-
-// Wait, shot a screenshot and put it in the list
-void MainWindow::takeScreenshot()
-{
-    // We verify if we can take a new screenshot (if there is no other screenshot on his way to be taken / cropped)
-    if(canTakeNewScreenshot == true)
-    {
-        // So now that we will take one, we need to wait the end of the process before take an other one
-        canTakeNewScreenshot = false;
-
-        // Lower the main window, so it can't be see in the screenshot
-        this->lower();
-
-        // Get the pixmap of the primary screen
-        QScreen *screen = QGuiApplication::primaryScreen();
-        QPixmap pixmapFullscreen = screen->grabWindow(0);
-
-        // Create and show the window with the crop tool
-        CropWindow* crop = new CropWindow(pixmapFullscreen);
-        crop->showFullScreen();
-
-        // When the crop windows is closing, we open the edit windows
-        QObject::connect(crop, SIGNAL(cropOver(Screenshot*)), this, SLOT(openEditWindowNewScreenshot(Screenshot*)));
-    }
-}
-
-// Merge the screenshots in the list
-void MainWindow::merge(int destination)
-{
-    // We verify that there is at least 1 screenshot on the list
-    if(listWidgetImage->count() != 0)
-    {
-        // Calculate the height and width of the merged screenshots
-        int height = 0;
-        int width = 0;
-        QPixmap currentPixmap;
-        // Loop to get the height and width to all the listed screenshots
-        for(int i = 0; i < listWidgetImage->count(); i++)
-        {
-            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->getImage();
-
-            height += currentPixmap.height();
-            if(width < currentPixmap.width())
-            {
-                width = currentPixmap.width();
-            }
-        }
-
-        // Creation of the pixmap for the merged screenshots
-        QPixmap* mergedScreenshots = new QPixmap(width, height);
-        mergedScreenshots->fill(Qt::white);
-
-        // And we need a QPainter to modify it
-        QPainter *painterMergedScreenshots = new QPainter(mergedScreenshots);
-
-        // Draw one per one the screenshots of the list into the pixmap created above
-        int currentY = 0;
-        for(int i = 0; i < listWidgetImage->count(); i++)
-        {
-            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->withDrawing();
-
-            painterMergedScreenshots->drawPixmap(0, currentY, currentPixmap);
-
-            currentY += ((Screenshot*)listWidgetImage->item(i))->getImage().height();
-        }
-        delete painterMergedScreenshots;
-
-        // And we save it or upload it
-        if(destination == 1)
-        {
-            save(*mergedScreenshots);
-        }
-        else if(destination == 2)
-        {
-            upload(*mergedScreenshots);
-        }
-    }
-}
 // Save an image
-void MainWindow::save(QPixmap image)
+void MainWindow::saveImage(QPixmap image)
 {
     // We check if the user want to use the default directory or if he want the program to ask him
     QString path;
@@ -327,8 +273,9 @@ void MainWindow::save(QPixmap image)
         }
     }
 }
+
 // Upload an image on noelshack
-void MainWindow::upload(QPixmap image)
+void MainWindow::uploadImage(QPixmap image)
 {
     // Transform the image into a jpeg
     QByteArray imageData;
@@ -359,6 +306,80 @@ void MainWindow::upload(QPixmap image)
     uploadWindow->show();
 }
 
+
+// Open the window if it's minimize
+void MainWindow::restore()
+{
+    this->showNormal();
+    this->activateWindow();
+    this->trayIcon->hide();
+}
+
+// Open the settings dialog
+void MainWindow::openSettings()
+{
+    (new SettingsWindow());
+}
+
+// Open the about dialog : the credits of the program
+void MainWindow::openAbout()
+{
+    QMessageBox::about(this, tr("About"),   "<h2><b>Screenshot Merge</b></h2>"
+                                            "<p><b>" + tr("Version :") + "</b>" + " 1.4 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
+                                            "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
+                                            "<b>" + tr("Library used :") + "</b> Qt 5.6.0<br/>"
+                                            "<b>" + tr("Logo :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
+                                            "<b>" + tr("Icon :") + "</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a></p>");
+}
+
+// Specify the action when the user interact with the tray icon
+void MainWindow::activationTrayIcon(QSystemTrayIcon::ActivationReason reason)
+{
+    // If the user double-click on the icon on the tray, we restore the main window
+    if(reason == QSystemTrayIcon::DoubleClick)
+    {
+        this->restore();
+    }
+}
+
+
+// Shot a screenshot and open a window to edit it
+void MainWindow::takeScreenshot()
+{
+    // We verify if we can take a new screenshot (if there is no other screenshot on his way to be taken / cropped)
+    if(canTakeNewScreenshot == true)
+    {
+        // So now that we will take one, we need to wait the end of the process before take an other one
+        canTakeNewScreenshot = false;
+
+        // Lower the main window, so it can't be see in the screenshot
+        this->lower();
+
+        // Get the size of the entire screen(s)
+        int screens = QApplication::desktop()->screenCount();
+        QRect screensRect;
+        QRect currentScreenRect;
+        for(int i = 0; i < screens; ++i ){
+             currentScreenRect = QApplication::desktop()->screen(i)->geometry();
+             screensRect = screensRect.united(currentScreenRect);
+        }
+
+        // Get the screenshot of the entire screen(s)
+        QScreen* screen = QApplication::primaryScreen();
+        QPixmap pixmapFullscreen = screen->grabWindow(QApplication::desktop()->winId(),
+                                                       screensRect.x(),
+                                                       screensRect.y(),
+                                                       screensRect.width(),
+                                                       screensRect.height());
+
+        // Create and show the window with the crop tool
+        CropWindow* crop = new CropWindow(pixmapFullscreen, screensRect);
+        crop->show();
+
+        // When the crop windows is closing, we open the edit windows
+        QObject::connect(crop, SIGNAL(cropOver(Screenshot*)), this, SLOT(openEditWindowNewScreenshot(Screenshot*)));
+    }
+}
 // Open a window to edit a new screenshot
 void MainWindow::openEditWindowNewScreenshot(Screenshot* screenshot)
 {
@@ -366,11 +387,67 @@ void MainWindow::openEditWindowNewScreenshot(Screenshot* screenshot)
     EditWindow* editWindow = new EditWindow(screenshot, listWidgetImage, &canTakeNewScreenshot);
     QObject::connect(editWindow, SIGNAL(editOver()), this, SLOT(restore()));
     QObject::connect(editWindow, SIGNAL(retakeSignal()), this, SLOT(takeScreenshot()));
-    QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(save(QPixmap)));
-    QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(upload(QPixmap)));
+    QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(saveImage(QPixmap)));
+    QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(uploadImage(QPixmap)));
 
     // And open it
     editWindow->show();
+}
+
+// Merge the screenshots in the list and save the result
+void MainWindow::saveMergedScreenshots()
+{
+    // Merge the screenshots in the list...
+    QPixmap* mergedScreenshots = this->merge();
+
+    // Verify if there is a result
+    if(mergedScreenshots != 0)
+    {
+        //... and save the result
+        saveImage(*mergedScreenshots);
+
+        // We don't need the result of the merged screenshot anymore
+        delete mergedScreenshots;
+    }
+}
+
+// Merge the screenshots in the list and copy the result into the clipboard
+void MainWindow::copyIntoClipboardMergedScreenshots()
+{
+    // Merge the screenshots in the list
+    QPixmap* mergedScreenshots = this->merge();
+
+    // Verify if there is a result
+    if(mergedScreenshots != 0)
+    {
+        // We get access to the clipboard
+        QClipboard* clipboard = QApplication::clipboard();
+        // Put the pixmap of the merged screenshots into it
+        clipboard->setPixmap(*mergedScreenshots);
+
+        // Display a dialog to inform that it's done
+        QMessageBox::information(this, tr("Clipboard"), tr("Your screenshot has been successfuly put in your clipboard !"));
+
+        // We don't need the result of the merged screenshot anymore
+        delete mergedScreenshots;
+    }
+}
+
+// Merge the screenshots in the list and upload the result to noelshack
+void MainWindow::uploadMergedScreenshots()
+{
+    // Merge the screenshots in the list...
+    QPixmap* mergedScreenshots = this->merge();
+
+    // Verify if there is a result
+    if(mergedScreenshots != 0)
+    {
+        // ... and upload the result
+        uploadImage(*mergedScreenshots);
+
+        // We don't need the result of the merged screenshot anymore
+        delete mergedScreenshots;
+    }
 }
 
 // Open a window to edit the selected screenshot on the list
@@ -390,8 +467,8 @@ void MainWindow::openEditWindowOldScreenshot(QListWidgetItem* screenshotClicked)
 {
     // Create a window to edit the screenshot
     EditWindow* editWindow = new EditWindow((Screenshot*)screenshotClicked);
-    QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(save(QPixmap)));
-    QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(upload(QPixmap)));
+    QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(saveImage(QPixmap)));
+    QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(uploadImage(QPixmap)));
 
     // And open it
     editWindow->show();
@@ -456,16 +533,5 @@ void MainWindow::deleteImage()
         // If so, take the screenshot from the list and delete it
         listWidgetImage->takeItem(listWidgetImage->row(selectedScreenshot.first()));
         delete selectedScreenshot.first();
-    }
-}
-
-
-// Specify the action when the user interact with the tray icon
-void MainWindow::activationTrayIcon(QSystemTrayIcon::ActivationReason reason)
-{
-    // If the user double-click on the icon on the tray, we restore the main window
-    if(reason == QSystemTrayIcon::DoubleClick)
-    {
-        this->restore();
     }
 }
