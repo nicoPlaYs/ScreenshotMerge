@@ -1,8 +1,8 @@
 <h1>Screenshot Merge</h1>
 <p>The main purpose of the program is simple : take screenshots and then merge them</p>
-<img src="http://i.imgur.com/jqVnABb.png"/>
 
 <br/><h3>Main tools</h3>
+<img src="http://i.imgur.com/jqVnABb.png"/>
 <ul>
 <li><b>Camera tool :</b> take a screenshot of the primary screen and crop it easily with an area selector<br/>
 (<u>Note :</u> you can press the 'Print Screen' key at anytime to take a screenshot with this tool, the program need just to be launch)</li>
