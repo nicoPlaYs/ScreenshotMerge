@@ -336,7 +336,7 @@ void EditWindow::validate()
     }
 
     // We signal that the edit is over
-    emit editOver();
+    emit editOverValidated();
 
     // Close the edit window
     this->close();
@@ -356,7 +356,7 @@ void EditWindow::cancel()
     }
 
     // We signal that the edit is over
-    emit editOver();
+    emit editOverCanceled();
 
     // We close the edit window, nothing is modified
     this->close();

@@ -129,8 +129,10 @@ class EditWindow : public QMainWindow
     signals :
         // Signal the main window to retake a screenshot
         void retakeSignal();
-        // Signal the main window that the edit is over
-        void editOver();
+        // Signal the main window that the edit is over and validated
+        void editOverValidated();
+        // Signal the main window that the edit is over and canceled
+        void editOverCanceled();
         // Signal to save the screenshot
         void saveSignal(QPixmap screenshot);
         // Signal to upload the screenshot on NoelShack
