@@ -109,6 +109,8 @@ class EditWindow : public QMainWindow
         void mouseMoveEvent(QMouseEvent* event);
         // When we release the click on the window
         void mouseReleaseEvent(QMouseEvent* event);
+        // When we close the window
+        void closeEvent(QCloseEvent* event);
 
     // Qt slots
     public slots:
@@ -135,10 +137,8 @@ class EditWindow : public QMainWindow
     signals :
         // Signal the main window to retake a screenshot
         void retakeSignal();
-        // Signal the main window that the edit is over and validated
-        void editOverValidated();
-        // Signal the main window that the edit is over and canceled
-        void editOverCanceled();
+        // Signal the main window that the edit is over
+        void editOver();
         // Signal to save the screenshot
         void saveSignal(QPixmap screenshot);
         // Signal to upload the screenshot on NoelShack

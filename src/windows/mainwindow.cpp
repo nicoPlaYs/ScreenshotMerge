@@ -379,8 +379,7 @@ void MainWindow::openEditWindowNewScreenshot(Screenshot* screenshot)
     EditWindow* editWindow = new EditWindow(screenshot, listWidgetImage);
     if(this->isVisible())
     {
-        QObject::connect(editWindow, SIGNAL(editOverValidated()), this, SLOT(restore()));
-        QObject::connect(editWindow, SIGNAL(editOverCanceled()), this, SLOT(restore()));
+        QObject::connect(editWindow, SIGNAL(editOver()), this, SLOT(restore()));
     }
     QObject::connect(editWindow, SIGNAL(retakeSignal()), this, SLOT(takeScreenshot()));
     QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(saveImage(QPixmap)));
@@ -460,8 +459,7 @@ void MainWindow::openEditWindowOldScreenshot(QListWidgetItem* screenshotClicked)
 {
     // Create a window to edit the screenshot
     EditWindow* editWindow = new EditWindow((Screenshot*)screenshotClicked);
-    QObject::connect(editWindow, SIGNAL(editOverValidated()), this, SLOT(restore()));
-    QObject::connect(editWindow, SIGNAL(editOverCanceled()), this, SLOT(restore()));
+    QObject::connect(editWindow, SIGNAL(editOver()), this, SLOT(restore()));
     QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(saveImage(QPixmap)));
     QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(uploadImage(QPixmap)));
 }

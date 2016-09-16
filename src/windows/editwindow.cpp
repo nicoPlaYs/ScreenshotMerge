@@ -358,6 +358,15 @@ void EditWindow::mouseReleaseEvent(QMouseEvent* event)
     }
 }
 
+// When we close the window
+void EditWindow::closeEvent(QCloseEvent *event)
+{
+    event->accept();
+
+    // We signal that the edit is over
+    emit editOver();
+}
+
 
 
 // Qt slots
@@ -377,7 +386,7 @@ void EditWindow::validate()
     }
 
     // We signal that the edit is over
-    emit editOverValidated();
+    emit editOver();
 
     // Close the edit window
     this->close();
@@ -394,7 +403,7 @@ void EditWindow::cancel()
     }
 
     // We signal that the edit is over
-    emit editOverCanceled();
+    emit editOver();
 
     // We close the edit window, nothing is modified
     this->close();
