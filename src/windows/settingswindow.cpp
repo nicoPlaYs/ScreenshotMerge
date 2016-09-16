@@ -1,4 +1,4 @@
-#include "include/settingswindow.h"
+#include "include/windows/settingswindow.h"
 
 
 
@@ -21,6 +21,7 @@ SettingsWindow::SettingsWindow() : QDialog()
         spinBoxImageQuality = new QSpinBox(this);
         spinBoxImageQuality->setRange(1, 100);
         spinBoxImageQuality->setValue(this->sliderImageQuality->value());
+        spinBoxImageQuality->setFixedWidth(35);
         QObject::connect(spinBoxImageQuality, SIGNAL(valueChanged(int)), sliderImageQuality, SLOT(setValue(int)));
         QObject::connect(sliderImageQuality, SIGNAL(valueChanged(int)), spinBoxImageQuality, SLOT(setValue(int)));
 
@@ -104,6 +105,7 @@ SettingsWindow::SettingsWindow() : QDialog()
     this->setWindowTitle(tr("Settings"));
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    this->setWindowModality(Qt::ApplicationModal);
     this->show();
     this->setFixedSize(this->size());
 }

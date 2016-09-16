@@ -8,7 +8,7 @@
 
 
 // Main window of the program
-#include "include/mainwindow.h"
+#include "include/windows/mainwindow.h"
 
 
 
@@ -22,6 +22,9 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("nicolasfostier.free.fr");
     app.setWindowIcon(QIcon(":/images/app.ico"));
     app.setQuitOnLastWindowClosed(false);
+
+    // Initialize the random seed
+    qsrand(QDateTime::currentDateTime().toMSecsSinceEpoch());
 
     // Force the app to use the same language as the system
     QString locale = QLocale::system().name().section('_', 0, 0);

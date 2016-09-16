@@ -13,12 +13,14 @@
         <file>images/editwindow/copytoclipboard.ico</file>
         <file>images/editwindow/validate.ico</file>
         <file>images/editwindow/retakescreenshot.ico</file>
-        <file>images/editwindow/pen.ico</file>
         <file>images/editwindow/eraser.ico</file>
         <file>images/menu/settings.ico</file>
         <file>images/menu/restore.ico</file>
         <file>images/toolbar/clearlist.ico</file>
         <file>images/toolbar/noelshack.ico</file>
         <file>images/toolbar/save.ico</file>
+        <file>images/editwindow/frame.ico</file>
+        <file>images/editwindow/freeline.ico</file>
+        <file>images/editwindow/straightline.ico</file>
     </qresource>
 </RCC>

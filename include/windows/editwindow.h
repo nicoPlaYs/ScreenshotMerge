@@ -23,10 +23,13 @@
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QDesktopWidget>
+#include <QSpinBox>
 
 
 // Store a screenshot which can be put in a QListWidget
 #include "include/screenshot.h"
+
+#include <QDebug>
 
 
 
@@ -40,8 +43,10 @@ class EditWindow : public QMainWindow
         // Settings
         QSettings* settings;
 
-        // Color of the draw tool
-        QColor drawColor;
+        // Pen of the draw tool
+        QPen drawPen;
+        //
+        QPen eraseTempPen;
 
         // Last point of the current polyline
         QPoint lastPointPolyline;
@@ -58,8 +63,12 @@ class EditWindow : public QMainWindow
 
             QAction* actionColor;
             QActionGroup* actionGroupDrawTool;
-                QAction* actionPen;
+                QAction* actionFreeLine;
+                QAction* actionLine;
+                QAction* actionFrame;
                 QAction* actionEraser;
+            QSlider* sliderPenWidth;
+                QSpinBox* spinBoxPenWidth;
 
         // Main widget of the window
         QWidget* widgetMain;
@@ -74,18 +83,16 @@ class EditWindow : public QMainWindow
         Screenshot* screenshot;
         // List of all the taken screenshots
         QListWidget* listWidgetImage;
-        // Usefull to refuse new screenshot to be taken when one is on his way to be taken / cropped
-        bool* canTakeNewScreenshot;
         // QPixmap to show
         QPixmap* screenshotToShow;
         // QPainter to draw on the screenshot
         QPainter* painterScreenshot;
         // List of the new drawings
-        QList<ColoredPoly> newDrawings;
+        QLinkedList<Drawing*> newDrawingsList;
 
     // Constructor
     public :
-        EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage = 0, bool* canTakeNewScreenshot = 0);
+        EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage = 0);
 
     // Destructor
     public :
@@ -103,9 +110,6 @@ class EditWindow : public QMainWindow
         // When we release the click on the window
         void mouseReleaseEvent(QMouseEvent* event);
 
-        // When the window is closing
-        void closeEvent(QCloseEvent* event);
-
     // Qt slots
     public slots:
         // Validate
@@ -122,8 +126,10 @@ class EditWindow : public QMainWindow
         // Upload the screenshot to NoelShack
         void upload();
 
+        // Change the width of the draw tool
+        void changePenWidth(int width);
         // Change the color of the draw tool
-        void changeColor();
+        void changePenColor();
 
     // Qt signals
     signals :

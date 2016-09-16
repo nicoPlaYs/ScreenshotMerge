@@ -13,6 +13,7 @@
 #include <QDesktopWidget>
 
 
+
 // Store a screenshot which can be put in a QListWidget
 #include "include/screenshot.h"
 

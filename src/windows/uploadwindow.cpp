@@ -1,4 +1,4 @@
-#include "include/uploadwindow.h"
+#include "include/windows/uploadwindow.h"
 
 
 
@@ -42,10 +42,11 @@ UploadWindow::UploadWindow(QNetworkReply* reply) : QDialog()
 
     // Configuration of the window
     this->setWindowTitle(tr("Uploading to NoelShack"));
-    this->setModal(true);
+    this->setWindowModality(Qt::ApplicationModal);
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setFixedSize(430,100);
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+    this->show();
 }
 
 

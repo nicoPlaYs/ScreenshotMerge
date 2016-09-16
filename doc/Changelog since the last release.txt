@@ -1,2 +1,11 @@
+1.5 :
+	Bug fixes : 
+		- Fix the possibility to take a screenshot of a null size
+		- Fix the possibility to take a screenshot when the edit or setting window is opened with an old screenshot
+			- It's now impossible to take a screenshot when any modal window of the program is opened
+	
 Idea to implement :
 	- Autoscroll Wizard : take screenshots and scroll automaticly to the end of a page
+	
+	
+Stocker les lignes / dessins dans un map avec les points en clés ?

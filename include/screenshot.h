@@ -5,13 +5,18 @@
 
 #include <QListWidgetItem>
 #include <QDateTime>
-#include <QList>
+#include <QLinkedList>
+#include <QMultiMap>
 #include <QPolygon>
 #include <QPainter>
 
 
-// Associate a polygon with a color
-#include "include/coloredpoly.h"
+// A polyline which can be drawn by the user
+#include "include/drawings/polyline.h"
+// A straight line which can be drawn by the user
+#include "include/drawings/straightline.h"
+// A frame which can be drawn by the user
+#include "include/drawings/frame.h"
 
 
 
@@ -23,17 +28,17 @@ class Screenshot : public QListWidgetItem
         // The screenshot
         QPixmap image;
         // The drawings on the screenshot
-        QList<ColoredPoly> drawings;
+        QLinkedList<Drawing*> drawingsList;
 
     // Getter
     public :
         QPixmap getImage();
-        QList<ColoredPoly> getDrawings();
+        QLinkedList<Drawing*> getDrawings();
 
     // Setter
     public :
         void setImage(QPixmap image);
-        void setDrawings(QList<ColoredPoly> drawings);
+        void setDrawings(QLinkedList<Drawing*> drawingsList);
 
     // Constructor
     public :
@@ -45,8 +50,8 @@ class Screenshot : public QListWidgetItem
 
     // Methods
     public :
-        // Return a pixmap of the screenshot with all of his drawing on it
-        QPixmap withDrawing();
+        // Return a pixmap of the screenshot with all of his drawings on it
+        QPixmap withDrawings();
 };
 
 

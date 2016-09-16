@@ -7,9 +7,9 @@ QPixmap Screenshot::getImage()
 {
     return image;
 }
-QList<ColoredPoly> Screenshot::getDrawings()
+QLinkedList<Drawing*> Screenshot::getDrawings()
 {
-    return drawings;
+    return drawingsList;
 }
 
 
@@ -19,9 +19,9 @@ void Screenshot::setImage(QPixmap image)
 {
     this->image = image;
 }
-void Screenshot::setDrawings(QList<ColoredPoly> drawings)
+void Screenshot::setDrawings(QLinkedList<Drawing*> drawings)
 {
-    this->drawings = drawings;
+    this->drawingsList = drawings;
 }
 
 
@@ -37,7 +37,11 @@ Screenshot::Screenshot(QPixmap image, const QString &text, QListWidget* parent, 
 // Destructor
 Screenshot::~Screenshot()
 {
-
+    Drawing* drawing;
+    foreach(drawing, drawingsList)
+    {
+        delete drawing;
+    }
 }
 
 
@@ -45,8 +49,8 @@ Screenshot::~Screenshot()
 // Methods
 
 
-// Return a pixmap of the screenshot with all of his drawing on it
-QPixmap Screenshot::withDrawing()
+// Return a pixmap of the screenshot with all of his drawings on it
+QPixmap Screenshot::withDrawings()
 {
     // First, we make a clone of the screenshot without any drawings
     QPixmap finalPixmap = QPixmap(this->image);
@@ -54,26 +58,12 @@ QPixmap Screenshot::withDrawing()
     // We prepare the painter and his pen
     QPainter* painter = new QPainter(&finalPixmap);
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    QPen pen;
 
     // We draw one by one all the drawings of the user on the screenshot
-    ColoredPoly coloredPolyline;
-    foreach(coloredPolyline, this->drawings)
+    Drawing* drawing;
+    foreach(drawing, this->drawingsList)
     {
-        pen.setColor(coloredPolyline.getColor());
-        pen.setWidth(2);
-        painter->setPen(pen);
-
-        // If it's just a point...
-        if(coloredPolyline.getPtrPolyline()->count() == 1)
-        {
-            painter->drawPoint(coloredPolyline.getPtrPolyline()->first());
-        }
-        // If it's a line...
-        else
-        {
-            painter->drawPolyline(*coloredPolyline.getPtrPolyline());
-        }
+        drawing->draw(painter);
     }
 
     // The painting is over

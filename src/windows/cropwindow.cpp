@@ -1,4 +1,4 @@
-#include "include/cropwindow.h"
+#include "include/windows/cropwindow.h"
 
 
 
@@ -25,8 +25,10 @@ CropWindow::CropWindow(QPixmap pixmapFullscreen, QRect screensRect) : QLabel()
 
     // Configure the window
     this->setCursor(Qt::CrossCursor);
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setWindowModality(Qt::ApplicationModal);
+    this->showFullScreen();
     this->resize(screensRect.size());
     this->move(screensRect.topLeft());
 }
@@ -47,6 +49,7 @@ CropWindow::~CropWindow()
 // Methods
 
 
+
 // When we click on the window
 void CropWindow::mousePressEvent(QMouseEvent *event)
 {
@@ -57,7 +60,7 @@ void CropWindow::mousePressEvent(QMouseEvent *event)
     cropOrigin = event->pos();
     // Initialize the crop area
     cropArea.setTopLeft(cropOrigin);
-    cropArea.setSize(QSize(1,1));
+    cropArea.setSize(QSize(0,0));
 }
 
 // When we move on the window
@@ -92,9 +95,19 @@ void CropWindow::mouseReleaseEvent(QMouseEvent *event)
     // Accept the event
     event->accept();
 
-    // Send the cropped screenshot to the edit window
-    emit cropOver(new Screenshot(this->originalPixmap->copy(cropArea), dateShooting, 0));
+    // Verify if the size of the crop area is not null. If it's not the case...
+    if(!cropArea.size().isEmpty())
+    {
+        // ...send the cropped screenshot to the edit window
+        emit cropOver(new Screenshot(this->originalPixmap->copy(cropArea), dateShooting, 0));
 
-    // The crop process is complete, we close the window
-    this->close();
+        // The crop process is complete, we close the window
+        this->close();
+    }
+    // If it's null, the user need to crop it again
+    else
+    {
+        painterMix->drawPixmap(whitePixmap->rect(), *whitePixmap);
+        this->setPixmap(*mixPixmap);
+    }
 }

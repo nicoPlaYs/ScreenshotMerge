@@ -1,13 +1,10 @@
-#include "include/mainwindow.h"
+#include "include/windows/mainwindow.h"
 
 
 
 // Constructor
 MainWindow::MainWindow() : QMainWindow()
 {
-    /* At the begin of the program, there is no screenshot on his way
-     * so we can take one */
-    canTakeNewScreenshot = true;
     // Initialization of the settings variable
     settings = new QSettings();
     // We define the minimum size of the window...
@@ -39,7 +36,7 @@ MainWindow::MainWindow() : QMainWindow()
 
         actionTakeScreenshot = toolBar->addAction(QIcon("://images/toolbar/takescreenshot.ico"), tr("Take a screenshot (Print Screen)"));
         QObject::connect(actionTakeScreenshot, SIGNAL(triggered()), this, SLOT(takeScreenshot()));
-        RegisterHotKey((HWND) this->winId(), 1, 0x4000, VK_SNAPSHOT);
+        RegisterHotKey((HWND) this->winId(), 27156547, 0, VK_SNAPSHOT);
 
         actionSaveMerged = toolBar->addAction(QIcon("://images/toolbar/save.ico"), tr("Merge and save it (Ctrl+S)"));
         actionSaveMerged->setShortcut(QKeySequence::Save);
@@ -168,7 +165,7 @@ QPixmap* MainWindow::merge()
         int currentY = 0;
         for(int i = 0; i < listWidgetImage->count(); i++)
         {
-            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->withDrawing();
+            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->withDrawings();
 
             painterMergedScreenshots->drawPixmap(0, currentY, currentPixmap);
 
@@ -186,6 +183,35 @@ QPixmap* MainWindow::merge()
 }
 
 
+// Use to receive globals hotkeys events from Windows
+bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
+{
+    Q_UNUSED(eventType);
+    Q_UNUSED(result);
+
+    // If the mesage is about a Windows hotkey...
+    MSG msg = *((MSG*)message);
+    if(msg.message == WM_HOTKEY)
+    {
+        // ... and if it's the hotkey to take a screenshot
+        if(msg.wParam == 27156547)
+        {
+            // We verify if we can take a new screenshot (if there is no other screenshot on his way to be taken / cropped)
+            if(QApplication::activeModalWidget() == 0)
+            {
+                this->takeScreenshot();
+            }
+            else
+            {
+                QApplication::activeModalWidget()->activateWindow();
+            }
+
+            return true;
+        }
+    }
+    return false;
+}
+
 // When 1 state of the window has changed
 void MainWindow::changeEvent(QEvent *event)
 {
@@ -199,33 +225,6 @@ void MainWindow::changeEvent(QEvent *event)
             this->hide();
             this->trayIcon->show();
         }
-    }
-}
-
-// Use to receive globals hotkeys events from Windows
-bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
-{
-    Q_UNUSED(eventType);
-    Q_UNUSED(result);
-
-    // If the mesage is about a Windows hotkey...
-    MSG msg = *((MSG*)message);
-    if(msg.message == WM_HOTKEY)
-    {
-        // ... and if it's the hotkey to take a screenshot
-        if(msg.wParam == 1)
-        {
-            this->takeScreenshot();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
     }
 }
 
@@ -287,7 +286,7 @@ void MainWindow::uploadImage(QPixmap image)
     // Preparation of the data
     QByteArray boundary = "195309827104211";
     QByteArray data = "--" + boundary + "\r\n";
-    data += "Content-Disposition: form-data; name=\"fichier\"; filename=\"Screenshot.jpg\";\r\n";
+    data += "Content-Disposition: form-data; name=\"fichier\"; filename=\"screenshot-" + QString::number(1000 + (qrand() % (9999 - 1000 + 1))) + ".jpg\";\r\n";
     data += "Content-Type: image/jpeg\r\n\r\n";
     data += buffer.readAll() + "\r\n";
     data += "--" + boundary + "--\r\n";
@@ -303,7 +302,7 @@ void MainWindow::uploadImage(QPixmap image)
 
     // Open the upload dialog
     UploadWindow* uploadWindow = new UploadWindow(reply);
-    uploadWindow->show();
+    Q_UNUSED(uploadWindow);
 }
 
 
@@ -318,16 +317,16 @@ void MainWindow::restore()
 // Open the settings dialog
 void MainWindow::openSettings()
 {
-    (new SettingsWindow());
+    new SettingsWindow();
 }
 
 // Open the about dialog : the credits of the program
 void MainWindow::openAbout()
 {
     QMessageBox::about(this, tr("About"),   "<h2><b>Screenshot Merge</b></h2>"
-                                            "<p><b>" + tr("Version :") + "</b>" + " 1.4 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
+                                            "<p><b>" + tr("Version :") + "</b>" + " 1.5 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
                                             "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
-                                            "<b>" + tr("Library used :") + "</b> Qt 5.6.0<br/>"
+                                            "<b>" + tr("Library used :") + "</b> Qt 5.7.0<br/>"
                                             "<b>" + tr("Logo :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
                                             "<b>" + tr("Icon :") + "</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a></p>");
 }
@@ -346,52 +345,46 @@ void MainWindow::activationTrayIcon(QSystemTrayIcon::ActivationReason reason)
 // Shot a screenshot and open a window to edit it
 void MainWindow::takeScreenshot()
 {
-    // We verify if we can take a new screenshot (if there is no other screenshot on his way to be taken / cropped)
-    if(canTakeNewScreenshot == true)
-    {
-        // So now that we will take one, we need to wait the end of the process before take an other one
-        canTakeNewScreenshot = false;
+    // Lower the main window, so it can't be see in the screenshot
+    this->lower();
 
-        // Lower the main window, so it can't be see in the screenshot
-        this->lower();
-
-        // Get the size of the entire screen(s)
-        int screens = QApplication::desktop()->screenCount();
-        QRect screensRect;
-        QRect currentScreenRect;
-        for(int i = 0; i < screens; ++i ){
-             currentScreenRect = QApplication::desktop()->screen(i)->geometry();
-             screensRect = screensRect.united(currentScreenRect);
-        }
-
-        // Get the screenshot of the entire screen(s)
-        QScreen* screen = QApplication::primaryScreen();
-        QPixmap pixmapFullscreen = screen->grabWindow(QApplication::desktop()->winId(),
-                                                       screensRect.x(),
-                                                       screensRect.y(),
-                                                       screensRect.width(),
-                                                       screensRect.height());
-
-        // Create and show the window with the crop tool
-        CropWindow* crop = new CropWindow(pixmapFullscreen, screensRect);
-        crop->show();
-
-        // When the crop windows is closing, we open the edit windows
-        QObject::connect(crop, SIGNAL(cropOver(Screenshot*)), this, SLOT(openEditWindowNewScreenshot(Screenshot*)));
+    // Get the size of the entire screen(s)
+    int screens = QApplication::desktop()->screenCount();
+    QRect screensRect;
+    QRect currentScreenRect;
+    for(int i = 0; i < screens; ++i ){
+         currentScreenRect = QApplication::desktop()->screen(i)->geometry();
+         screensRect = screensRect.united(currentScreenRect);
     }
+
+    // Get the screenshot of the entire screen(s)
+    QScreen* screen = QApplication::primaryScreen();
+    QPixmap pixmapFullscreen = screen->grabWindow(QApplication::desktop()->winId(),
+                                                   screensRect.x(),
+                                                   screensRect.y(),
+                                                   screensRect.width(),
+                                                   screensRect.height());
+
+    // Create and show the window with the crop tool
+    CropWindow* crop = new CropWindow(pixmapFullscreen, screensRect);
+
+    // When the crop windows is closing, we open the edit windows
+    QObject::connect(crop, SIGNAL(cropOver(Screenshot*)), this, SLOT(openEditWindowNewScreenshot(Screenshot*)));
 }
+
 // Open a window to edit a new screenshot
 void MainWindow::openEditWindowNewScreenshot(Screenshot* screenshot)
 {
     // Create a window to edit the screenshot
-    EditWindow* editWindow = new EditWindow(screenshot, listWidgetImage, &canTakeNewScreenshot);
-    QObject::connect(editWindow, SIGNAL(editOverValidated()), this, SLOT(restore()));
+    EditWindow* editWindow = new EditWindow(screenshot, listWidgetImage);
+    if(this->isVisible())
+    {
+        QObject::connect(editWindow, SIGNAL(editOverValidated()), this, SLOT(restore()));
+        QObject::connect(editWindow, SIGNAL(editOverCanceled()), this, SLOT(restore()));
+    }
     QObject::connect(editWindow, SIGNAL(retakeSignal()), this, SLOT(takeScreenshot()));
     QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(saveImage(QPixmap)));
     QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(uploadImage(QPixmap)));
-
-    // And open it
-    editWindow->show();
 }
 
 // Merge the screenshots in the list and save the result
@@ -471,9 +464,6 @@ void MainWindow::openEditWindowOldScreenshot(QListWidgetItem* screenshotClicked)
     QObject::connect(editWindow, SIGNAL(editOverCanceled()), this, SLOT(restore()));
     QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(saveImage(QPixmap)));
     QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(uploadImage(QPixmap)));
-
-    // And open it
-    editWindow->show();
 }
 
 // Raise the selected image on the list

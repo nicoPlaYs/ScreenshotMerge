@@ -35,13 +35,13 @@
 
 
 // The window to change the program settings
-#include "include/settingswindow.h"
+#include "include/windows/settingswindow.h"
 // The window to crop the screenshot of the entire screen
-#include "include/cropwindow.h"
+#include "include/windows/cropwindow.h"
 // The window to display an image
-#include "include/editwindow.h"
+#include "include/windows/editwindow.h"
 // Window which appears when uploading an image to NoelShack
-#include "include/uploadwindow.h"
+#include "include/windows/uploadwindow.h"
 
 
 
@@ -87,9 +87,6 @@ class MainWindow : public QMainWindow
             QMenu* menuTrayIcon;
                 QAction* actionOpen;
 
-        // Usefull to refuse new screenshot to be taken when one is on his way to be taken / cropped
-        bool canTakeNewScreenshot;
-
     // Constructor
     public :
         MainWindow();
@@ -105,10 +102,10 @@ class MainWindow : public QMainWindow
         // Merge the screenshots in the list and return the result
         QPixmap* merge();
 
-        // When 1 state of the window has changed
-        void changeEvent(QEvent *event);
         // Use to receive globals hotkeys events from Windows
         bool nativeEvent(const QByteArray &eventType, void *message, long *result);
+        // When 1 state of the window has changed
+        void changeEvent(QEvent *event);
         // Quit the application when the main window is closed
         void closeEvent(QCloseEvent* event);
 
