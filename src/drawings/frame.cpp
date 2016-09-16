@@ -81,7 +81,7 @@ bool Frame::isHitted(QRect hitbox)
         x--;
     }
     // Left line
-    while(y != this->frame.topLeft().y())
+    while(y != this->frame.topLeft().y() - 1)
     {
         if(hitbox.contains(QPoint(x, y)))
         {
