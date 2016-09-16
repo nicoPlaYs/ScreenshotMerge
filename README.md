@@ -20,7 +20,7 @@
 <img src="http://i.imgur.com/TL6Gk00.png"/>
 
 <br/><h3>Editor</h3>
-<img src="http://i.imgur.com/uWed5dN.png"/>
+<img src="http://i.imgur.com/HwCYzCF.png"/>
 <ul>
 <li><b>Green button :</b> validate the screenshot / the edits</li>
 <li><b>Red button :</b> cancel the screeenshot / the edits</li>
@@ -28,9 +28,12 @@
 <li><b>Floppy disk :</b> save just this screenshot</li>
 <li><b>Two pieces of paper :</b> copy the screenshot into the clipboard</li>
 <li><b>NoelShack logo :</b> upload just this screenshot to noelshack.com</li>
-<li><b>Paint pallet:</b> change the color of the pen</li>
-<li><b>Pen :</b> to draw on the screenshot we activated</li>
-<li><b>Eraser :</b> to erase the drawing of the pen</li>
+<li><b>Slider and spinbox:</b> change the size of the drawing tools</li>
+<li><b>Paint pallet:</b> change the color of the drawing tools</li>
+<li><b>Free line :</b> to draw a free line</li>
+<li><b>Straight line :</b> to draw a straight line</li>
+<li><b>Frame :</b> to draw a frame</li>
+<li><b>Eraser :</b> to erase a drawing</li>
 </ul>
 
 <br/><br/><h3>Credits :</h3>
