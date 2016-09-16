@@ -30,9 +30,9 @@
 <li><b>NoelShack logo :</b> upload just this screenshot to noelshack.com</li>
 <li><b>Slider and spinbox:</b> change the size of the drawing tools</li>
 <li><b>Paint pallet:</b> change the color of the drawing tools</li>
-<li><b>Free line :</b> to draw a free line on the screenshot</li>
-<li><b>Straight line :</b> to draw a straight line on the screenshot</li>
-<li><b>Frame :</b> to draw a frame on the screenshot</li>
+<li><b>Free line :</b> to draw a free line</li>
+<li><b>Straight line :</b> to draw a straight line</li>
+<li><b>Frame :</b> to draw a frame</li>
 <li><b>Eraser :</b> to erase a drawing</li>
 </ul>
 
