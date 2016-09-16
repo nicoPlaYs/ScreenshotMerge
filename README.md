@@ -20,7 +20,7 @@
 <img src="http://i.imgur.com/TL6Gk00.png"/>
 
 <br/><h3>Editor</h3>
-<img src="http://i.imgur.com/HwCYzCF.png"/>
+<img src="http://i.imgur.com/bY1GQf9.png"/>
 <ul>
 <li><b>Green button :</b> validate the screenshot / the edits</li>
 <li><b>Red button :</b> cancel the screeenshot / the edits</li>
@@ -37,4 +37,4 @@
 </ul>
 
 <br/><br/><h3>Credits :</h3>
-<img src="http://i.imgur.com/Y2dPWBd.png"/>
+<img src="http://i.imgur.com/PUr552n.png"/>
