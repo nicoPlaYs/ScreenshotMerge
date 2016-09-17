@@ -7,7 +7,7 @@
 <li><b>Camera tool :</b> take a screenshot of the primary screen and crop it easily with an area selector<br/>
 (<u>Note :</u> you can press the 'Print Screen' key at anytime to take a screenshot with this tool, the program need just to be launch)</li>
 <li><b>Floppy disk :</b> merge the screenshots which are in the list and save the result</li>
-<li><b>Two pieces of paper :</b> copy the screenshot into the clipboard</li>
+<li><b>Two pieces of paper :</b> merge the screenshots which are in the list and copy the result into the clipboard</li>
 <li><b>NoelShack logo :</b> merge the screenshots which are in the list and upload the result to noelshack.com</li>
 <li><b>Picture of a tree :</b> display the selected image<br/>
 (Note : double-click on a screenshot on the list do it too)</li>
