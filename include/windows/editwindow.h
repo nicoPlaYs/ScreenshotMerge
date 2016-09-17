@@ -31,7 +31,7 @@
 
 #include <QDebug>
 
-
+enum typeDrawTool{FREELINE,STRAIGHTLINE,FRAME,ERASER};
 
 // The window to display and edit an screenshot
 class EditWindow : public QMainWindow
@@ -64,7 +64,7 @@ class EditWindow : public QMainWindow
             QAction* actionColor;
             QActionGroup* actionGroupDrawTool;
                 QAction* actionFreeLine;
-                QAction* actionLine;
+                QAction* actionStraightLine;
                 QAction* actionFrame;
                 QAction* actionEraser;
             QSlider* sliderPenWidth;
@@ -132,6 +132,8 @@ class EditWindow : public QMainWindow
         void changePenWidth(int width);
         // Change the color of the draw tool
         void changePenColor();
+        // When the drawing tool is changing
+        void changeDrawingTool();
 
     // Qt signals
     signals :

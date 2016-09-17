@@ -87,19 +87,39 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage) : Q
     toolBar->addSeparator();
 
         actionGroupDrawTool = new QActionGroup(toolBar);
+        QObject::connect(actionGroupDrawTool, SIGNAL(triggered(QAction*)), this, SLOT(changeDrawingTool()));
 
             actionFreeLine = actionGroupDrawTool->addAction(QIcon("://images/editwindow/freeline.ico"), tr("Free line"));
             actionFreeLine->setCheckable(true);
-            actionFreeLine->setChecked(true);
 
-            actionLine = actionGroupDrawTool->addAction(QIcon("://images/editwindow/straightline.ico"), tr("Straight line"));
-            actionLine->setCheckable(true);
+            actionStraightLine = actionGroupDrawTool->addAction(QIcon("://images/editwindow/straightline.ico"), tr("Straight line"));
+            actionStraightLine->setCheckable(true);
 
             actionFrame = actionGroupDrawTool->addAction(QIcon("://images/editwindow/frame.ico"), tr("Frame"));
             actionFrame->setCheckable(true);
 
             actionEraser = actionGroupDrawTool->addAction(QIcon("://images/editwindow/eraser.ico"), tr("Eraser"));
             actionEraser->setCheckable(true);
+
+            // Activate the last drawing tool used by the user
+            switch(settings->value("EditWindow/drawingTool", typeDrawTool(FREELINE)).toInt())
+            {
+                case FREELINE :
+                actionFreeLine->setChecked(true);
+                break;
+
+                case STRAIGHTLINE :
+                actionStraightLine->setChecked(true);
+                break;
+
+                case FRAME :
+                actionFrame->setChecked(true);
+                break;
+
+                case ERASER :
+                actionEraser->setChecked(true);
+                break;
+            }
 
     toolBar->addActions(actionGroupDrawTool->actions());
 
@@ -210,7 +230,7 @@ void EditWindow::mousePressEvent(QMouseEvent* event)
             // We keep this new point as the last point
             lastPointPolyline = mousePosLabel;
         }
-        else if(this->actionLine->isChecked())
+        else if(this->actionStraightLine->isChecked())
         {
             // Create a new straight line
             StraightLine* straightLine = new StraightLine(drawPen, mousePosLabel, mousePosLabel);
@@ -274,7 +294,7 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
             // We keep this new point as the last point
             lastPointPolyline = mousePosLabel;
         }
-        else if(this->actionLine->isChecked())
+        else if(this->actionStraightLine->isChecked())
         {
             // Create a new straight line
             StraightLine* straightLine = (StraightLine*) newDrawingsList.last();
@@ -474,4 +494,30 @@ void EditWindow::changePenColor()
         settings->setValue("EditWindow/drawColorG", newColor.green());
         settings->setValue("EditWindow/drawColorB", newColor.blue());
     }
+}
+
+// When the drawing tool is changing
+void EditWindow::changeDrawingTool()
+{
+    enum typeDrawTool drawingTool(FREELINE);
+
+    if(actionFreeLine->isChecked())
+    {
+        drawingTool = FREELINE;
+    }
+    else if(actionStraightLine->isChecked())
+    {
+        drawingTool = STRAIGHTLINE;
+    }
+    else if(actionFrame->isChecked())
+    {
+        drawingTool = FRAME;
+    }
+    else if(actionEraser->isChecked())
+    {
+        drawingTool = ERASER;
+    }
+
+    // Save the last drawing tool used by the user
+    settings->setValue("EditWindow/drawingTool", drawingTool);
 }

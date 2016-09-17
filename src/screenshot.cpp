@@ -1,6 +1,6 @@
 #include "include/screenshot.h"
 
-
+#include <QDebug>
 
 // Getter
 QPixmap Screenshot::getImage()
@@ -37,10 +37,9 @@ Screenshot::Screenshot(QPixmap image, const QString &text, QListWidget* parent, 
 // Destructor
 Screenshot::~Screenshot()
 {
-    Drawing* drawing;
-    foreach(drawing, drawingsList)
+    while(!drawingsList.isEmpty())
     {
-        delete drawing;
+        delete drawingsList.takeFirst();
     }
 }
 
