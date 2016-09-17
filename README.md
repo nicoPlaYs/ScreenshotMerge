@@ -37,4 +37,4 @@
 </ul>
 
 <br/><br/><h3>Credits :</h3>
-<img src="http://i.imgur.com/PUr552n.png"/>
+<img src="http://imgur.com/jlSGoox"/>
