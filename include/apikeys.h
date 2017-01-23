@@ -3,6 +3,6 @@
 
 #include <QString>
 
-const QString IMGUR_CLIENT_ID = "Client-ID XXXXXXXXXX";
+const QString IMGUR_CLIENT_ID = "Client-ID XXXXX";
 
 #endif // APIKEYS_H

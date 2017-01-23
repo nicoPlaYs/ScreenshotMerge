@@ -56,16 +56,16 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
         actionCopyIntoClipboard->setShortcut(QKeySequence::Copy);
         QObject::connect(actionCopyIntoClipboard, SIGNAL(triggered()), this, SLOT(copyIntoClipboard()));
 
+        actionUploadScreenshot = toolBar->addAction(QIcon("://images/toolbar/upload.ico"), tr("Merge and upload it (Ctrl+U)"));
+        actionUploadScreenshot->setShortcut(QKeySequence("Ctrl+U"));
+        QObject::connect(actionUploadScreenshot, SIGNAL(triggered()), this, SLOT(uploadScreenshot()));
+
         comboBoxImageHost = new QComboBox(this);
         comboBoxImageHost->addItem(QIcon("://images/toolbar/imgur.ico"), "imgur", QVariant(imgur));
         comboBoxImageHost->addItem(QIcon("://images/toolbar/noelshack.ico"), "NoelShack", QVariant(noelshack));
         comboBoxImageHost->setCurrentIndex(comboBoxImageHost->findData(host));
 
         toolBar->addWidget(comboBoxImageHost);
-
-        actionUploadScreenshot = toolBar->addAction(QIcon("://images/toolbar/upload.ico"), tr("Merge and upload it (Ctrl+U)"));
-        actionUploadScreenshot->setShortcut(QKeySequence("Ctrl+U"));
-        QObject::connect(actionUploadScreenshot, SIGNAL(triggered()), this, SLOT(uploadScreenshot()));
 
     toolBar->addSeparator();
 
