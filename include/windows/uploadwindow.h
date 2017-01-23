@@ -15,8 +15,12 @@
 #include <QNetworkReply>
 
 
+// Upload function in order to send the screenshots to an image host
+#include "include/upload.h"
 
-// Window which appears when uploading an image to NoelShack
+
+
+// Window which appears when uploading an image to an image host website
 class UploadWindow : public QDialog
 {
     Q_OBJECT
@@ -34,12 +38,14 @@ class UploadWindow : public QDialog
             // Cancel the upload and close the window
             QPushButton* cancelButton;
 
-        // Reply of NoelShack
+        // Host
+        ImageHost host;
+        // Reply of the image host
         QNetworkReply* reply;
 
     // Constructor
     public :
-        UploadWindow(QNetworkReply* reply);
+        UploadWindow(QNetworkReply* reply, ImageHost host);
 
     // Destructor
     public :

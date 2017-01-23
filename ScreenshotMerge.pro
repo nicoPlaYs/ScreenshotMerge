@@ -11,7 +11,9 @@ SOURCES +=  src/screenshot.cpp \
         src/drawings/drawing.cpp \
         src/drawings/polyline.cpp \
         src/drawings/straightline.cpp \
-        src/drawings/frame.cpp
+        src/drawings/frame.cpp \
+    src/upload.cpp \
+    src/save.cpp
 
 HEADERS  += include/screenshot.h \
         include/windows/mainwindow.h \
@@ -22,7 +24,10 @@ HEADERS  += include/screenshot.h \
         include/drawings/drawing.h \
         include/drawings/polyline.h \
         include/drawings/straightline.h \
-        include/drawings/frame.h
+        include/drawings/frame.h \
+    include/upload.h \
+    include/save.h \
+    include/apikeys.h
 
 RESOURCES += res/images.qrc \
         res/lang.qrc

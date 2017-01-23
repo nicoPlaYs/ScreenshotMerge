@@ -24,12 +24,17 @@
 #include <QScrollBar>
 #include <QDesktopWidget>
 #include <QSpinBox>
+#include <QComboBox>
 
 
 // Store a screenshot which can be put in a QListWidget
 #include "include/screenshot.h"
+// Upload function in order to send the screenshots to an image host
+#include "include/upload.h"
+// Save function
+#include "include/save.h"
 
-#include <QDebug>
+
 
 enum typeDrawTool{FREELINE,STRAIGHTLINE,FRAME,ERASER};
 
@@ -59,7 +64,8 @@ class EditWindow : public QMainWindow
 
             QAction* actionSave;
             QAction* actionCopyIntoClipboard;
-            QAction* actionUpload;
+            QComboBox* comboBoxImageHost;
+            QAction* actionUploadScreenshot;
 
             QAction* actionColor;
             QActionGroup* actionGroupDrawTool;
@@ -92,7 +98,7 @@ class EditWindow : public QMainWindow
 
     // Constructor
     public :
-        EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage = 0);
+        EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* listWidgetImage = 0);
 
     // Destructor
     public :
@@ -125,8 +131,8 @@ class EditWindow : public QMainWindow
         void save();
         // Copy the screenshot to the clipboard
         void copyIntoClipboard();
-        // Upload the screenshot to NoelShack
-        void upload();
+        // Upload the screenshot to an image host website
+        void uploadScreenshot();
 
         // Change the width of the draw tool
         void changePenWidth(int width);
@@ -140,11 +146,7 @@ class EditWindow : public QMainWindow
         // Signal the main window to retake a screenshot
         void retakeSignal();
         // Signal the main window that the edit is over
-        void editOver();
-        // Signal to save the screenshot
-        void saveSignal(QPixmap screenshot);
-        // Signal to upload the screenshot on NoelShack
-        void uploadSignal(QPixmap screenshot);
+        void editOver(QString host);
 };
 
 

@@ -3,7 +3,7 @@
 
 
 // Constructor
-EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage) : QMainWindow()
+EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* listWidgetImage) : QMainWindow()
 {
     this->screenshot = screenshot;
     this->listWidgetImage = listWidgetImage;
@@ -56,9 +56,16 @@ EditWindow::EditWindow(Screenshot* screenshot, QListWidget* listWidgetImage) : Q
         actionCopyIntoClipboard->setShortcut(QKeySequence::Copy);
         QObject::connect(actionCopyIntoClipboard, SIGNAL(triggered()), this, SLOT(copyIntoClipboard()));
 
-        actionUpload = toolBar->addAction(QIcon("://images/toolbar/noelshack.ico"), tr("Upload to NoelShack (Ctrl+U)"));
-        actionUpload->setShortcut(QKeySequence("Ctrl+U"));
-        QObject::connect(actionUpload, SIGNAL(triggered()), this, SLOT(upload()));
+        comboBoxImageHost = new QComboBox(this);
+        comboBoxImageHost->addItem(QIcon("://images/toolbar/imgur.ico"), "imgur", QVariant(imgur));
+        comboBoxImageHost->addItem(QIcon("://images/toolbar/noelshack.ico"), "NoelShack", QVariant(noelshack));
+        comboBoxImageHost->setCurrentIndex(comboBoxImageHost->findData(host));
+
+        toolBar->addWidget(comboBoxImageHost);
+
+        actionUploadScreenshot = toolBar->addAction(QIcon("://images/toolbar/upload.ico"), tr("Merge and upload it (Ctrl+U)"));
+        actionUploadScreenshot->setShortcut(QKeySequence("Ctrl+U"));
+        QObject::connect(actionUploadScreenshot, SIGNAL(triggered()), this, SLOT(uploadScreenshot()));
 
     toolBar->addSeparator();
 
@@ -381,10 +388,11 @@ void EditWindow::mouseReleaseEvent(QMouseEvent* event)
 // When we close the window
 void EditWindow::closeEvent(QCloseEvent *event)
 {
+    // Accept the event
     event->accept();
 
     // We signal that the edit is over
-    emit editOver();
+    emit editOver(comboBoxImageHost->currentText());
 }
 
 
@@ -406,7 +414,7 @@ void EditWindow::validate()
     }
 
     // We signal that the edit is over
-    emit editOver();
+    emit editOver(comboBoxImageHost->currentText());
 
     // Close the edit window
     this->close();
@@ -423,7 +431,7 @@ void EditWindow::cancel()
     }
 
     // We signal that the edit is over
-    emit editOver();
+    emit editOver(comboBoxImageHost->currentText());
 
     // We close the edit window, nothing is modified
     this->close();
@@ -450,7 +458,7 @@ void EditWindow::retake()
 void EditWindow::save()
 {
     // We signal the main window that we want to save a screenshot
-    emit saveSignal(*(labelImage->pixmap()));
+    saveImage(*(labelImage->pixmap()));
 }
 
 // Copy the screenshot to the clipboard
@@ -466,10 +474,10 @@ void EditWindow::copyIntoClipboard()
     QMessageBox::information(this, tr("Clipboard"), tr("Your screenshot has been successfuly put in your clipboard !"));
 }
 
-// Upload the screenshot to NoelShack
-void EditWindow::upload()
+// Upload the screenshot to an image host website
+void EditWindow::uploadScreenshot()
 {
-    emit uploadSignal(*(labelImage->pixmap()));
+    uploadImage(*(labelImage->pixmap()), comboBoxImageHost->currentData().value<ImageHost>(), settings->value("SettingsWindow/imageQuality", 85).toInt());
 }
 
 // Change the width of the draw tool

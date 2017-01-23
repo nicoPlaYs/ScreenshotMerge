@@ -1,17 +1,11 @@
 #include "include/windows/mainwindow.h"
 
 
-
 // Constructor
 MainWindow::MainWindow() : QMainWindow()
 {
     // Initialization of the settings variable
     settings = new QSettings();
-    // We define the minimum size of the window...
-    this->setMinimumSize(289,300);
-    // ... and we restore the size of the window from the previous session
-    this->restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
-
 
     // File menu
     menuFile = menuBar()->addMenu(tr("File"));
@@ -38,6 +32,8 @@ MainWindow::MainWindow() : QMainWindow()
         QObject::connect(actionTakeScreenshot, SIGNAL(triggered()), this, SLOT(takeScreenshot()));
         RegisterHotKey((HWND) this->winId(), 27156547, 0, VK_SNAPSHOT);
 
+    toolBar->addSeparator();
+
         actionSaveMerged = toolBar->addAction(QIcon("://images/toolbar/save.ico"), tr("Merge and save it (Ctrl+S)"));
         actionSaveMerged->setShortcut(QKeySequence::Save);
         QObject::connect(actionSaveMerged, SIGNAL(triggered()), this, SLOT(saveMergedScreenshots()));
@@ -46,9 +42,15 @@ MainWindow::MainWindow() : QMainWindow()
         actionCopyIntoClipboard->setShortcut(QKeySequence::Copy);
         QObject::connect(actionCopyIntoClipboard, SIGNAL(triggered()), this, SLOT(copyIntoClipboardMergedScreenshots()));
 
-        actionUploadMerged = toolBar->addAction(QIcon("://images/toolbar/noelshack.ico"), tr("Merge and upload it (Ctrl+U)"));
-        actionUploadMerged->setShortcut(QKeySequence("Ctrl+U"));
-        QObject::connect(actionUploadMerged, SIGNAL(triggered()), this, SLOT(uploadMergedScreenshots()));
+        actionUploadMergedScreenshots = toolBar->addAction(QIcon("://images/toolbar/upload.ico"), tr("Merge and upload it (Ctrl+U)"));
+        actionUploadMergedScreenshots->setShortcut(QKeySequence("Ctrl+U"));
+        QObject::connect(actionUploadMergedScreenshots, SIGNAL(triggered()), this, SLOT(uploadMergedScreenshots()));
+
+        comboBoxImageHost = new QComboBox(this);
+        comboBoxImageHost->addItem(QIcon("://images/toolbar/imgur.ico"), "imgur", QVariant(imgur));
+        comboBoxImageHost->addItem(QIcon("://images/toolbar/noelshack.ico"), "NoelShack", QVariant(noelshack));
+        comboBoxImageHost->setCurrentText(settings->value("imageHost", "imgur").toString());
+        toolBar->addWidget(comboBoxImageHost);
 
     toolBar->addSeparator();
 
@@ -100,6 +102,12 @@ MainWindow::MainWindow() : QMainWindow()
     trayIcon->setToolTip("Screenshot Merge");
     trayIcon->setContextMenu(menuTrayIcon);
     QObject::connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(activationTrayIcon(QSystemTrayIcon::ActivationReason)));
+
+    // Define the minimum size of the window
+    this->setMinimumSize(this->sizeHint());
+
+    // Restore the size of the window from the previous session
+    this->restoreGeometry(settings->value("MainWindow/geometry").toByteArray());
 }
 
 
@@ -114,23 +122,6 @@ MainWindow::~MainWindow()
 
 // Methods
 
-
-// Give the next screenshot name available for the default directory
-QString MainWindow::nextScreenshotName()
-{
-    QString path = this->settings->value("SettingsWindow/defaultDirectory", QStandardPaths::writableLocation(QStandardPaths::PicturesLocation)).toString();
-
-    // We check every number of screenshot on the directory to find the next screenshot name available
-    QFile nextScreenshotJPG(path + "\\Screenshot00001.jpg");
-    QFile nextScreenshotPNG(path + "\\Screenshot00001.png");
-    for(int i = 2; i < 99999 && (nextScreenshotJPG.exists() || nextScreenshotPNG.exists()); i++)
-    {
-        nextScreenshotJPG.setFileName(path + QString("\\Screenshot") + QString::number(i).rightJustified(5, '0', false) + ".jpg");
-        nextScreenshotPNG.setFileName(path + QString("\\Screenshot") + QString::number(i).rightJustified(5, '0', false) + ".png");
-    }
-
-    return nextScreenshotJPG.fileName();
-}
 
 // Merge the screenshots in the list and return the result
 QPixmap* MainWindow::merge()
@@ -236,6 +227,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
     // We save all the settings and data usefull for a next session
     settings->setValue("MainWindow/geometry", this->saveGeometry());
+    settings->setValue("imageHost", this->comboBoxImageHost->currentText());
 
     // Close the app
     qApp->quit();
@@ -244,66 +236,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
 
 
 // Qt slots
-
-
-// Save an image
-void MainWindow::saveImage(QPixmap image)
-{
-    // We check if the user want to use the default directory or if he want the program to ask him
-    QString path;
-    if(!this->settings->value("SettingsWindow/alwaysUseDefaultDirectory", false).toBool())
-    {
-        // Open the dialog for the user to indicate where he want his merged screenhosts to be saved
-        path = QFileDialog::getSaveFileName(this, tr("Save as..."), nextScreenshotName(), "JPG (*.jpg);;PNG (*.png)");
-    }
-    else
-    {
-        path = nextScreenshotName();
-    }
-
-    // We verify that the user has really selected a path
-    if(path != 0)
-    {
-        // Save the merged screenshots
-        image.save(path, 0, settings->value("SettingsWindow/imageQuality", 85).toInt());
-        if(settings->value("SettingsWindow/alwaysUseDefaultDirectory", false).toBool())
-        {
-            QMessageBox::information(this, tr("Image successfully saved"), tr("Your image has been saved in your default directory !"));
-        }
-    }
-}
-
-// Upload an image on noelshack
-void MainWindow::uploadImage(QPixmap image)
-{
-    // Transform the image into a jpeg
-    QByteArray imageData;
-    QBuffer buffer(&imageData);
-    buffer.open(QIODevice::ReadWrite);
-    image.save(&buffer, "JPG", settings->value("SettingsWindow/imageQuality", 85).toInt());
-    buffer.reset();
-
-    // Preparation of the data
-    QByteArray boundary = "195309827104211";
-    QByteArray data = "--" + boundary + "\r\n";
-    data += "Content-Disposition: form-data; name=\"fichier\"; filename=\"screenshot-" + QString::number(1000 + (qrand() % (9999 - 1000 + 1))) + ".jpg\";\r\n";
-    data += "Content-Type: image/jpeg\r\n\r\n";
-    data += buffer.readAll() + "\r\n";
-    data += "--" + boundary + "--\r\n";
-
-    // Preparation of the request
-    QNetworkRequest request(QUrl("http://www.noelshack.com/api.php"));
-    request.setRawHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
-    request.setRawHeader("Content-Length", QString::number(data.size()).toLatin1());
-
-    // Send all of it to noelshack
-    QNetworkAccessManager* manager = new QNetworkAccessManager(this);
-    QNetworkReply* reply = manager->post(request, data);
-
-    // Open the upload dialog
-    UploadWindow* uploadWindow = new UploadWindow(reply);
-    Q_UNUSED(uploadWindow);
-}
 
 
 // Open the window if it's minimize
@@ -376,14 +308,13 @@ void MainWindow::takeScreenshot()
 void MainWindow::openEditWindowNewScreenshot(Screenshot* screenshot)
 {
     // Create a window to edit the screenshot
-    EditWindow* editWindow = new EditWindow(screenshot, listWidgetImage);
+    EditWindow* editWindow = new EditWindow(screenshot, comboBoxImageHost->currentData().value<ImageHost>(), listWidgetImage);
     if(this->isVisible())
     {
-        QObject::connect(editWindow, SIGNAL(editOver()), this, SLOT(restore()));
+        QObject::connect(editWindow, SIGNAL(editOver(QString)), this, SLOT(restore()));
     }
     QObject::connect(editWindow, SIGNAL(retakeSignal()), this, SLOT(takeScreenshot()));
-    QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(saveImage(QPixmap)));
-    QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(uploadImage(QPixmap)));
+    QObject::connect(editWindow, SIGNAL(editOver(QString)), comboBoxImageHost, SLOT(setCurrentText(QString)));
 }
 
 // Merge the screenshots in the list and save the result
@@ -435,7 +366,7 @@ void MainWindow::uploadMergedScreenshots()
     if(mergedScreenshots != 0)
     {
         // ... and upload the result
-        uploadImage(*mergedScreenshots);
+        uploadImage(*mergedScreenshots, comboBoxImageHost->currentData().value<ImageHost>(), settings->value("SettingsWindow/imageQuality", 85).toInt());
 
         // We don't need the result of the merged screenshot anymore
         delete mergedScreenshots;
@@ -458,10 +389,9 @@ void MainWindow::openEditWindowOldScreenshot()
 void MainWindow::openEditWindowOldScreenshot(QListWidgetItem* screenshotClicked)
 {
     // Create a window to edit the screenshot
-    EditWindow* editWindow = new EditWindow((Screenshot*)screenshotClicked);
-    QObject::connect(editWindow, SIGNAL(editOver()), this, SLOT(restore()));
-    QObject::connect(editWindow, SIGNAL(saveSignal(QPixmap)), this, SLOT(saveImage(QPixmap)));
-    QObject::connect(editWindow, SIGNAL(uploadSignal(QPixmap)), this, SLOT(uploadImage(QPixmap)));
+    EditWindow* editWindow = new EditWindow((Screenshot*)screenshotClicked, comboBoxImageHost->currentData().value<ImageHost>());
+    QObject::connect(editWindow, SIGNAL(editOver(QString)), this, SLOT(restore()));
+    QObject::connect(editWindow, SIGNAL(editOver(QString)), comboBoxImageHost, SLOT(setCurrentText(QString)));
 }
 
 // Raise the selected image on the list

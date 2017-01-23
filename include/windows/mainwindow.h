@@ -28,6 +28,8 @@
 #include <QNetworkReply>
 #include <QRegExp>
 #include <QClipboard>
+#include <QComboBox>
+#include <QVariant>
 
 
 // For globals hotkeys on Windows
@@ -40,8 +42,12 @@
 #include "include/windows/cropwindow.h"
 // The window to display an image
 #include "include/windows/editwindow.h"
-// Window which appears when uploading an image to NoelShack
+// Window which appears when uploading an image to an image host website
 #include "include/windows/uploadwindow.h"
+// Upload function in order to send the screenshots to an image host
+#include "include/upload.h"
+// Save function
+#include "include/save.h"
 
 
 
@@ -66,9 +72,12 @@ class MainWindow : public QMainWindow
         // The main toolbar
         QToolBar* toolBar;
             QAction* actionTakeScreenshot;
+
             QAction* actionSaveMerged;
             QAction* actionCopyIntoClipboard;
-            QAction* actionUploadMerged;
+            QComboBox* comboBoxImageHost;
+            QAction* actionUploadMergedScreenshots;
+
             QAction* actionEdit;
             QAction* actionUp;
             QAction* actionDown;
@@ -97,8 +106,6 @@ class MainWindow : public QMainWindow
 
     // Methods
     public :
-        // Give the next screenshot name available for the default directory
-        QString nextScreenshotName();
         // Merge the screenshots in the list and return the result
         QPixmap* merge();
 
@@ -106,16 +113,11 @@ class MainWindow : public QMainWindow
         bool nativeEvent(const QByteArray &eventType, void *message, long *result);
         // When 1 state of the window has changed
         void changeEvent(QEvent *event);
-        // Quit the application when the main window is closed
+        // Called when the main window is closed
         void closeEvent(QCloseEvent* event);
 
     // Qt slots
     public slots :
-        // Save an image
-        void saveImage(QPixmap image);
-        // Upload an image on noelshack
-        void uploadImage(QPixmap image);
-
         // Restore the window if it's minimize
         void restore();
         // Open the settings dialog
@@ -134,7 +136,7 @@ class MainWindow : public QMainWindow
         void saveMergedScreenshots();
         // Merge the screenshots in the list and copy the result into the clipboard
         void copyIntoClipboardMergedScreenshots();
-        // Merge the screenshots in the list and upload the result to noelshack
+        // Merge the screenshots in the list and upload the result to an image host
         void uploadMergedScreenshots();
         // Open a window to edit the selected image on the list
         void openEditWindowOldScreenshot();

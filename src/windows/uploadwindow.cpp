@@ -3,8 +3,9 @@
 
 
 // Constructor
-UploadWindow::UploadWindow(QNetworkReply* reply) : QDialog()
+UploadWindow::UploadWindow(QNetworkReply* reply, ImageHost host) : QDialog()
 {
+    this->host = host;
     this->reply = reply;
     QObject::connect(this->reply, SIGNAL(uploadProgress(qint64,qint64)), this, SLOT(updateUploadProgress(qint64,qint64)));
     QObject::connect(this->reply, SIGNAL(finished()), this, SLOT(uploadFinished()));
@@ -41,7 +42,7 @@ UploadWindow::UploadWindow(QNetworkReply* reply) : QDialog()
 
 
     // Configuration of the window
-    this->setWindowTitle(tr("Uploading to NoelShack"));
+    this->setWindowTitle(tr("Uploading..."));
     this->setWindowModality(Qt::ApplicationModal);
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setFixedSize(430,100);
@@ -75,11 +76,9 @@ void UploadWindow::updateUploadProgress(qint64 bytesSent, qint64 bytesTotal)
 // Upload is finished
 void UploadWindow::uploadFinished()
 {
-    // Get the correct link of just the image
-    QString link = reply->readAll();
-    QRegExp exp("(\\d+)-(\\d+)-(\\d+)-(\\S+)");
-    exp.indexIn(link);
-    link = "http://image.noelshack.com/fichiers/" + exp.cap(1) + "/" + exp.cap(2) + "/" + exp.cap(3) + "-" + exp.cap(4);
+    this->setWindowTitle(tr("Uploaded with success !"));
+
+    QString link = linkUploadedScreenshot(reply->readAll(), host);
 
     // Update the progressbar to 100%
     uploadProgressBar->setRange(0,100);
