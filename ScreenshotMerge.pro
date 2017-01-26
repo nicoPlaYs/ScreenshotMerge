@@ -34,7 +34,7 @@ RESOURCES += res/images.qrc \
 
 TRANSLATIONS = res/lang/screenshotmerge_fr.ts
 
-VERSION = 1.6
+VERSION = 1.6.1
 
 RC_ICONS += res/images/app.ico
 QMAKE_TARGET_PRODUCT = "Screenshot Merge"
