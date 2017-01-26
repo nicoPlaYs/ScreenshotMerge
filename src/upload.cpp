@@ -29,7 +29,8 @@ void uploadImage(QPixmap image, ImageHost host, int quality)
         {
             request.setUrl(QUrl("http://www.noelshack.com/api.php"));
 
-            dataImage.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"fichier\""));
+            dataImage.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"fichier\"; filename=\"screenshot-"
+                                                                                    + QString::number(1000 + (qrand() % (9999 - 1000 + 1))) + ".jpg\";"));
         }
         break;
 
@@ -47,6 +48,7 @@ void uploadImage(QPixmap image, ImageHost host, int quality)
 
     QNetworkAccessManager* manager = new QNetworkAccessManager();
     QNetworkReply* reply = manager->post(request, data);
+    manager->setParent(reply);
 
     // Open the upload dialog
     UploadWindow* uploadWindow = new UploadWindow(reply, host);
