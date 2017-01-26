@@ -1,7 +1,10 @@
-# Dossier des fichiers binaires
+# Sensitive data
+include/apikeys.h
+
+# Bin
 bin/
 
-# Fichier user de Qt
+# Qt
 *.pro.user
 
 # Windows image file caches
