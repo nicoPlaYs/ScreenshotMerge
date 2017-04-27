@@ -455,9 +455,6 @@ void EditWindow::validate()
 // Retake the screenshot
 void EditWindow::retake()
 {
-    //and we delete the screenshot
-    delete screenshot;
-
     // We lower the edit windows
     this->lower();
 
