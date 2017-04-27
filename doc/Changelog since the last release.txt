@@ -1,14 +1,2 @@
-New feature :
-	- Check at launch if there is a new version available to download on github
-
-Bug fixe :
-	- Crash when removing a drawing, canceling the edit, and then reopening it
-
-Improvement :
-	- Various memory leak
-	- Updated to Qt 5.7.1
-
-
-
 Idea to implement :
 	- Autoscroll Wizard : take screenshots and scroll automaticly to the end of a page
