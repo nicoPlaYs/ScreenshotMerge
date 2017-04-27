@@ -107,7 +107,7 @@ SettingsWindow::SettingsWindow() : QDialog()
     this->setWindowFlags(Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
     this->setWindowModality(Qt::ApplicationModal);
     this->show();
-    this->setFixedSize(this->size());
+    this->setMinimumSize(this->size());
 }
 
 

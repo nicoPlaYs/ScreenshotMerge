@@ -18,6 +18,10 @@ Frame::Frame(QPen pen, QPoint P1, QPoint P2) : Drawing(pen)
     this->firstPoint = P1;
     this->setEndPoint(P2);
 }
+Frame::Frame(Frame const& frame) : Drawing(frame.pen){
+    this->firstPoint = frame.firstPoint;
+    this->frame = frame.frame;
+}
 
 
 
@@ -30,6 +34,12 @@ Frame::~Frame()
 
 
 // Methods
+
+// Clone the frame
+Drawing* Frame::clone(){
+    return new Frame(*this);
+}
+
 
 // Draw the frame
 void Frame::draw(QPainter *painter)

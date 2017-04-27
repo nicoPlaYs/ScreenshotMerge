@@ -7,7 +7,13 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
 {
     this->screenshot = screenshot;
     this->listWidgetImage = listWidgetImage;
-    this->newDrawingsList = screenshot->getDrawings();
+
+   	Drawing* drawing;
+    foreach(drawing, screenshot->getDrawings())
+    {
+        this->newDrawingsList.append(drawing->clone());
+    }
+
     this->screenshotToShow = new QPixmap(screenshot->withDrawings());
     this->painterScreenshot = new QPainter(screenshotToShow);
     painterScreenshot->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
@@ -35,7 +41,7 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
 
         actionCancel = toolBar->addAction(QIcon("://images/editwindow/cancel.ico"), tr("Cancel (Escape)"));
         actionCancel->setShortcut(QKeySequence(Qt::Key_Escape));
-        QObject::connect(actionCancel, SIGNAL(triggered()), this, SLOT(cancel()));
+        QObject::connect(actionCancel, SIGNAL(triggered()), this, SLOT(close()));
 
         // If we edit a fresh new screenshot...
         if(this->listWidgetImage != 0)
@@ -167,6 +173,9 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
 
         // Add the scroll area to the layout
         layout->addWidget(scrollArea, Qt::AlignCenter);
+
+    // The edit isn't validated yet
+    this->isValidated = false;
 
     // Configuration of the window
     this->setWindowTitle(tr("Edit your screenshot"));
@@ -391,6 +400,39 @@ void EditWindow::closeEvent(QCloseEvent *event)
     // Accept the event
     event->accept();
 
+    // Check is the edit has been validated
+    if(this->isValidated)
+    {
+        // We add the new drawings to the screenshot after deleting the newest which is empty
+        screenshot->setDrawings(newDrawingsList);
+
+        // If we edit a fresh new screenshot...
+        if(listWidgetImage != 0)
+        {
+            // ...we add the screenshot to the list
+            listWidgetImage->addItem(screenshot);
+        }
+
+        // We signal that the edit is over
+        emit editOver(comboBoxImageHost->currentText());
+    }
+    else
+    {
+
+        // If we edit a fresh new screenshot...
+        if(listWidgetImage != 0)
+        {
+            // ...we delete the screenshot
+            delete screenshot;
+        }
+
+        // Delete every new drawings
+        while(!newDrawingsList.isEmpty())
+        {
+            delete newDrawingsList.takeFirst();
+        }
+    }
+
     // We signal that the edit is over
     emit editOver(comboBoxImageHost->currentText());
 }
@@ -403,37 +445,10 @@ void EditWindow::closeEvent(QCloseEvent *event)
 // Update the pixmap of the displayed screenshot with the new drawings
 void EditWindow::validate()
 {
-    // We add the new drawings to the screenshot after deleting the newest which is empty
-    screenshot->setDrawings(newDrawingsList);
-
-    // If we edit a fresh new screenshot...
-    if(listWidgetImage != 0)
-    {
-        // ...we add the screenshot to the list
-        listWidgetImage->addItem(screenshot);
-    }
-
-    // We signal that the edit is over
-    emit editOver(comboBoxImageHost->currentText());
+    // The edit is validated
+    this->isValidated = true;
 
     // Close the edit window
-    this->close();
-}
-
-// Cancel
-void EditWindow::cancel()
-{
-    // If we edit a fresh new screenshot...
-    if(listWidgetImage != 0)
-    {
-        // ...we delete the screenshot
-        delete screenshot;
-    }
-
-    // We signal that the edit is over
-    emit editOver(comboBoxImageHost->currentText());
-
-    // We close the edit window, nothing is modified
     this->close();
 }
 

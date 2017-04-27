@@ -73,25 +73,29 @@ void UploadWindow::updateUploadProgress(qint64 bytesSent, qint64 bytesTotal)
     }
 }
 
-// Upload is finished
+// Read and process the reply from the image host
 void UploadWindow::uploadFinished()
 {
-    this->setWindowTitle(tr("Uploaded with success !"));
+    // Check if the upload was success
+    if(reply->error() == QNetworkReply::NoError)
+    {
+        this->setWindowTitle(tr("Uploaded with success !"));
 
-    QString link = linkUploadedScreenshot(reply->readAll(), host);
+        QString link = linkUploadedScreenshot(reply->readAll(), host);
 
-    // Update the progressbar to 100%
-    uploadProgressBar->setRange(0,100);
-    uploadProgressBar->setValue(100);
+        // Update the progressbar to 100%
+        uploadProgressBar->setRange(0,100);
+        uploadProgressBar->setValue(100);
 
-    // Write the link into the QLineEdit
-    lineEditLink->setEnabled(true);
-    lineEditLink->setText(link);
-    lineEditLink->setReadOnly(true);
-    lineEditLink->setSelection(0, link.length());
+        // Write the link into the QLineEdit
+        lineEditLink->setEnabled(true);
+        lineEditLink->setText(link);
+        lineEditLink->setReadOnly(true);
+        lineEditLink->setSelection(0, link.length());
 
-    // Enable the button to copy the link to clipboard
-    copyLinkInClipboardButton->setEnabled(true);
+        // Enable the button to copy the link to clipboard
+        copyLinkInClipboardButton->setEnabled(true);
+    }
 }
 
 // Copy the link into the clipboard

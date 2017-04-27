@@ -38,6 +38,9 @@ class Drawing
 
     // Methods
     public :
+        // Clone the shape
+        virtual Drawing* clone() = 0;
+
         // Draw the shape
         virtual void draw(QPainter* painter) = 0;
         // Return true if the shape is hitted by the hitbox in argument

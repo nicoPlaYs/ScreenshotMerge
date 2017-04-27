@@ -50,7 +50,7 @@ class EditWindow : public QMainWindow
 
         // Pen of the draw tool
         QPen drawPen;
-        //
+        // Pen to erase some temporary drawing
         QPen eraseTempPen;
 
         // Last point of the current polyline
@@ -96,6 +96,9 @@ class EditWindow : public QMainWindow
         // List of the new drawings
         QLinkedList<Drawing*> newDrawingsList;
 
+        // True if the window has been closed with the validate button
+        bool isValidated;
+
     // Constructor
     public :
         EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* listWidgetImage = 0);
@@ -122,8 +125,6 @@ class EditWindow : public QMainWindow
     public slots:
         // Validate
         void validate();
-        // Cancel
-        void cancel();
         // Retake the screenshot
         void retake();
 

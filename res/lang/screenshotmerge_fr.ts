@@ -4,83 +4,83 @@
 <context>
     <name>EditWindow</name>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="32"/>
+        <location filename="../../src/windows/editwindow.cpp" line="38"/>
         <source>Validate (Enter)</source>
         <translation>Valider (Enter)</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="36"/>
+        <location filename="../../src/windows/editwindow.cpp" line="42"/>
         <source>Cancel (Escape)</source>
         <translation>Annuler (Echap)</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="44"/>
+        <location filename="../../src/windows/editwindow.cpp" line="50"/>
         <source>Retake the screenshot (Ctrl+N)</source>
         <translation>Reprendre le screenshot (Ctrl+N)</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="51"/>
+        <location filename="../../src/windows/editwindow.cpp" line="57"/>
         <source>Save it (Ctrl+S)</source>
         <translation>L&apos;enregistrer (Ctrl+S)</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="55"/>
+        <location filename="../../src/windows/editwindow.cpp" line="61"/>
         <source>Copy to clipboard (Ctrl+C)</source>
         <translation>Copier dans le presse-papier (Ctrl+C)</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="66"/>
+        <location filename="../../src/windows/editwindow.cpp" line="65"/>
         <source>Merge and upload it (Ctrl+U)</source>
         <translation>Fusionner puis envoyer (Ctrl+U)</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="73"/>
-        <location filename="../../src/windows/editwindow.cpp" line="81"/>
+        <location filename="../../src/windows/editwindow.cpp" line="79"/>
+        <location filename="../../src/windows/editwindow.cpp" line="87"/>
         <source>Size of the drawing tools</source>
         <translation>Taille des outils de dessins</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="91"/>
+        <location filename="../../src/windows/editwindow.cpp" line="97"/>
         <source>Color of the drawing tools</source>
         <translation>Couleur des outils de dessins</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="99"/>
+        <location filename="../../src/windows/editwindow.cpp" line="105"/>
         <source>Free line</source>
         <translation>Ligne libre</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="102"/>
+        <location filename="../../src/windows/editwindow.cpp" line="108"/>
         <source>Straight line</source>
         <translation>Ligne droite</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="105"/>
+        <location filename="../../src/windows/editwindow.cpp" line="111"/>
         <source>Frame</source>
         <translation>Cadre</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="108"/>
+        <location filename="../../src/windows/editwindow.cpp" line="114"/>
         <source>Eraser</source>
         <translation>Effaceur</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="172"/>
+        <location filename="../../src/windows/editwindow.cpp" line="181"/>
         <source>Edit your screenshot</source>
         <translation>Editez votre screenshot</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="474"/>
+        <location filename="../../src/windows/editwindow.cpp" line="489"/>
         <source>Clipboard</source>
         <translation>Presse-papier</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="474"/>
+        <location filename="../../src/windows/editwindow.cpp" line="489"/>
         <source>Your screenshot has been successfuly put in your clipboard !</source>
         <translation>Votre screenshot a été placé dans votre presse-papier avec succès !</translation>
     </message>
     <message>
-        <location filename="../../src/windows/editwindow.cpp" line="494"/>
+        <location filename="../../src/windows/editwindow.cpp" line="509"/>
         <source>Choose your color</source>
         <translation>Choisissez votre couleur</translation>
     </message>
@@ -181,7 +181,7 @@
     <message>
         <location filename="../../src/windows/mainwindow.cpp" line="261"/>
         <source>Library used :</source>
-        <translation>Librairie utilisée :</translation>
+        <translation>Bibliothèque utilisée :</translation>
     </message>
     <message>
         <location filename="../../src/windows/mainwindow.cpp" line="262"/>
@@ -220,6 +220,31 @@
         <location filename="../../src/save.cpp" line="48"/>
         <source>Your image has been saved in your default directory !</source>
         <translation>Votre image a été sauvegardée dans votre répertoire par défaut !</translation>
+    </message>
+    <message>
+        <location filename="../../src/checkforupdate.cpp" line="54"/>
+        <source>Update available !</source>
+        <translation>Mise à jour disponible !</translation>
+    </message>
+    <message>
+        <location filename="../../src/checkforupdate.cpp" line="54"/>
+        <source>A new version of Screenshot Merge is available on github.</source>
+        <translation>Une nouvelle version de Screenshot Merge est disponible sur github.</translation>
+    </message>
+    <message>
+        <location filename="../../src/checkforupdate.cpp" line="55"/>
+        <source>Your version :</source>
+        <translation>Votre version :</translation>
+    </message>
+    <message>
+        <location filename="../../src/checkforupdate.cpp" line="56"/>
+        <source>Latest version available :</source>
+        <translation>Dernière version disponible :</translation>
+    </message>
+    <message>
+        <location filename="../../src/checkforupdate.cpp" line="57"/>
+        <source>Download the latest version</source>
+        <translation>Télécharger la dernière version</translation>
     </message>
 </context>
 <context>
@@ -293,7 +318,7 @@
         <translation>Envoi en cours...</translation>
     </message>
     <message>
-        <location filename="../../src/windows/uploadwindow.cpp" line="79"/>
+        <location filename="../../src/windows/uploadwindow.cpp" line="82"/>
         <source>Uploaded with success !</source>
         <translation>Envoyé avec succès !</translation>
     </message>

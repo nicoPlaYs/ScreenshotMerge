@@ -1,6 +1,6 @@
 #include "include/drawings/straightline.h"
 
-#include <QDebug>
+
 
 // Setter
 void StraightLine::setEndPoint(QPoint endPoint)
@@ -16,6 +16,9 @@ StraightLine::StraightLine(QPen pen, QPoint P1, QPoint P2) : Drawing(pen)
     this->straightLine.setP1(P1);
     this->straightLine.setP2(P2);
 }
+StraightLine::StraightLine(StraightLine const& straightline) : Drawing(straightline.pen){
+    this->straightLine = straightline.straightLine;
+}
 
 
 
@@ -29,12 +32,20 @@ StraightLine::~StraightLine()
 
 // Methods
 
+// Clone the straight line
+Drawing* StraightLine::clone(){
+    return new StraightLine(*this);
+}
+
+
+// Draw the straight line
 void StraightLine::draw(QPainter *painter)
 {
     painter->setPen(this->pen);
     painter->drawLine(this->straightLine);
 }
 
+// Return true if the straight line is hitted by the hitbox in argument
 bool StraightLine::isHitted(QRect hitbox)
 {
     // Increase the size of the hitbox depending on the of the pen

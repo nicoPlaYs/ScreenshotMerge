@@ -55,7 +55,7 @@ class UploadWindow : public QDialog
     public slots :
         // Update the value of the upload progress bar
         void updateUploadProgress(qint64 bytesSent, qint64 bytesTotal);
-        // Upload is finished
+        // Read and process the reply from the image host
         void uploadFinished();
         // Copy the link into the clipboard
         void copyLinkInClipboard();

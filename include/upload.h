@@ -7,6 +7,9 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QHttpMultiPart>
+#include <QPixmap>
+#include <QNetworkAccessManager>
+#include <QBuffer>
 
 enum ImageHost{noelshack, imgur};
 Q_DECLARE_METATYPE(ImageHost)

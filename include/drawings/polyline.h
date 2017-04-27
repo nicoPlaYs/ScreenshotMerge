@@ -22,13 +22,17 @@ class Polyline : public Drawing
     // Constructor
     public :
         Polyline(QPen pen, QPoint firstPoint);
+        Polyline(Polyline const& polyline);
 
     // Destructor
-    public:
+    public :
         ~Polyline();
 
     // Methods
     public :
+        // Clone the polyline
+        virtual Drawing* clone();
+
         // Draw the polyline
         void draw(QPainter* painter);
         // Return true if the polyline is hitted by the hitbox in argument

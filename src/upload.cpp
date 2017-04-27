@@ -1,8 +1,6 @@
-#include <QPixmap>
-#include <QNetworkAccessManager>
-#include <QBuffer>
-
 #include "include/upload.h"
+
+
 
 // Upload an image
 void uploadImage(QPixmap image, ImageHost host, int quality)
@@ -48,11 +46,10 @@ void uploadImage(QPixmap image, ImageHost host, int quality)
 
     QNetworkAccessManager* manager = new QNetworkAccessManager();
     QNetworkReply* reply = manager->post(request, data);
-    manager->setParent(reply);
 
     // Open the upload dialog
     UploadWindow* uploadWindow = new UploadWindow(reply, host);
-    Q_UNUSED(uploadWindow);
+    manager->setParent(uploadWindow);
 }
 
 QString linkUploadedScreenshot(QByteArray byteReplied, ImageHost host)

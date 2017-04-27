@@ -1,6 +1,6 @@
 #include "include/screenshot.h"
 
-#include <QDebug>
+
 
 // Getter
 QPixmap Screenshot::getImage()
@@ -19,9 +19,15 @@ void Screenshot::setImage(QPixmap image)
 {
     this->image = image;
 }
-void Screenshot::setDrawings(QLinkedList<Drawing*> drawings)
+void Screenshot::setDrawings(QLinkedList<Drawing*> drawingsList)
 {
-    this->drawingsList = drawings;
+    // Delete every old drawings
+    while(!this->drawingsList.isEmpty())
+    {
+        delete this->drawingsList.takeFirst();
+    }
+
+    this->drawingsList = drawingsList;
 }
 
 

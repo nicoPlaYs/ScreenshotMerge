@@ -26,6 +26,7 @@ class StraightLine : public Drawing
     // Constructor
     public:
         StraightLine(QPen pen, QPoint P1, QPoint P2);
+        StraightLine(StraightLine const& straightline);
 
     // Destructor
     public:
@@ -33,6 +34,9 @@ class StraightLine : public Drawing
 
     // Methods
     public :
+        // Clone the straight line
+        virtual Drawing* clone();
+
         // Draw the straight line
         virtual void draw(QPainter *painter);
         // Return true if the straight line is hitted by the hitbox in argument

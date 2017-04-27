@@ -7,6 +7,9 @@ Polyline::Polyline(QPen pen, QPoint firstPoint) : Drawing(pen)
 {
     this->polyline.append(firstPoint);
 }
+Polyline::Polyline(Polyline const& polyline) : Drawing(polyline.pen){
+    this->polyline = polyline.polyline;
+}
 
 
 
@@ -19,6 +22,12 @@ Polyline::~Polyline()
 
 
 // Methods
+
+// Clone the polyline
+Drawing* Polyline::clone(){
+    return new Polyline(*this);
+}
+
 
 // Draw the polyline
 void Polyline::draw(QPainter* painter)

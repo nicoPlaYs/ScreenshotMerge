@@ -1,12 +1,10 @@
-// Qt application
 #include <QApplication>
-
-// Qt translation & co
 #include <QTranslator>
 #include <QLocale>
 #include <QLibraryInfo>
 
-
+// Check if there is an update available on github
+#include "include/checkforupdate.h"
 // Main window of the program
 #include "include/windows/mainwindow.h"
 
@@ -20,6 +18,7 @@ int main(int argc, char *argv[])
     app.setApplicationName("Screenshot Merge");
     app.setOrganizationName("Nicolas Fostier");
     app.setOrganizationDomain("nicolasfostier.free.fr");
+    app.setApplicationVersion("1.7.0");
     app.setWindowIcon(QIcon(":/images/app.ico"));
     app.setQuitOnLastWindowClosed(false);
 
@@ -31,6 +30,10 @@ int main(int argc, char *argv[])
     QTranslator translator;
     translator.load(QString("screenshotmerge_") + locale, ":/lang");
     app.installTranslator(&translator);
+
+    // Check if there is an update available on github
+    CheckForUpdate* cfu = new CheckForUpdate(app.applicationVersion());
+    cfu->start();
 
     // Creation of the main window of the program
     MainWindow mainWindow;
@@ -46,6 +49,6 @@ int main(int argc, char *argv[])
         mainWindow.show();
     }
 
-    // Execute the Qt application
+    // Execute the Qt application, enter the event loop
     return app.exec();
 }

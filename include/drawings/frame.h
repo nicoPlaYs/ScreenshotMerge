@@ -28,6 +28,7 @@ class Frame : public Drawing
     // Constructor
     public :
         Frame(QPen pen, QPoint P1, QPoint P2);
+        Frame(Frame const& frame);
 
     // Destructor
     public :
@@ -35,6 +36,9 @@ class Frame : public Drawing
 
     // Methods
     public :
+        // Clone the frame
+        virtual Drawing* clone();
+
         // Draw the frame
         virtual void draw(QPainter *painter);
         // Return true if the frame is hitted by the hitbox in argument

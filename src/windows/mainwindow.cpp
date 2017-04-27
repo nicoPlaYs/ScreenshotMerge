@@ -256,10 +256,10 @@ void MainWindow::openSettings()
 void MainWindow::openAbout()
 {
     QMessageBox::about(this, tr("About"),   "<h2><b>Screenshot Merge</b></h2>"
-                                            "<p><b>" + tr("Version :") + "</b>" + " 1.6.1 (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>"
-                                            "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
-                                            "<b>" + tr("Library used :") + "</b> Qt 5.7.0<br/>"
-                                            "<b>" + tr("Logo :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>"
+                                            "<p><b>" + tr("Version :") + "</b> " + qApp->applicationVersion() + " (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>" +
+                                            "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>" +
+                                            "<b>" + tr("Library used :") + "</b> Qt 5.7.1<br/>" +
+                                            "<b>" + tr("Logo :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>" +
                                             "<b>" + tr("Icon :") + "</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a></p>");
 }
 
