@@ -30,7 +30,6 @@ void CheckForUpdate::run()
 
     QNetworkAccessManager manager;
     reply = manager.get(request);
-    reply->ignoreSslErrors();
     QObject::connect(reply, SIGNAL(finished()), this, SLOT(replyFinished()));
 
     // Enter the event loop
