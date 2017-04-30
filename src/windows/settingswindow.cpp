@@ -52,18 +52,32 @@ SettingsWindow::SettingsWindow() : QDialog()
         labelStartWithWindows = new QLabel(tr("Launch the program minimized at startup : "), this);
         checkBoxStartWithWindows = new QCheckBox(this);
 
-        // We verify if it's the right path for the program to launch on system startup
-        QString pathApp = "\"" + QCoreApplication::applicationFilePath() + "\" -minimized";
-        pathApp.replace("/", "\\");
-        QSettings startup("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-        if(startup.value("Screenshot Merge", QString()).toString() == pathApp)
-        {
-            checkBoxStartWithWindows->setChecked(true);
-        }
-        else
-        {
-            checkBoxStartWithWindows->setChecked(false);
-        }
+        // We verify if the program is alreasy setup to launch at the start of the OS
+
+            // Windows
+            #ifdef Q_OS_WIN
+                QString pathApp = "\"" + QCoreApplication::applicationFilePath() + "\" -minimized";
+                pathApp.replace("/", "\\");
+                QSettings startup("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+                if(startup.value("Screenshot Merge", QString()).toString() == pathApp)
+                {
+                    checkBoxStartWithWindows->setChecked(true);
+                }
+                else
+                {
+                    checkBoxStartWithWindows->setChecked(false);
+                }
+            #endif
+
+            // macOS
+            #ifdef Q_OS_MACOS
+
+            #endif
+
+            // Linux
+            #ifdef Q_OS_LINUX
+
+            #endif
 
     layout->addWidget(labelStartWithWindows, 4, 0, 1, 1);
     layout->addWidget(checkBoxStartWithWindows, 4, 1, 1, 2, Qt::AlignHCenter);
@@ -141,18 +155,32 @@ void SettingsWindow::validateChanges()
     settings->setValue("SettingsWindow/alwaysUseDefaultDirectory", checkBoxAlwaysUseDefaultDirectory->isChecked());
     settings->setValue("SettingsWindow/minimizeTray", checkBoxMinimizeTray->isChecked());
 
-    // Add or remove the program on the list of the programs to launch at the start of Windows
-    QSettings startup("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-    if(checkBoxStartWithWindows->isChecked())
-    {
-        QString pathApp = "\"" + QCoreApplication::applicationFilePath() + "\" -minimized";
-        pathApp.replace("/", "\\");
-        startup.setValue("Screenshot Merge", pathApp);
-    }
-    else
-    {
-        startup.remove("Screenshot Merge");
-    }
+    // Add or remove the program on the list of the programs to launch at the start of the OS
+
+        // Windows
+        #ifdef Q_OS_WIN
+            QSettings startup("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+            if(checkBoxStartWithWindows->isChecked())
+            {
+                QString pathApp = "\"" + QCoreApplication::applicationFilePath() + "\" -minimized";
+                pathApp.replace("/", "\\");
+                startup.setValue("Screenshot Merge", pathApp);
+            }
+            else
+            {
+                startup.remove("Screenshot Merge");
+            }
+        #endif
+
+        // macOS
+        #ifdef Q_OS_MACOS
+
+        #endif
+
+        // Linux
+        #ifdef Q_OS_LINUX
+
+        #endif
 
     // Then close the settings window
     this->close();

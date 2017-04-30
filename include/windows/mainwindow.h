@@ -31,9 +31,22 @@
 #include <QComboBox>
 #include <QVariant>
 
+// Specfic include for Windows
+#ifdef Q_OS_WIN
+    // For globals hotkeys on Windows
+    #include <windows.h>
+#endif
 
-// For globals hotkeys on Windows
-#include <windows.h>
+// Specific include for macOS
+#ifdef Q_OS_MACOS
+
+#endif
+
+// Specific include for Linux
+#ifdef Q_OS_LINUX
+
+#endif
+
 
 
 // The window to change the program settings

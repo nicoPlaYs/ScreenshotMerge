@@ -174,32 +174,48 @@ QPixmap* MainWindow::merge()
 }
 
 
-// Use to receive globals hotkeys events from Windows
+// Use to receive globals hotkeys events
 bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
     Q_UNUSED(eventType);
     Q_UNUSED(result);
 
-    // If the mesage is about a Windows hotkey...
-    MSG msg = *static_cast<MSG*>(message);
-    if(msg.message == WM_HOTKEY)
-    {
-        // ... and if it's the hotkey to take a screenshot
-        if(msg.wParam == 27156547)
-        {
-            // We verify if we can take a new screenshot (if there is no other screenshot on his way to be taken / cropped)
-            if(QApplication::activeModalWidget() == 0)
-            {
-                this->takeScreenshot();
-            }
-            else
-            {
-                QApplication::activeModalWidget()->activateWindow();
-            }
+    // Windows
+    #ifdef Q_OS_WIN
 
-            return true;
+        // If the mesage is about a Windows hotkey...
+        MSG msg = *static_cast<MSG*>(message);
+        if(msg.message == WM_HOTKEY)
+        {
+            // ... and if it's the hotkey to take a screenshot
+            if(msg.wParam == 27156547)
+            {
+                // We verify if we can take a new screenshot (if there is no other screenshot on his way to be taken / cropped)
+                if(QApplication::activeModalWidget() == 0)
+                {
+                    this->takeScreenshot();
+                }
+                else
+                {
+                    QApplication::activeModalWidget()->activateWindow();
+                }
+
+                return true;
+            }
         }
-    }
+
+    #endif
+
+    // macOS
+    #ifdef Q_OS_MACOS
+
+    #endif
+
+    // Linux
+    #ifdef Q_OS_LINUX
+
+    #endif
+
     return false;
 }
 
