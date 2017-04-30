@@ -296,7 +296,7 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
         // We check which tool is selected
         if(this->actionFreeLine->isChecked())
         {
-            Polyline* polyline = (Polyline*) newDrawingsList.last();
+            Polyline* polyline = static_cast<Polyline*>(newDrawingsList.last());
 
             // Add the new point to the newest polyline
             polyline->addPoint(mousePosLabel);
@@ -313,7 +313,7 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
         else if(this->actionStraightLine->isChecked())
         {
             // Create a new straight line
-            StraightLine* straightLine = (StraightLine*) newDrawingsList.last();
+            StraightLine* straightLine = static_cast<StraightLine*>(newDrawingsList.last());
 
             // Erase the previous temporary straight line
             straightLine->setPen(eraseTempPen);
@@ -334,7 +334,7 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
         else if(this->actionFrame->isChecked())
         {
             // Create a new straight line
-            Frame* frame = (Frame*) newDrawingsList.last();
+            Frame* frame = static_cast<Frame*>(newDrawingsList.last());
 
             // Erase the previous temporary straight line
             frame->setPen(eraseTempPen);

@@ -136,7 +136,7 @@ QPixmap* MainWindow::merge()
         // Loop to get the height and width to all the listed screenshots
         for(int i = 0; i < listWidgetImage->count(); i++)
         {
-            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->getImage();
+            currentPixmap = static_cast<Screenshot*>(listWidgetImage->item(i))->getImage();
 
             height += currentPixmap.height();
             if(width < currentPixmap.width())
@@ -156,11 +156,11 @@ QPixmap* MainWindow::merge()
         int currentY = 0;
         for(int i = 0; i < listWidgetImage->count(); i++)
         {
-            currentPixmap = ((Screenshot*)listWidgetImage->item(i))->withDrawings();
+            currentPixmap = static_cast<Screenshot*>(listWidgetImage->item(i))->withDrawings();
 
             painterMergedScreenshots->drawPixmap(0, currentY, currentPixmap);
 
-            currentY += ((Screenshot*)listWidgetImage->item(i))->getImage().height();
+            currentY += currentPixmap.height();
         }
 
         // We don't need the painter anymore
@@ -181,7 +181,7 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, long *r
     Q_UNUSED(result);
 
     // If the mesage is about a Windows hotkey...
-    MSG msg = *((MSG*)message);
+    MSG msg = *static_cast<MSG*>(message);
     if(msg.message == WM_HOTKEY)
     {
         // ... and if it's the hotkey to take a screenshot
