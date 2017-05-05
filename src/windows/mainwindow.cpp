@@ -30,7 +30,9 @@ MainWindow::MainWindow() : QMainWindow()
 
         actionTakeScreenshot = toolBar->addAction(QIcon("://images/toolbar/takescreenshot.ico"), tr("Take a screenshot (Print Screen)"));
         QObject::connect(actionTakeScreenshot, SIGNAL(triggered()), this, SLOT(takeScreenshot()));
-        RegisterHotKey((HWND) this->winId(), 27156547, 0, VK_SNAPSHOT);
+        #ifdef Q_OS_WIN
+            RegisterHotKey((HWND) this->winId(), 27156547, 0, VK_SNAPSHOT);
+        #endif
 
     toolBar->addSeparator();
 
