@@ -38,7 +38,9 @@ TRANSLATIONS = res/lang/screenshotmerge_fr.ts
 
 VERSION = 1.7.0
 
-RC_ICONS += res/images/app.ico
+macx::ICON = res/images/app.ico
+win32::RC_ICONS += res/images/app.ico
+
 QMAKE_TARGET_PRODUCT = "Screenshot Merge"
 QMAKE_TARGET_COMPANY = "Nicolas Fostier"
 QMAKE_TARGET_COPYRIGHT = "Nicolas Fostier"
