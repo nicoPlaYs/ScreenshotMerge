@@ -296,7 +296,14 @@ void MainWindow::activationTrayIcon(QSystemTrayIcon::ActivationReason reason)
 void MainWindow::takeScreenshot()
 {
     // Lower the main window, so it can't be see in the screenshot
-    this->lower();
+    #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        this->lower();
+    #endif
+
+    // In macOS, it's better to minimized the window
+    #ifdef Q_OS_MACOS
+        this->showMinimized();
+    #endif
 
     // Get the size of the entire screen(s)
     int screens = QApplication::desktop()->screenCount();

@@ -30,6 +30,7 @@
 #include <QClipboard>
 #include <QComboBox>
 #include <QVariant>
+#include <QThread>
 
 // Specfic include for Windows
 #ifdef Q_OS_WIN

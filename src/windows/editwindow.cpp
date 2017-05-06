@@ -456,7 +456,14 @@ void EditWindow::validate()
 void EditWindow::retake()
 {
     // We lower the edit windows
-    this->lower();
+    #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+        this->lower();
+    #endif
+
+    // In macOS, it's better to minimized the window
+    #ifdef Q_OS_MACOS
+        this->showMinimized();
+    #endif
 
     // And we retake one
     emit retakeSignal();

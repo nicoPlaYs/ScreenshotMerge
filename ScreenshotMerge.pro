@@ -1,4 +1,4 @@
-win32 {
+win32{
     QMAKE_TARGET_PRODUCT = "Screenshot Merge"
     QMAKE_TARGET_DESCRIPTION = "Screenshot Merge"
     QMAKE_TARGET_COMPANY = "Nicolas Fostier"
