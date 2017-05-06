@@ -1,5 +1,24 @@
-QT += widgets \
-    network
+win32 {
+    QMAKE_TARGET_PRODUCT = "Screenshot Merge"
+    QMAKE_TARGET_DESCRIPTION = "Screenshot Merge"
+    QMAKE_TARGET_COMPANY = "Nicolas Fostier"
+    QMAKE_TARGET_COPYRIGHT = "Nicolas Fostier"
+    RC_ICONS += res/images/app.ico
+}
+
+macx{
+    QMAKE_FRAMEWORK_BUNDLE_NAME = "Screenshot Merge"
+    ICON = res/images/app.ico
+}
+
+VERSION = 1.7.0
+
+
+
+QT +=   widgets \
+        network
+
+win32::LIBS += -luser32
 
 SOURCES +=  src/screenshot.cpp \
             src/main.cpp \
@@ -35,15 +54,3 @@ RESOURCES += res/images.qrc \
              res/lang.qrc
 
 TRANSLATIONS = res/lang/screenshotmerge_fr.ts
-
-VERSION = 1.7.0
-
-macx::ICON = res/images/app.ico
-win32::RC_ICONS += res/images/app.ico
-
-QMAKE_TARGET_PRODUCT = "Screenshot Merge"
-QMAKE_TARGET_COMPANY = "Nicolas Fostier"
-QMAKE_TARGET_COPYRIGHT = "Nicolas Fostier"
-QMAKE_TARGET_DESCRIPTION = "Screenshot Merge"
-
-win32::LIBS += -luser32

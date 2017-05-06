@@ -28,7 +28,7 @@ CropWindow::CropWindow(QPixmap pixmapFullscreen, QRect screensRect) : QLabel()
     this->setWindowFlags(Qt::FramelessWindowHint);
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowModality(Qt::ApplicationModal);
-    this->showFullScreen();
+    this->show();
     this->resize(screensRect.size());
     this->move(screensRect.topLeft());
 }
@@ -47,8 +47,6 @@ CropWindow::~CropWindow()
 
 
 // Methods
-
-
 
 // When we click on the window
 void CropWindow::mousePressEvent(QMouseEvent *event)
