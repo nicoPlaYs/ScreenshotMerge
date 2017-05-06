@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     app.setApplicationName("Screenshot Merge");
     app.setOrganizationName("Nicolas Fostier");
     app.setOrganizationDomain("nicolasfostier.free.fr");
-    app.setApplicationVersion("1.7.0");
+    app.setApplicationVersion("1.7.1");
     app.setWindowIcon(QIcon(":/images/app.ico"));
     app.setQuitOnLastWindowClosed(false);
 

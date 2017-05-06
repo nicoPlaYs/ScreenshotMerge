@@ -115,7 +115,7 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
             actionEraser->setCheckable(true);
 
             // Activate the last drawing tool used by the user
-            switch(settings->value("EditWindow/drawingTool", typeDrawTool(FREELINE)).toInt())
+            switch(settings->value("EditWindow/drawingTool", TypeDrawTool(FREELINE)).toInt())
             {
                 case FREELINE :
                 actionFreeLine->setChecked(true);
@@ -175,7 +175,7 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
         layout->addWidget(scrollArea, Qt::AlignCenter);
 
     // The edit isn't validated yet
-    this->isValidated = false;
+    this->closingReason = REJECT;
 
     // Configuration of the window
     this->setWindowTitle(tr("Edit your screenshot"));
@@ -400,41 +400,56 @@ void EditWindow::closeEvent(QCloseEvent *event)
     // Accept the event
     event->accept();
 
-    // Check is the edit has been validated
-    if(this->isValidated)
-    {
-        // We add the new drawings to the screenshot after deleting the newest which is empty
-        screenshot->setDrawings(newDrawingsList);
+    // Check why the edit window is closing
+    switch(this->closingReason){
+        case REJECT:
+            // If we edit a fresh new screenshot...
+            if(listWidgetImage != 0)
+            {
+                // ...we delete the screenshot
+                delete screenshot;
+            }
 
-        // If we edit a fresh new screenshot...
-        if(listWidgetImage != 0)
-        {
-            // ...we add the screenshot to the list
-            listWidgetImage->addItem(screenshot);
-        }
+            // Delete every new drawings
+            while(!newDrawingsList.isEmpty())
+            {
+                delete newDrawingsList.takeFirst();
+            }
 
-        // We signal that the edit is over
-        emit editOver(comboBoxImageHost->currentText());
+            // We signal that the edit is over
+            emit editOver(comboBoxImageHost->currentText());
+        break;
+
+        case VALIDATED:
+            // We add the new drawings to the screenshot after deleting the newest which is empty
+            screenshot->setDrawings(newDrawingsList);
+
+            // If we edit a fresh new screenshot...
+            if(listWidgetImage != 0)
+            {
+                // ...we add the screenshot to the list
+                listWidgetImage->addItem(screenshot);
+            }
+
+            // We signal that the edit is over
+            emit editOver(comboBoxImageHost->currentText());
+        break;
+
+        case RETAKE:
+            // We lower the edit windows
+            #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+                this->lower();
+            #endif
+
+            // In macOS, it's better to minimized the window
+            #ifdef Q_OS_MACOS
+                this->showMinimized();
+            #endif
+
+            // And we retake one
+            emit retakeSignal();
+        break;
     }
-    else
-    {
-
-        // If we edit a fresh new screenshot...
-        if(listWidgetImage != 0)
-        {
-            // ...we delete the screenshot
-            delete screenshot;
-        }
-
-        // Delete every new drawings
-        while(!newDrawingsList.isEmpty())
-        {
-            delete newDrawingsList.takeFirst();
-        }
-    }
-
-    // We signal that the edit is over
-    emit editOver(comboBoxImageHost->currentText());
 }
 
 
@@ -446,7 +461,7 @@ void EditWindow::closeEvent(QCloseEvent *event)
 void EditWindow::validate()
 {
     // The edit is validated
-    this->isValidated = true;
+    this->closingReason = VALIDATED;
 
     // Close the edit window
     this->close();
@@ -455,18 +470,8 @@ void EditWindow::validate()
 // Retake the screenshot
 void EditWindow::retake()
 {
-    // We lower the edit windows
-    #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-        this->lower();
-    #endif
-
-    // In macOS, it's better to minimized the window
-    #ifdef Q_OS_MACOS
-        this->showMinimized();
-    #endif
-
-    // And we retake one
-    emit retakeSignal();
+    // A retake has been resquested
+    this->closingReason = RETAKE;
 
     // And we finally completely close the window
     this->close();
@@ -526,7 +531,7 @@ void EditWindow::changePenColor()
 // When the drawing tool is changing
 void EditWindow::changeDrawingTool()
 {
-    enum typeDrawTool drawingTool(FREELINE);
+    TypeDrawTool drawingTool(FREELINE);
 
     if(actionFreeLine->isChecked())
     {

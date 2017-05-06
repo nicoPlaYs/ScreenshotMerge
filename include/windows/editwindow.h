@@ -36,7 +36,11 @@
 
 
 
-enum typeDrawTool{FREELINE,STRAIGHTLINE,FRAME,ERASER};
+// All the type of tool to draw on the screenshot
+enum TypeDrawTool{FREELINE,STRAIGHTLINE,FRAME,ERASER};
+// Reasons for the edit window to close
+enum ClosingReasonEW{REJECT, VALIDATED, RETAKE};
+
 
 // The window to display and edit an screenshot
 class EditWindow : public QMainWindow
@@ -97,7 +101,7 @@ class EditWindow : public QMainWindow
         QLinkedList<Drawing*> newDrawingsList;
 
         // True if the window has been closed with the validate button
-        bool isValidated;
+        ClosingReasonEW closingReason;
 
     // Constructor
     public :
