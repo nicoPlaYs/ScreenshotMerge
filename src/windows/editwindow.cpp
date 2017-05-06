@@ -436,6 +436,19 @@ void EditWindow::closeEvent(QCloseEvent *event)
         break;
 
         case RETAKE:
+            // If we edit a fresh new screenshot...
+            if(listWidgetImage != 0)
+            {
+                // ...we delete the screenshot
+                delete screenshot;
+            }
+
+            // Delete every new drawings
+            while(!newDrawingsList.isEmpty())
+            {
+                delete newDrawingsList.takeFirst();
+            }
+
             // We lower the edit windows
             #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                 this->lower();
