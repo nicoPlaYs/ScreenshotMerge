@@ -8,7 +8,7 @@ win32 {
 
 macx{
     QMAKE_FRAMEWORK_BUNDLE_NAME = "Screenshot Merge"
-    ICON = res/images/app.ico
+    ICON = res/images/app.icns
 }
 
 VERSION = 1.7.0
