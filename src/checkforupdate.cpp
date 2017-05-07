@@ -21,7 +21,7 @@ CheckForUpdate::~CheckForUpdate()
 
 // Qt slots
 
-//
+// Ask to github the information about the last release of the program
 void CheckForUpdate::askGithub(){
     this->manager = new QNetworkAccessManager();
 
