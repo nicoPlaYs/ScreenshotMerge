@@ -1,7 +1,6 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QLocale>
-#include <QLibraryInfo>
 
 // Check if there is an update available on github
 #include "include/checkforupdate.h"
@@ -32,8 +31,13 @@ int main(int argc, char *argv[])
     app.installTranslator(&translator);
 
     // Check if there is an update available on github
+    // (It's executed on its own thread)
+    QThread* threadCFU = new QThread();
+    QObject::connect(threadCFU, SIGNAL(finished()), threadCFU, SLOT(deleteLater()));
     CheckForUpdate* cfu = new CheckForUpdate(app.applicationVersion());
-    cfu->start();
+    cfu->moveToThread(threadCFU);
+    QObject::connect(threadCFU, SIGNAL(started()), cfu, SLOT(askGithub()));
+    threadCFU->start();
 
     // Creation of the main window of the program
     MainWindow mainWindow;
@@ -49,6 +53,6 @@ int main(int argc, char *argv[])
         mainWindow.show();
     }
 
-    // Execute the Qt application, enter the event loop
+    // Execute the Qt application : enter the event loop
     return app.exec();
 }

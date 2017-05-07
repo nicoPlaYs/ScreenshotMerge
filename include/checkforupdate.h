@@ -13,7 +13,8 @@
 
 
 // Check if there is an update available on github
-class CheckForUpdate : public QThread
+// (It's executed on its own thread)
+class CheckForUpdate : public QObject
 {
     Q_OBJECT
 
@@ -21,6 +22,8 @@ class CheckForUpdate : public QThread
     private :
         // Current version of the program
         QString currentVersion;
+        // Manager for the connection to github
+        QNetworkAccessManager* manager;
         // Reply from github
         QNetworkReply* reply;
 
@@ -32,15 +35,13 @@ class CheckForUpdate : public QThread
     public :
         ~CheckForUpdate();
 
-    // Methods
-    public :
-        // The thread task
-        void run();
-
     // Qt slots
     public slots :
+        // Ask to github the information about the last release of the program
+        void askGithub();
+
         // Read and process the reply from github
-        void replyFinished();
+        void processReply();
 };
 
 

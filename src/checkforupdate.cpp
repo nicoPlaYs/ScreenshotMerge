@@ -3,12 +3,9 @@
 
 
 // Constructor
-CheckForUpdate::CheckForUpdate(QString currentVersion) : QThread()
-{
+CheckForUpdate::CheckForUpdate(QString currentVersion)
+{    
     this->currentVersion = currentVersion;
-
-    // Destroy this thread when its job is over
-    QObject::connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 
 
@@ -16,32 +13,27 @@ CheckForUpdate::CheckForUpdate(QString currentVersion) : QThread()
 // Destructor
 CheckForUpdate::~CheckForUpdate()
 {
-
-}
-
-
-
-// Methods
-
-void CheckForUpdate::run()
-{
-    QNetworkRequest request;
-    request.setUrl(QString("https://api.github.com/repos/nicolasfostier/ScreenshotMerge/releases/latest"));
-
-    QNetworkAccessManager manager;
-    reply = manager.get(request);
-    QObject::connect(reply, SIGNAL(finished()), this, SLOT(replyFinished()));
-
-    // Enter the event loop
-    this->exec();
+    delete manager;
+    this->thread()->quit();
 }
 
 
 
 // Qt slots
 
+//
+void CheckForUpdate::askGithub(){
+    this->manager = new QNetworkAccessManager();
+
+    QNetworkRequest request;
+    request.setUrl(QString("https://api.github.com/repos/nicolasfostier/ScreenshotMerge/releases/latest"));
+
+    reply = manager->get(request);
+    QObject::connect(reply, SIGNAL(finished()), this, SLOT(processReply()));
+}
+
 // Read and process the reply from github
-void CheckForUpdate::replyFinished()
+void CheckForUpdate::processReply()
 {
     // Check if everything went well
     if(reply->error() == QNetworkReply::NoError)
@@ -57,6 +49,6 @@ void CheckForUpdate::replyFinished()
         }
     }
 
-    // Exit the event loop, and stop the thread
-    this->exit();
+    // The class have finish
+    this->deleteLater();
 }
