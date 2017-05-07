@@ -1,3 +1,5 @@
+TARGET = ScreenshotMerge
+
 win32{
     QMAKE_TARGET_PRODUCT = "Screenshot Merge"
     QMAKE_TARGET_DESCRIPTION = "Screenshot Merge"
@@ -11,11 +13,14 @@ macx{
     ICON = res/images/app.icns
 }
 
+TEMPLATE = app
+
 VERSION = 1.7.1
 
 
 
-QT +=   widgets \
+QT +=   core gui \
+        widgets \
         network
 
 win32::LIBS += -luser32
@@ -54,3 +59,7 @@ RESOURCES += res/images.qrc \
              res/lang.qrc
 
 TRANSLATIONS = res/lang/screenshotmerge_fr.ts
+
+
+
+DEFINES += QT_DEPRECATED_WARNINGS
