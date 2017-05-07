@@ -1,5 +1,5 @@
-#ifndef INCLUDECHECKFORUPDATE_H
-#define INCLUDECHECKFORUPDATE_H
+#ifndef CHECKFORUPDATE_H
+#define CHECKFORUPDATE_H
 
 
 #include <QTranslator>
@@ -46,4 +46,4 @@ class CheckForUpdate : public QObject
 
 
 
-#endif // INCLUDECHECKFORUPDATE_H
+#endif // CHECKFORUPDATE_H
