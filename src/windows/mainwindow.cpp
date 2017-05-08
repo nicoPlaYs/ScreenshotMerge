@@ -5,14 +5,15 @@
 MainWindow::MainWindow() : QMainWindow()
 {
     // Initialization of the settings variable
-    settings = new QSettings();
+    settings = new QSettings(this);
+
 
     // File menu
     menuFile = menuBar()->addMenu(tr("File"));
         actionQuit = menuFile->addAction(QIcon("://images/menu/quit.ico"), tr("Quit"));
         QObject::connect(actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
 
-    // Options menu
+    // Tools menu
     menuTools = menuBar()->addMenu(tr("Tools"));
         actionSettings = menuTools->addAction(QIcon("://images/menu/settings.ico"), tr("Settings"));
         QObject::connect(actionSettings, SIGNAL(triggered()), this, SLOT(openSettings()));
@@ -246,9 +247,6 @@ void MainWindow::closeEvent(QCloseEvent* event)
     // We save all the settings and data usefull for a next session
     settings->setValue("MainWindow/geometry", this->saveGeometry());
     settings->setValue("imageHost", this->comboBoxImageHost->currentText());
-
-    // Close the app
-    qApp->quit();
 }
 
 

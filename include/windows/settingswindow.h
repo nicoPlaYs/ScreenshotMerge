@@ -18,6 +18,7 @@
 #include <QStandardPaths>
 #include <QFileDialog>
 #include <QCoreApplication>
+#include <QHBoxLayout>
 
 
 

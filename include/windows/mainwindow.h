@@ -7,7 +7,6 @@
 #include <QMainWindow>
 #include <QSettings>
 #include <QMenuBar>
-#include <QAction>
 #include <QMessageBox>
 #include <QGridLayout>
 #include <QToolBar>
@@ -18,19 +17,12 @@
 #include <QLabel>
 #include <QPainter>
 #include <QFileDialog>
-#include <QString>
 #include <QStandardPaths>
 #include <QTranslator>
 #include <QSystemTrayIcon>
-#include <QBuffer>
-#include <QNetworkRequest>
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
-#include <QRegExp>
 #include <QClipboard>
 #include <QComboBox>
 #include <QVariant>
-#include <QThread>
 
 // Specfic include for Windows
 #ifdef Q_OS_WIN
