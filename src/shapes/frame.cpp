@@ -1,4 +1,4 @@
-#include "include/drawings/frame.h"
+#include "include/shapes/frame.h"
 
 
 
@@ -13,12 +13,12 @@ void Frame::setEndPoint(QPoint endPoint)
 
 
 // Constructor
-Frame::Frame(QPen pen, QPoint P1, QPoint P2) : Drawing(pen)
+Frame::Frame(QPen pen, QPoint P1, QPoint P2) : Shape(pen)
 {
     this->firstPoint = P1;
     this->setEndPoint(P2);
 }
-Frame::Frame(Frame const& frame) : Drawing(frame.pen){
+Frame::Frame(Frame const& frame) : Shape(frame.pen){
     this->firstPoint = frame.firstPoint;
     this->frame = frame.frame;
 }
@@ -36,7 +36,7 @@ Frame::~Frame()
 // Methods
 
 // Clone the frame
-Drawing* Frame::clone(){
+Shape* Frame::clone(){
     return new Frame(*this);
 }
 

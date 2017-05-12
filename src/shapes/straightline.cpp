@@ -1,4 +1,4 @@
-#include "include/drawings/straightline.h"
+#include "include/shapes/straightline.h"
 
 
 
@@ -11,12 +11,12 @@ void StraightLine::setEndPoint(QPoint endPoint)
 
 
 // Constructeur
-StraightLine::StraightLine(QPen pen, QPoint P1, QPoint P2) : Drawing(pen)
+StraightLine::StraightLine(QPen pen, QPoint P1, QPoint P2) : Shape(pen)
 {
     this->straightLine.setP1(P1);
     this->straightLine.setP2(P2);
 }
-StraightLine::StraightLine(StraightLine const& straightline) : Drawing(straightline.pen){
+StraightLine::StraightLine(StraightLine const& straightline) : Shape(straightline.pen){
     this->straightLine = straightline.straightLine;
 }
 
@@ -33,7 +33,7 @@ StraightLine::~StraightLine()
 // Methods
 
 // Clone the straight line
-Drawing* StraightLine::clone(){
+Shape* StraightLine::clone(){
     return new StraightLine(*this);
 }
 

@@ -20,9 +20,9 @@
         <file>images/toolbar/noelshack.ico</file>
         <file>images/toolbar/save.ico</file>
         <file>images/editwindow/frame.ico</file>
-        <file>images/editwindow/freeline.ico</file>
         <file>images/editwindow/straightline.ico</file>
         <file>images/toolbar/imgur.ico</file>
         <file>images/toolbar/upload.ico</file>
+        <file>images/editwindow/pen.ico</file>
     </qresource>
 </RCC>

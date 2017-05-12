@@ -32,13 +32,13 @@ SOURCES +=  src/screenshot.cpp \
             src/windows/settingswindow.cpp \
             src/windows/editwindow.cpp \
             src/windows/uploadwindow.cpp \
-            src/drawings/drawing.cpp \
-            src/drawings/polyline.cpp \
-            src/drawings/straightline.cpp \
-            src/drawings/frame.cpp \
+            src/shapes/polyline.cpp \
+            src/shapes/straightline.cpp \
+            src/shapes/frame.cpp \
             src/upload.cpp \
             src/save.cpp \
-            src/checkforupdate.cpp
+            src/checkforupdate.cpp \
+    src/shapes/shape.cpp
 
 HEADERS  += include/screenshot.h \
             include/windows/mainwindow.h \
@@ -46,14 +46,14 @@ HEADERS  += include/screenshot.h \
             include/windows/settingswindow.h \
             include/windows/editwindow.h \
             include/windows/uploadwindow.h \
-            include/drawings/drawing.h \
-            include/drawings/polyline.h \
-            include/drawings/straightline.h \
-            include/drawings/frame.h \
+            include/shapes/polyline.h \
+            include/shapes/straightline.h \
+            include/shapes/frame.h \
             include/upload.h \
             include/save.h \
             include/apikeys.h \
-            include/checkforupdate.h
+            include/checkforupdate.h \
+    include/shapes/shape.h
 
 RESOURCES += res/images.qrc \
              res/lang.qrc

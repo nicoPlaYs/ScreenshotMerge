@@ -1,5 +1,5 @@
-#ifndef DRAWING_H
-#define DRAWING_H
+#ifndef SHAPE_H
+#define SHAPE_H
 
 
 
@@ -10,36 +10,36 @@
 
 
 // Abstract class which contains the shape drawn by the user on his screenshots
-class Drawing
+class Shape
 {
     // Variable
     protected :
         // Pen used to draw the shape
         QPen pen;
         // Indicate if the shape is currently being drawn
-        bool inProgress;
+        bool isInProgressValue;
 
     // Getter
     public :
-        bool getInProgess();
+        bool isInProgress();
 
     // Setter
     public :
         void setPen(QPen pen);
-        void setInProgress(bool inProgress);
+        void setInProgress(bool isInProgressValue);
 
     // Constructor
     public :
-        Drawing(QPen pen);
+        Shape(QPen pen);
 
     // Destructor
     public :
-        virtual ~Drawing();
+        virtual ~Shape();
 
     // Methods
     public :
         // Clone the shape
-        virtual Drawing* clone() = 0;
+        virtual Shape* clone() = 0;
 
         // Draw the shape
         virtual void draw(QPainter* painter) = 0;
@@ -49,4 +49,4 @@ class Drawing
 
 
 
-#endif // DRAWING_H
+#endif // SHAPE_H

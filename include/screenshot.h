@@ -12,11 +12,11 @@
 
 
 // A polyline which can be drawn by the user
-#include "include/drawings/polyline.h"
+#include "include/shapes/polyline.h"
 // A straight line which can be drawn by the user
-#include "include/drawings/straightline.h"
+#include "include/shapes/straightline.h"
 // A frame which can be drawn by the user
-#include "include/drawings/frame.h"
+#include "include/shapes/frame.h"
 
 
 
@@ -27,18 +27,18 @@ class Screenshot : public QListWidgetItem
     private :
         // The screenshot
         QPixmap image;
-        // The drawings on the screenshot
-        QLinkedList<Drawing*> drawingsList;
+        // The shapes on the screenshot
+        QLinkedList<Shape*> shapesList;
 
     // Getter
     public :
         QPixmap getImage();
-        QLinkedList<Drawing*> getDrawings();
+        QLinkedList<Shape*> getShapes();
 
     // Setter
     public :
         void setImage(QPixmap image);
-        void setDrawings(QLinkedList<Drawing*> drawingsList);
+        void setShapes(QLinkedList<Shape*> shapesList);
 
     // Constructor
     public :
@@ -50,7 +50,7 @@ class Screenshot : public QListWidgetItem
 
     // Methods
     public :
-        // Return a pixmap of the screenshot with all of his drawings on it
+        // Return a pixmap of the screenshot with all of its shapes drawn
         QPixmap withDrawings();
 };
 

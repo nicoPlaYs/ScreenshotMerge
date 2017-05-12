@@ -7,12 +7,12 @@
 
 
 // Abstract class which contains the shape drawn by the user on his screenshots
-#include "include/drawings/drawing.h"
+#include "include/shapes/shape.h"
 
 
 
 // A straight line which can be drawn by the user
-class StraightLine : public Drawing
+class StraightLine : public Shape
 {
     // Variable
     private :
@@ -35,7 +35,7 @@ class StraightLine : public Drawing
     // Methods
     public :
         // Clone the straight line
-        virtual Drawing* clone();
+        virtual Shape* clone();
 
         // Draw the straight line
         virtual void draw(QPainter *painter);

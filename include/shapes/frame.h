@@ -7,12 +7,12 @@
 
 
 // Abstract class which contains the shape drawn by the user on his screenshots
-#include "include/drawings/drawing.h"
+#include "include/shapes/shape.h"
 
 
 
 // A frame which can be drawn by the user
-class Frame : public Drawing
+class Frame : public Shape
 {
     // Variable
     private :
@@ -37,7 +37,7 @@ class Frame : public Drawing
     // Methods
     public :
         // Clone the frame
-        virtual Drawing* clone();
+        virtual Shape* clone();
 
         // Draw the frame
         virtual void draw(QPainter *painter);

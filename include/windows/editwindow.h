@@ -37,7 +37,7 @@
 
 
 // All the type of tool to draw on the screenshot
-enum TypeDrawTool{FREELINE,STRAIGHTLINE,FRAME,ERASER};
+enum TypeDrawTool{PEN,STRAIGHTLINE,FRAME,ERASER};
 // Reasons for the edit window to close
 enum ClosingReasonEW{REJECT, VALIDATED, RETAKE};
 
@@ -73,7 +73,7 @@ class EditWindow : public QMainWindow
 
             QAction* actionColor;
             QActionGroup* actionGroupDrawTool;
-                QAction* actionFreeLine;
+                QAction* actionPen;
                 QAction* actionStraightLine;
                 QAction* actionFrame;
                 QAction* actionEraser;
@@ -97,8 +97,8 @@ class EditWindow : public QMainWindow
         QPixmap* screenshotToShow;
         // QPainter to draw on the screenshot
         QPainter* painterScreenshot;
-        // List of the new drawings
-        QLinkedList<Drawing*> newDrawingsList;
+        // List of the new shapes
+        QLinkedList<Shape*> newShapesList;
 
         // True if the window has been closed with the validate button
         ClosingReasonEW closingReason;

@@ -8,10 +8,10 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
     this->screenshot = screenshot;
     this->listWidgetImage = listWidgetImage;
 
-   	Drawing* drawing;
-    foreach(drawing, screenshot->getDrawings())
+    Shape* shape;
+    foreach(shape, screenshot->getShapes())
     {
-        this->newDrawingsList.append(drawing->clone());
+        this->newShapesList.append(shape->clone());
     }
 
     this->screenshotToShow = new QPixmap(screenshot->withDrawings());
@@ -105,8 +105,8 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
         actionGroupDrawTool = new QActionGroup(toolBar);
         QObject::connect(actionGroupDrawTool, SIGNAL(triggered(QAction*)), this, SLOT(changeDrawingTool()));
 
-            actionFreeLine = actionGroupDrawTool->addAction(QIcon("://images/editwindow/freeline.ico"), tr("Free line"));
-            actionFreeLine->setCheckable(true);
+            actionPen = actionGroupDrawTool->addAction(QIcon("://images/editwindow/pen.ico"), tr("Pen"));
+            actionPen->setCheckable(true);
 
             actionStraightLine = actionGroupDrawTool->addAction(QIcon("://images/editwindow/straightline.ico"), tr("Straight line"));
             actionStraightLine->setCheckable(true);
@@ -118,10 +118,10 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
             actionEraser->setCheckable(true);
 
             // Activate the last drawing tool used by the user
-            switch(settings->value("EditWindow/drawingTool", TypeDrawTool(FREELINE)).toInt())
+            switch(settings->value("EditWindow/drawingTool", TypeDrawTool(PEN)).toInt())
             {
-                case FREELINE :
-                actionFreeLine->setChecked(true);
+                case PEN :
+                actionPen->setChecked(true);
                 break;
 
                 case STRAIGHTLINE :
@@ -206,15 +206,15 @@ EditWindow::~EditWindow()
 // Refresh the pixmap of the displayed screenshot by redraw everything
 void EditWindow::refreshScreenshotToShow()
 {
-    // Take the screenshot without any drawings
+    // Take the screenshot without any shapes
     QPixmap screenshotPixmap = screenshot->getImage();
     painterScreenshot->drawPixmap(screenshotPixmap.rect(), screenshotPixmap);
 
-    // Draw every drawing one by one on the clean screenshot
-    Drawing* drawing;
-    foreach(drawing, newDrawingsList)
+    // Draw every shape one by one on the clean screenshot
+    Shape* shape;
+    foreach(shape, newShapesList)
     {
-        drawing->draw(painterScreenshot);
+        shape->draw(painterScreenshot);
     }
 
     // Update the pixmap of the label
@@ -232,13 +232,13 @@ void EditWindow::mousePressEvent(QMouseEvent* event)
     if(labelImage->rect().contains(mousePosLabel))
     {
         // We check which tool is selected
-        if(this->actionFreeLine->isChecked())
+        if(this->actionPen->isChecked())
         {
             // Create a new polyline
             Polyline* polyline = new Polyline(drawPen, mousePosLabel);
 
-            // Add the new polyline to the drawing list
-            newDrawingsList.append(polyline);
+            // Add the new polyline to the shape list
+            newShapesList.append(polyline);
 
             // Draw the single point of this polyline
             painterScreenshot->drawPoint(mousePosLabel);
@@ -254,8 +254,8 @@ void EditWindow::mousePressEvent(QMouseEvent* event)
             // Create a new straight line
             StraightLine* straightLine = new StraightLine(drawPen, mousePosLabel, mousePosLabel);
 
-            // Add the new straight line to the drawing list
-            newDrawingsList.append(straightLine);
+            // Add the new straight line to the shape list
+            newShapesList.append(straightLine);
 
             // Prepare the pen to erase the temporary straight line
             eraseTempPen.setBrush(QBrush(*screenshotToShow));
@@ -272,8 +272,8 @@ void EditWindow::mousePressEvent(QMouseEvent* event)
             // Create a new straight line
             Frame* frame = new Frame(drawPen, mousePosLabel, mousePosLabel);
 
-            // Add the new frame to the drawing list
-            newDrawingsList.append(frame);
+            // Add the new frame to the shape list
+            newShapesList.append(frame);
 
             // Prepare the pen to erase the temporary frame
             eraseTempPen.setBrush(QBrush(*screenshotToShow));
@@ -294,12 +294,12 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
     // Position of the mouse on the label
     QPoint mousePosLabel = labelImage->mapFrom(this, event->pos());
 
-    if(!newDrawingsList.isEmpty() && newDrawingsList.last()->getInProgess())
+    if(!newShapesList.isEmpty() && newShapesList.last()->isInProgress())
     {
         // We check which tool is selected
-        if(this->actionFreeLine->isChecked())
+        if(this->actionPen->isChecked())
         {
-            Polyline* polyline = static_cast<Polyline*>(newDrawingsList.last());
+            Polyline* polyline = static_cast<Polyline*>(newShapesList.last());
 
             // Add the new point to the newest polyline
             polyline->addPoint(mousePosLabel);
@@ -316,7 +316,7 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
         else if(this->actionStraightLine->isChecked())
         {
             // Create a new straight line
-            StraightLine* straightLine = static_cast<StraightLine*>(newDrawingsList.last());
+            StraightLine* straightLine = static_cast<StraightLine*>(newShapesList.last());
 
             // Erase the previous temporary straight line
             straightLine->setPen(eraseTempPen);
@@ -337,7 +337,7 @@ void EditWindow::mouseMoveEvent(QMouseEvent* event)
         else if(this->actionFrame->isChecked())
         {
             // Create a new straight line
-            Frame* frame = static_cast<Frame*>(newDrawingsList.last());
+            Frame* frame = static_cast<Frame*>(newShapesList.last());
 
             // Erase the previous temporary straight line
             frame->setPen(eraseTempPen);
@@ -364,9 +364,9 @@ void EditWindow::mouseReleaseEvent(QMouseEvent* event)
     // Position of the mouse on the label
     QPoint mousePosLabel = labelImage->mapFrom(this, event->pos());
 
-    if(!newDrawingsList.isEmpty() && newDrawingsList.last()->getInProgess())
+    if(!newShapesList.isEmpty() && newShapesList.last()->isInProgress())
     {
-        newDrawingsList.last()->setInProgress(false);
+        newShapesList.last()->setInProgress(false);
     }
     // If it's the eraser which is selected...
     else if(this->actionEraser->isChecked())
@@ -378,15 +378,15 @@ void EditWindow::mouseReleaseEvent(QMouseEvent* event)
             QRect hitbox(mousePosLabel, mousePosLabel);
             hitbox = hitbox.marginsAdded(QMargins(3,3,3,3));
 
-            // Check if this hitbox hit a drawing
-            QLinkedList<Drawing*>::iterator i;
-            for(i = newDrawingsList.begin(); i != newDrawingsList.end(); ++i)
+            // Check if this hitbox hit a shape
+            QLinkedList<Shape*>::iterator i;
+            for(i = newShapesList.begin(); i != newShapesList.end(); ++i)
             {
-                // if it's the case, destroy the drawing and refresh the screenshot to show
+                // if it's the case, destroy the shape and refresh the screenshot to show
                 if((*i)->isHitted(hitbox))
                 {
                     delete *i;
-                    newDrawingsList.erase(i);
+                    newShapesList.erase(i);
 
                     refreshScreenshotToShow();
 
@@ -413,10 +413,10 @@ void EditWindow::closeEvent(QCloseEvent *event)
                 delete screenshot;
             }
 
-            // Delete every new drawings
-            while(!newDrawingsList.isEmpty())
+            // Delete every new shapes
+            while(!newShapesList.isEmpty())
             {
-                delete newDrawingsList.takeFirst();
+                delete newShapesList.takeFirst();
             }
 
             // We signal that the edit is over
@@ -424,8 +424,8 @@ void EditWindow::closeEvent(QCloseEvent *event)
         break;
 
         case VALIDATED:
-            // We add the new drawings to the screenshot after deleting the newest which is empty
-            screenshot->setDrawings(newDrawingsList);
+            // We add the new shapes to the screenshot after deleting the newest which is empty
+            screenshot->setShapes(newShapesList);
 
             // If we edit a fresh new screenshot...
             if(listWidgetImage != 0)
@@ -446,10 +446,10 @@ void EditWindow::closeEvent(QCloseEvent *event)
                 delete screenshot;
             }
 
-            // Delete every new drawings
-            while(!newDrawingsList.isEmpty())
+            // Delete every new shapes
+            while(!newShapesList.isEmpty())
             {
-                delete newDrawingsList.takeFirst();
+                delete newShapesList.takeFirst();
             }
 
             // We lower the edit windows
@@ -473,7 +473,7 @@ void EditWindow::closeEvent(QCloseEvent *event)
 // Qt slots
 
 
-// Update the pixmap of the displayed screenshot with the new drawings
+// Update the pixmap of the displayed screenshot with the new shapes
 void EditWindow::validate()
 {
     // The edit is validated
@@ -547,11 +547,11 @@ void EditWindow::changePenColor()
 // When the drawing tool is changing
 void EditWindow::changeDrawingTool()
 {
-    TypeDrawTool drawingTool(FREELINE);
+    TypeDrawTool drawingTool(PEN);
 
-    if(actionFreeLine->isChecked())
+    if(actionPen->isChecked())
     {
-        drawingTool = FREELINE;
+        drawingTool = PEN;
     }
     else if(actionStraightLine->isChecked())
     {

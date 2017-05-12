@@ -7,9 +7,9 @@ QPixmap Screenshot::getImage()
 {
     return image;
 }
-QLinkedList<Drawing*> Screenshot::getDrawings()
+QLinkedList<Shape*> Screenshot::getShapes()
 {
-    return drawingsList;
+    return shapesList;
 }
 
 
@@ -19,15 +19,15 @@ void Screenshot::setImage(QPixmap image)
 {
     this->image = image;
 }
-void Screenshot::setDrawings(QLinkedList<Drawing*> drawingsList)
+void Screenshot::setShapes(QLinkedList<Shape*> shapesList)
 {
-    // Delete every old drawings
-    while(!this->drawingsList.isEmpty())
+    // Delete every old shapes
+    while(!this->shapesList.isEmpty())
     {
-        delete this->drawingsList.takeFirst();
+        delete this->shapesList.takeFirst();
     }
 
-    this->drawingsList = drawingsList;
+    this->shapesList = shapesList;
 }
 
 
@@ -43,9 +43,9 @@ Screenshot::Screenshot(QPixmap image, const QString &text, QListWidget* parent, 
 // Destructor
 Screenshot::~Screenshot()
 {
-    while(!drawingsList.isEmpty())
+    while(!shapesList.isEmpty())
     {
-        delete drawingsList.takeFirst();
+        delete shapesList.takeFirst();
     }
 }
 
@@ -54,21 +54,21 @@ Screenshot::~Screenshot()
 // Methods
 
 
-// Return a pixmap of the screenshot with all of his drawings on it
+// Return a pixmap of the screenshot with all of its shapes drawn
 QPixmap Screenshot::withDrawings()
 {
-    // First, we make a clone of the screenshot without any drawings
+    // First, we make a clone of the screenshot without any shapes
     QPixmap finalPixmap = QPixmap(this->image);
 
     // We prepare the painter and his pen
     QPainter* painter = new QPainter(&finalPixmap);
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
-    // We draw one by one all the drawings of the user on the screenshot
-    Drawing* drawing;
-    foreach(drawing, this->drawingsList)
+    // We draw one by one all the shapes of the user on the screenshot
+    Shape* shape;
+    foreach(shape, this->shapesList)
     {
-        drawing->draw(painter);
+        shape->draw(painter);
     }
 
     // The painting is over

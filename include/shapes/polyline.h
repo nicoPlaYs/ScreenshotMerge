@@ -7,12 +7,12 @@
 
 
 // Abstract class which contains the shape drawn by the user on his screenshots
-#include "include/drawings/drawing.h"
+#include "include/shapes/shape.h"
 
 
 
 // A polyline which can be drawn by the user
-class Polyline : public Drawing
+class Polyline : public Shape
 {
     // Variable
     private :
@@ -31,7 +31,7 @@ class Polyline : public Drawing
     // Methods
     public :
         // Clone the polyline
-        virtual Drawing* clone();
+        virtual Shape* clone();
 
         // Draw the polyline
         void draw(QPainter* painter);

@@ -1,13 +1,13 @@
-#include "include/drawings/polyline.h"
+#include "include/shapes/polyline.h"
 
 
 
 // Constructor
-Polyline::Polyline(QPen pen, QPoint firstPoint) : Drawing(pen)
+Polyline::Polyline(QPen pen, QPoint firstPoint) : Shape(pen)
 {
     this->polyline.append(firstPoint);
 }
-Polyline::Polyline(Polyline const& polyline) : Drawing(polyline.pen){
+Polyline::Polyline(Polyline const& polyline) : Shape(polyline.pen){
     this->polyline = polyline.polyline;
 }
 
@@ -24,7 +24,7 @@ Polyline::~Polyline()
 // Methods
 
 // Clone the polyline
-Drawing* Polyline::clone(){
+Shape* Polyline::clone(){
     return new Polyline(*this);
 }
 
