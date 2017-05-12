@@ -28,6 +28,9 @@ EditWindow::EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* list
     drawColor.setBlue(settings->value("EditWindow/drawColorB", QColor(Qt::red).blue()).toInt());
     drawPen.setColor(drawColor);
     drawPen.setWidth(settings->value("EditWindow/width", 2).toInt());
+    drawPen.setStyle(Qt::SolidLine);
+    drawPen.setCapStyle(Qt::RoundCap);
+    drawPen.setJoinStyle(Qt::RoundJoin);
     painterScreenshot->setPen(drawPen);
 
     // Creation of the toolbar
