@@ -38,8 +38,6 @@ class Polyline : public Shape
         // Return true if the polyline is hitted by the hitbox in argument
         bool isHitted(QRect hitbox);
 
-        // Return true if the polyline is empty
-        bool isEmpty();
         // Add a point at the end of the polyline
         void addPoint(QPoint newPoint);
 };

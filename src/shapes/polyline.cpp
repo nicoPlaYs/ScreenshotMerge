@@ -46,12 +46,6 @@ void Polyline::draw(QPainter* painter)
     }
 }
 
-// Return true if the polyline is empty
-bool Polyline::isEmpty()
-{
-    return polyline.isEmpty();
-}
-
 // Return true if the polyline is hitted by the hitbox in argument
 bool Polyline::isHitted(QRect hitbox)
 {
