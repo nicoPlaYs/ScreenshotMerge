@@ -124,6 +124,9 @@ class MainWindow : public QMainWindow
 
     // Qt slots
     public slots :
+        //
+        void updateToDownload(QJsonDocument jsonReply);
+
         // Restore the window if it's minimize
         void restore();
         // Open the settings dialog

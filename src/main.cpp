@@ -3,7 +3,7 @@
 #include <QLocale>
 
 // Check if there is an update available on github
-#include "include/checkforupdate.h"
+#include "include/updatechecker.h"
 // Main window of the program
 #include "include/windows/mainwindow.h"
 
@@ -29,13 +29,13 @@ int main(int argc, char *argv[])
     translator.load(QString("screenshotmerge_") + locale, ":/lang");
     app.installTranslator(&translator);
 
-    // Check if there is an update available on github
-    // (It's executed on its own thread and will delete himself when its task is over)
-    new CheckForUpdate(app.applicationVersion());
-
-
     // Creation of the main window of the program
     MainWindow mainWindow;
+
+    // Check if there is an update available on github
+    // (It's executed on its own thread and will delete himself when its task is over)
+    UpdateChecker* updateChecker = new UpdateChecker(app.applicationVersion());
+    QObject::connect(updateChecker, SIGNAL(updateToDownload(QJsonDocument)), &mainWindow, SLOT(showNewUpdateAvailable(QJsonDocument)));
 
     // Display the main window (minimized if the launch argument say so)
     if(QCoreApplication::arguments().count() > 1 &&

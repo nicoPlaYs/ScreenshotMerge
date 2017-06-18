@@ -37,8 +37,8 @@ SOURCES +=  src/screenshot.cpp \
             src/shapes/frame.cpp \
             src/upload.cpp \
             src/save.cpp \
-            src/checkforupdate.cpp \
-    src/shapes/shape.cpp
+    src/shapes/shape.cpp \
+    src/updatechecker.cpp
 
 HEADERS  += include/screenshot.h \
             include/windows/mainwindow.h \
@@ -52,8 +52,8 @@ HEADERS  += include/screenshot.h \
             include/upload.h \
             include/save.h \
             include/apikeys.h \
-            include/checkforupdate.h \
-    include/shapes/shape.h
+    include/shapes/shape.h \
+    include/updatechecker.h
 
 RESOURCES += res/images.qrc \
              res/lang.qrc
