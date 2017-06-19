@@ -254,7 +254,7 @@ void MainWindow::closeEvent(QCloseEvent* event)
 // Qt slots
 
 //
-void MainWindow::updateToDownload(QJsonDocument jsonReply){
+void MainWindow::showNewUpdateAvailable(QJsonDocument jsonReply){
     QMessageBox::about(this, QObject::tr("Update available !"),"<p>" + QObject::tr("A new version of Screenshot Merge is available on github.") + "<br/>" +
                                                                     "<b>" + QObject::tr("Your version :") + "</b> " + qApp->applicationVersion() + "<br/>" +
                                                                     "<b>" + QObject::tr("Latest version available :") + "</b> " + jsonReply.object().value("tag_name").toString() + "</p>" +
@@ -283,7 +283,7 @@ void MainWindow::openAbout()
     QMessageBox::about(this, tr("About"),   "<h2><b>Screenshot Merge</b></h2>"
                                             "<p><b>" + tr("Version :") + "</b> " + qApp->applicationVersion() + " (<a href='https://github.com/nicolasfostier/ScreenshotMerge/releases'>" + tr("Latest releases") + "</a>)<br/>" +
                                             "<b>" + tr("Developped by :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>" +
-                                            "<b>" + tr("Library used :") + "</b> Qt 5.7.1<br/>" +
+                                            "<b>" + tr("Library used :") + "</b> Qt 5.8<br/>" +
                                             "<b>" + tr("Logo :") + "</b> <a href='https://github.com/nicolasfostier'>Nicolas Fostier</a><br/>" +
                                             "<b>" + tr("Icon :") + "</b> <a href='http://www.customicondesign.com/'>Custom Icon Design</a></p>");
 }

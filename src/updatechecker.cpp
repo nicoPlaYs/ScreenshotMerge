@@ -38,7 +38,7 @@ void UpdateChecker::askGithub(){
     request.setUrl(QString("https://api.github.com/repos/nicolasfostier/ScreenshotMerge/releases/latest"));
 
     reply = manager->get(request);
-    QObject::connect(reply, SIGNAL(finished()), this, SLOT(processReply()));
+    QObject::connect(reply, SIGNAL(finished()), this, SLOT(readReply()));
 }
 
 // Read and process the reply from github
