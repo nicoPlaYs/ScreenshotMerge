@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain("nicolasfostier.free.fr");
     app.setApplicationVersion("1.7.2");
     app.setWindowIcon(QIcon(":/images/app.ico"));
+    app.setQuitOnLastWindowClosed(false);
 
     // Initialize the random seed
     qsrand(QDateTime::currentDateTime().toMSecsSinceEpoch());

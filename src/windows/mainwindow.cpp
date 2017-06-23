@@ -247,6 +247,9 @@ void MainWindow::closeEvent(QCloseEvent* event)
     // We save all the settings and data usefull for a next session
     settings->setValue("MainWindow/geometry", this->saveGeometry());
     settings->setValue("imageHost", this->comboBoxImageHost->currentText());
+
+    // Close the app
+    qApp->quit();
 }
 
 
