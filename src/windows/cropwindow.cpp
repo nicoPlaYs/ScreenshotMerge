@@ -29,6 +29,7 @@ CropWindow::CropWindow(QPixmap pixmapFullscreen, QRect screensRect) : QLabel()
     this->setAttribute(Qt::WA_DeleteOnClose);
     this->setWindowModality(Qt::ApplicationModal);
     this->show();
+    this->activateWindow();
     this->resize(screensRect.size());
     this->move(screensRect.topLeft());
 }
