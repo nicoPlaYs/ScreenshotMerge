@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     app.setApplicationName("Screenshot Merge");
     app.setOrganizationName("Nicolas Fostier");
     app.setOrganizationDomain("nicolasfostier.free.fr");
-    app.setApplicationVersion("1.7.1");
+    app.setApplicationVersion("1.7.2");
     app.setWindowIcon(QIcon(":/images/app.ico"));
 
     // Initialize the random seed
