@@ -12,35 +12,34 @@
 
 
 // A straight line which can be drawn by the user
-class StraightLine : public Shape
-{
-    // Variable
-    private :
-        // The straight line;
-        QLineF straightLine;
+class StraightLine : public Shape{
+	// Variable
+	private :
+		// The straight line;
+		QLineF straightLine;
 
-    // Setter
-    public :
-        void setEndPoint(QPoint endPoint);
+	// Setter
+	public :
+		void setEndPoint(QPoint endPoint);
 
-    // Constructor
-    public:
-        StraightLine(QPen pen, QPoint P1, QPoint P2);
-        StraightLine(StraightLine const& straightline);
+	// Constructor
+	public:
+		StraightLine(QPen pen, QPoint P1, QPoint P2);
+		StraightLine(StraightLine const& straightline);
 
-    // Destructor
-    public:
-        ~StraightLine();
+	// Destructor
+	public:
+		~StraightLine();
 
-    // Methods
-    public :
-        // Clone the straight line
-        virtual Shape* clone();
+	// Methods
+	public :
+		// Clone the straight line
+		virtual Shape* clone();
 
-        // Draw the straight line
-        virtual void draw(QPainter *painter);
-        // Return true if the straight line is hitted by the hitbox in argument
-        virtual bool isHitted(QRect hitbox);
+		// Draw the straight line
+		virtual void draw(QPainter *painter);
+		// Return true if the straight line is hitted by the hitbox in argument
+		virtual bool isHitted(QRect hitbox);
 };
 
 

@@ -3,31 +3,28 @@
 
 
 // Setter
-void Frame::setEndPoint(QPoint endPoint)
-{
-    this->frame.setTopLeft(this->firstPoint);
-    this->frame.setBottomRight(endPoint);
-    this->frame = this->frame.normalized();
+void Frame::setEndPoint(QPoint endPoint){
+	this->frame.setTopLeft(this->firstPoint);
+	this->frame.setBottomRight(endPoint);
+	this->frame = this->frame.normalized();
 }
 
 
 
 // Constructor
-Frame::Frame(QPen pen, QPoint P1, QPoint P2) : Shape(pen)
-{
-    this->firstPoint = P1;
-    this->setEndPoint(P2);
+Frame::Frame(QPen pen, QPoint P1, QPoint P2) : Shape(pen){
+	this->firstPoint = P1;
+	this->setEndPoint(P2);
 }
 Frame::Frame(Frame const& frame) : Shape(frame.pen){
-    this->firstPoint = frame.firstPoint;
-    this->frame = frame.frame;
+	this->firstPoint = frame.firstPoint;
+	this->frame = frame.frame;
 }
 
 
 
 // Destructor
-Frame::~Frame()
-{
+Frame::~Frame(){
 
 }
 
@@ -37,69 +34,59 @@ Frame::~Frame()
 
 // Clone the frame
 Shape* Frame::clone(){
-    return new Frame(*this);
+	return new Frame(*this);
 }
 
 
 // Draw the frame
-void Frame::draw(QPainter *painter)
-{
-    painter->setPen(this->pen);
-    painter->drawRect(this->frame);
+void Frame::draw(QPainter *painter){
+	painter->setPen(this->pen);
+	painter->drawRect(this->frame);
 }
 
 // Return true if the frame is hitted by the hitbox in argument
-bool Frame::isHitted(QRect hitbox)
-{
-    // Increase the size of the hitbox depending on the of the pen
-    int margin = pen.width()/2;
-    hitbox = hitbox.marginsAdded(QMargins(margin,margin,margin,margin));
+bool Frame::isHitted(QRect hitbox){
+	// Increase the size of the hitbox depending on the of the pen
+	int margin = pen.width()/2;
+	hitbox = hitbox.marginsAdded(QMargins(margin,margin,margin,margin));
 
-    // Check the points from the 4 line of the rectangle
+	// Check the points from the 4 line of the rectangle
 
-    int x = this->frame.topLeft().x();
-    int y = this->frame.topLeft().y();
+	int x = this->frame.topLeft().x();
+	int y = this->frame.topLeft().y();
 
-    // Top line
-    while(x != this->frame.topRight().x())
-    {
-        if(hitbox.contains(QPoint(x, y)))
-        {
-            return true;
-        }
+	// Top line
+	while(x != this->frame.topRight().x()){
+		if(hitbox.contains(QPoint(x, y))){
+			return true;
+		}
 
-        x++;
-    }
-    // Right line
-    while(y != this->frame.bottomRight().y())
-    {
-        if(hitbox.contains(QPoint(x, y)))
-        {
-            return true;
-        }
+		x++;
+	}
+	// Right line
+	while(y != this->frame.bottomRight().y()){
+		if(hitbox.contains(QPoint(x, y))){
+			return true;
+		}
 
-        y++;
-    }
-    // Bottom line
-    while(x != this->frame.bottomLeft().x())
-    {
-        if(hitbox.contains(QPoint(x, y)))
-        {
-            return true;
-        }
+		y++;
+	}
+	// Bottom line
+	while(x != this->frame.bottomLeft().x()){
+		if(hitbox.contains(QPoint(x, y))){
+			return true;
+		}
 
-        x--;
-    }
-    // Left line
-    while(y != this->frame.topLeft().y() - 1)
-    {
-        if(hitbox.contains(QPoint(x, y)))
-        {
-            return true;
-        }
+		x--;
+	}
+	// Left line
+	while(y != this->frame.topLeft().y() - 1){
+		if(hitbox.contains(QPoint(x, y))){
+			return true;
+		}
 
-        y--;
-    }
+		y--;
+	}
 
-    return false;
+	return false;
 }

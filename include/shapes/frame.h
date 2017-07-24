@@ -12,37 +12,36 @@
 
 
 // A frame which can be drawn by the user
-class Frame : public Shape
-{
-    // Variable
-    private :
-        // The frame
-        QRect frame;
-        // The first point of the frame
-        QPoint firstPoint;
+class Frame : public Shape{
+	// Variable
+	private :
+		// The frame
+		QRect frame;
+		// The first point of the frame
+		QPoint firstPoint;
 
-    // Setter
-    public :
-        void setEndPoint(QPoint endPoint);
+	// Setter
+	public :
+		void setEndPoint(QPoint endPoint);
 
-    // Constructor
-    public :
-        Frame(QPen pen, QPoint P1, QPoint P2);
-        Frame(Frame const& frame);
+	// Constructor
+	public :
+		Frame(QPen pen, QPoint P1, QPoint P2);
+		Frame(Frame const& frame);
 
-    // Destructor
-    public :
-        ~Frame();
+	// Destructor
+	public :
+		~Frame();
 
-    // Methods
-    public :
-        // Clone the frame
-        virtual Shape* clone();
+	// Methods
+	public :
+		// Clone the frame
+		virtual Shape* clone();
 
-        // Draw the frame
-        virtual void draw(QPainter *painter);
-        // Return true if the frame is hitted by the hitbox in argument
-        virtual bool isHitted(QRect hitbox);
+		// Draw the frame
+		virtual void draw(QPainter *painter);
+		// Return true if the frame is hitted by the hitbox in argument
+		virtual bool isHitted(QRect hitbox);
 };
 
 

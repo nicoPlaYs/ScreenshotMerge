@@ -21,46 +21,45 @@
 
 
 // Window which appears when uploading an image to an image host website
-class UploadWindow : public QDialog
-{
-    Q_OBJECT
+class UploadWindow : public QDialog{
+	Q_OBJECT
 
-    // Variables
-    private :
-        // Main layout
-        QGridLayout* mainLayout;
-            // Progress bar of the upload
-            QProgressBar* uploadProgressBar;
-            // Will contain the link to the uploaded image
-            QLineEdit* lineEditLink;
-            // Copy the link to the clipboard and close this window
-            QPushButton* copyLinkInClipboardButton;
-            // Cancel the upload and close the window
-            QPushButton* cancelButton;
+	// Variables
+	private :
+		// Main layout
+		QGridLayout* mainLayout;
+		// Progress bar of the upload
+		QProgressBar* uploadProgressBar;
+		// Will contain the link to the uploaded image
+		QLineEdit* lineEditLink;
+		// Copy the link to the clipboard and close this window
+		QPushButton* copyLinkInClipboardButton;
+		// Cancel the upload and close the window
+		QPushButton* cancelButton;
 
-        // Host
-        ImageHost host;
-        // Reply of the image host
-        QNetworkReply* reply;
+		// Host
+		ImageHost host;
+		// Reply of the image host
+		QNetworkReply* reply;
 
-    // Constructor
-    public :
-        UploadWindow(QNetworkReply* reply, ImageHost host);
+	// Constructor
+	public :
+		UploadWindow(QNetworkReply* reply, ImageHost host);
 
-    // Destructor
-    public :
-        ~UploadWindow();
+	// Destructor
+	public :
+		~UploadWindow();
 
-    // Qt slots
-    public slots :
-        // Update the value of the upload progress bar
-        void updateUploadProgress(qint64 bytesSent, qint64 bytesTotal);
-        // Read and process the reply from the image host
-        void uploadFinished();
-        // Copy the link into the clipboard
-        void copyLinkInClipboard();
-        // Cancel the upload
-        void cancel();
+	// Qt slots
+	public slots :
+		// Update the value of the upload progress bar
+		void updateUploadProgress(qint64 bytesSent, qint64 bytesTotal);
+		// Read and process the reply from the image host
+		void uploadFinished();
+		// Copy the link into the clipboard
+		void copyLinkInClipboard();
+		// Cancel the upload
+		void cancel();
 };
 
 

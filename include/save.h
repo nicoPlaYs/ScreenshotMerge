@@ -19,4 +19,5 @@ QString nextScreenshotName();
 void saveImage(QPixmap image);
 
 
+
 #endif // SAVE_H

@@ -42,116 +42,117 @@ enum TypeDrawTool{PEN,STRAIGHTLINE,FRAME,ERASER};
 enum ClosingReasonEW{REJECT, VALIDATED, RETAKE};
 
 
+
 // The window to display and edit an screenshot
-class EditWindow : public QMainWindow
-{
-    Q_OBJECT
+class EditWindow : public QMainWindow{
+	Q_OBJECT
 
-    // Variables
-    private :
-        // Settings
-        QSettings* settings;
+	// Variables
+	private :
+		// Settings
+		QSettings* settings;
 
-        // Pen of the draw tool
-        QPen drawPen;
-        // Pen to erase some temporary drawing
-        QPen eraseTempPen;
+		// Pen of the draw tool
+		QPen drawPen;
+		// Pen to erase some temporary drawing
+		QPen eraseTempPen;
 
-        // Last point of the current polyline
-        QPoint lastPointPolyline;
+		// Last point of the current polyline
+		QPoint lastPointPolyline;
 
-        // The toolbar
-        QToolBar* toolBar;
-            QAction* actionValidate;
-            QAction* actionCancel;
-            QAction* actionRetake;
+		// The toolbar
+		QToolBar* toolBar;
 
-            QAction* actionSave;
-            QAction* actionCopyIntoClipboard;
-            QComboBox* comboBoxImageHost;
-            QAction* actionUploadScreenshot;
+		QAction* actionValidate;
+		QAction* actionCancel;
+		QAction* actionRetake;
 
-            QAction* actionColor;
-            QActionGroup* actionGroupDrawTool;
-                QAction* actionPen;
-                QAction* actionStraightLine;
-                QAction* actionFrame;
-                QAction* actionEraser;
-            QSlider* sliderPenWidth;
-                QSpinBox* spinBoxPenWidth;
+		QAction* actionSave;
+		QAction* actionCopyIntoClipboard;
+		QComboBox* comboBoxImageHost;
+		QAction* actionUploadScreenshot;
 
-        // Main widget of the window
-        QWidget* widgetMain;
-            // Main layout of the dialog
-            QHBoxLayout* layout;
-                // If the screenshot is to big
-                QScrollArea* scrollArea;
-                    // The label of the image we want to see
-                    QLabel* labelImage;
+		QAction* actionColor;
+		QActionGroup* actionGroupDrawTool;
+		QAction* actionPen;
+		QAction* actionStraightLine;
+		QAction* actionFrame;
+		QAction* actionEraser;
+		QSlider* sliderPenWidth;
+		QSpinBox* spinBoxPenWidth;
 
-        // Screenshot
-        Screenshot* screenshot;
-        // List of all the taken screenshots
-        QListWidget* listWidgetImage;
-        // QPixmap to show
-        QPixmap* screenshotToShow;
-        // QPainter to draw on the screenshot
-        QPainter* painterScreenshot;
-        // List of the new shapes
-        QLinkedList<Shape*> newShapesList;
+		// Main widget of the window
+		QWidget* widgetMain;
+		// Main layout of the dialog
+		QHBoxLayout* layout;
+		// If the screenshot is to big
+		QScrollArea* scrollArea;
+		// The label of the image we want to see
+		QLabel* labelImage;
 
-        // True if the window has been closed with the validate button
-        ClosingReasonEW closingReason;
+		// Screenshot
+		Screenshot* screenshot;
+		// List of all the taken screenshots
+		QListWidget* listWidgetImage;
+		// QPixmap to show
+		QPixmap* screenshotToShow;
+		// QPainter to draw on the screenshot
+		QPainter* painterScreenshot;
+		// List of the new shapes
+		QLinkedList<Shape*> newShapesList;
 
-    // Constructor
-    public :
-        EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* listWidgetImage = 0);
+		// True if the window has been closed with the validate button
+		ClosingReasonEW closingReason;
 
-    // Destructor
-    public :
-        ~EditWindow();
+	// Constructor
+	public :
+		EditWindow(Screenshot* screenshot, ImageHost host, QListWidget* listWidgetImage = 0);
 
-    // Methods
-    public :
-        // Refresh the pixmap of the displayed screenshot by redraw everything
-        void refreshScreenshotToShow();
+	// Destructor
+	public :
+		~EditWindow();
 
-        // When we press the right click on the window
-        void mousePressEvent(QMouseEvent* event);
-        // When we move on the window
-        void mouseMoveEvent(QMouseEvent* event);
-        // When we release the click on the window
-        void mouseReleaseEvent(QMouseEvent* event);
-        // When we close the window
-        void closeEvent(QCloseEvent* event);
+	// Methods
+	public :
+		// Refresh the pixmap of the displayed screenshot by redraw everything
+		void refreshScreenshotToShow();
 
-    // Qt slots
-    public slots:
-        // Validate
-        void validate();
-        // Retake the screenshot
-        void retake();
+		// When we press the right click on the window
+		void mousePressEvent(QMouseEvent* event);
+		// When we move on the window
+		void mouseMoveEvent(QMouseEvent* event);
+		// When we release the click on the window
+		void mouseReleaseEvent(QMouseEvent* event);
+		// When we close the window
+		void closeEvent(QCloseEvent* event);
 
-        // Save the screenshot
-        void save();
-        // Copy the screenshot to the clipboard
-        void copyIntoClipboard();
-        // Upload the screenshot to an image host website
-        void uploadScreenshot();
+	// Qt slots
+	public slots:
+		// Validate
+		void validate();
+		// Retake the screenshot
+		void retake();
 
-        // Change the width of the draw tool
-        void changePenWidth(int width);
-        // Change the color of the draw tool
-        void changePenColor();
-        // When the drawing tool is changing
-        void changeDrawingTool();
+		// Save the screenshot
+		void save();
+		// Copy the screenshot to the clipboard
+		void copyIntoClipboard();
+		// Upload the screenshot to an image host website
+		void uploadScreenshot();
 
-    // Qt signals
-    signals :
-        // Signal the main window to retake a screenshot
-        void retakeSignal();
-        // Signal the main window that the edit is over
-        void editOver(QString host);
+		// Change the width of the draw tool
+		void changePenWidth(int width);
+		// Change the color of the draw tool
+		void changePenColor();
+		// When the drawing tool is changing
+		void changeDrawingTool();
+
+	// Qt signals
+	signals :
+		// Signal the main window to retake a screenshot
+		void retakeSignal();
+		// Signal the main window that the edit is over
+		void editOver(QString host);
 };
 
 

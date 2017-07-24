@@ -1,2 +1,8 @@
+Improvement :
+	- Qt 5.9.1
+
+Bug :
+	- Fix the url of the screenshot upload to noelshack
+
 Idea to implement :
 	- Autoscroll Wizard : take screenshots and scroll automaticly to the end of a page

@@ -21,37 +21,36 @@
 
 
 // Store a screenshot which can be put in a QListWidget
-class Screenshot : public QListWidgetItem
-{
-    // Variables
-    private :
-        // The screenshot
-        QPixmap image;
-        // The shapes on the screenshot
-        QLinkedList<Shape*> shapesList;
+class Screenshot : public QListWidgetItem{
+	// Variables
+	private :
+		// The screenshot
+		QPixmap image;
+		// The shapes on the screenshot
+		QLinkedList<Shape*> shapesList;
 
-    // Getter
-    public :
-        QPixmap getImage();
-        QLinkedList<Shape*> getShapes();
+	// Getter
+	public :
+		QPixmap getImage();
+		QLinkedList<Shape*> getShapes();
 
-    // Setter
-    public :
-        void setImage(QPixmap image);
-        void setShapes(QLinkedList<Shape*> shapesList);
+	// Setter
+	public :
+		void setImage(QPixmap image);
+		void setShapes(QLinkedList<Shape*> shapesList);
 
-    // Constructor
-    public :
-        Screenshot(QPixmap image, const QString &text, QListWidget* parent = 0, int type = Type);
+	// Constructor
+	public :
+		Screenshot(QPixmap image, const QString &text, QListWidget* parent = 0, int type = Type);
 
-    // Destructor
-    public :
-        ~Screenshot();
+	// Destructor
+	public :
+		~Screenshot();
 
-    // Methods
-    public :
-        // Return a pixmap of the screenshot with all of its shapes drawn
-        QPixmap withDrawings();
+	// Methods
+	public :
+		// Return a pixmap of the screenshot with all of its shapes drawn
+		QPixmap withDrawings();
 };
 
 

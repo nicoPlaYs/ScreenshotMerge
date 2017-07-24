@@ -7,6 +7,9 @@ bin/
 # Qt
 *.pro.user
 
+# Other
+*.cpp~
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
