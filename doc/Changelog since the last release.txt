@@ -1,8 +1,10 @@
 Improvement :
-	- Qt 5.9.1
+	- Updated to Qt 5.9.1
 
 Bug :
-	- Fix the url of the screenshot upload to noelshack
+	- Fix the URL of the screenshots uploaded to noelshack
 
-Idea to implement :
-	- Autoscroll Wizard : take screenshots and scroll automaticly to the end of a page
+
+To do before 1.7.3 :
+	- Update all the icons
+	- Try to sign the app with a certificate
