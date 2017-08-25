@@ -1,0 +1,8 @@
+~ : Planned to be shipped in the next major version
+O : Planned to be shipped in the next minor version
+X : Ready to be shipped in the next version
+
+
+
+Improvements :
+	[O] Update all the icons
